@@ -1,2 +1,59 @@
 %!TEX root = main.tex
-\section{Robustness}
+\section{Robustness Against the Synchronous Semantics}
+
+TODO DEFINE CONFLICT-PRESERVING PERMUTATIONS
+
+TODO DEFINE ROBUSTNESS AS SERIALIZABILITY
+
+TODO PROVE THAT IT IMPLIES HAVING THE SAME SET OF LOCAL STATE VECTORS AS IN THE SYNCHRONOUS SEMANTICS
+
+We define robustness against rendez-vous which ensures that even if the sys- tem uses buffers to store messages it provides the illusion that messages are received instantaneously, as in the rendez-vous semantics. This is analogous to the atomicity criterion for concurrent shared-memory systems, where even though transactions can interleave, every execution is “equivalent” to an execution where transactions happen atomically without interference.
+
+\subsection{Defining Robustness}
+
+We define a conflict relation $\prec$ on actions in $S\cup R$ that relates every two actions of the same process and every send with the corresponding receive. Formally,
+\begin{align*}
+a \prec a'\mbox{ iff } \<proc>(a) = \<proc>(a')\mbox{ or } a\match r
+\end{align*}
+
+A permutation $t'$ of a trace $t$ is \emph{conflict-preserving} when every pair $a$ and $a'$ of actions of $t$ appear in the same order in $t'$ whenever $a \prec a'$. Intuitively, a message passing system can not distinguish between two traces, one being the conflict-preserving permutation of the other.
+
+\begin{lemma}
+For a given trace $t$, $\asynchTr{A}$ contains every conflict-preserving permutation $t'$ of $t$ when $t\in \asynchTr{A}$.
+\end{lemma}
+
+A trace $t$ is called \emph{synchronous} when every receive $r\in R$ is immediately preceded by the matching send. Formally, for every $1\leq i\leq |t|$, if $t_i\in R$ then $t_{i-1}\in S$ and $t_{i-1}\match t_i$.
+
+\begin{definition}
+A trace $t$ is called \emph{synchronizable} when there exists a synchronous conflict-preserving permutation of $t$. 
+\end{definition}
+
+\begin{figure} [t]
+\footnotesize{
+  \centering
+  \begin{mathpar}
+    \inferrule[send]{
+      m= \tup{i,j,p}
+    }{
+      \vec{l},\vec{b}
+      \xRightarrow{\send{i}{m}}
+      \vec{l}[\vec{l_i}\gets T(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
+    }%\hspace{5mm}
+    
+    \inferrule[receive]{
+      m = \vec{b}_j.\ \mathrm{rem}() \\
+      \vec{b_i}. \mathrm{rem}() \mbox{ is not enabled, for all $i\neq j$}
+    }{
+      \vec{l},\vec{b}
+      \xRightarrow{\rec{j}{m}}
+      \vec{l}[\vec{l_j}\gets T(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
+    }%\hspace{5mm}
+  \end{mathpar}
+  }
+% \vspace{-5mm}
+  \caption{The synchronous semantics of a message passing system $A$. 
+  }
+  \label{fig:synch-sem}
+%\vspace{-6mm}
+\end{figure}
+

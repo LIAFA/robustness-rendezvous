@@ -1,2 +1,80 @@
 %!TEX root = main.tex
-\section{Preliminaries}
+\section{Message passing systems}
+
+We fix arbitrary sets $\<Ids>$ and $\<Plds>$ of process ids and message payloads. 
+A \emph{message} is a triple $m = \tup{i,j,p}$ where $i \in \<Ids>$ denotes the source, $j \in \<Ids>$ the destination, and $p \in \<Plds>$ the payload. 
+The set of messages is denoted by $\<Msgs>$. 
+The source, destination, and payload of a message $m$ are denoted by $\<src>(m)$, $\<dst>(m)$, $\<pay>(m)$, respectively.
+For given sets $\<Ids>$ and $\<Plds>$, we fix the sets 
+\begin{align*}
+S = \set{\send{i}{m}: i\in\<Ids>, m\in \<Msgs>, i=\<src>(m)},\mbox{ and }R = \set{\rec{j}{m}: j\in\<Ids>, m\in \<Msgs>, j=\<dst>(m)}
+\end{align*}
+of \emph{send actions} and \emph{receive actions}; 
+each send action $\send{i}{m}$ combines a process id $i\in \<Ids>$ with a message $m\in \<Msgs>$ whose source is the same process $i$.
+We denote the message of a send/receive action $a$ by $\<msg>(a)$, and the process id indexing the action by $\<proc>(a)$.
+Send and receive actions $s\in S$ and $r\in R$ are \emph{matching}, written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
+
+A message passing system consists of a finite set of processes that communicate via messages. Each process is described as a state
+machine that evolves by executing send or receive actions, and it is equipped with an instance of some fixed collection data type, e.g., FIFO queue, 
+that acts as a message buffer (storing incoming messages before being processed). 
+
+We fix a set $\<Lsts>$ of local process states and a collection data type $\<AdtM>$ with interface $\mathrm{add}(m)$ for adding an element $m$
+to the collection and $\mathrm{rem}()$ that removes and returns an element from the collection (this method returns only when the collection
+is non-empty). 
+
+A message passing system $A=(T,l_0,\<AdtM>)$ is a transition relation $T\subseteq \<Lsts>\times (S\cup R)\times \<Lsts>$ describing the 
+evolution of all processes globally with an initial local state $l_0$ and a collection data type $\<AdtM>$.
+
+A configuration $c=\tup{\vec{l},\vec{b}}$ is a vector of local states $\vec{l}$ together with a vector of message buffers $\vec{b}$ that are
+instances of the collection data type $\<AdtM>$. For a vector $\vec{x}$, let $\vec{x}_i$ denote the $i$th element of $\vec{x}$.
+The state of a process is defined by a local state $\vec{l}_i$ and a message buffer $\vec{b_i}$, for some $i$.
+%The set of configurations is denoted by $C$.
+
+The transition relation $\rightarrow$ in Figure~\ref{fig:asynch-sem} is determined by a message passing system $A$, and maps
+a configuration $c_1$ to another configuration $c_2$ and action $a\in S\cup R$.
+\textsc{send} transitions ... \textsc{receive} transitons TODO FILL IN
+
+An \emph{execution} of a system $A$ under the asynchronous semantics to configuration ${c}_n$
+is a configuration sequence ${c}_0 {c}_1 \ldots {c}_n$ such that
+%\vspace{-2mm}
+%\begin{align*}
+$  {c}_m \xrightarrow{a_{m+1}} {c}_{m+1}$
+%\end{align*}
+%%\vspace{-1.5mm}
+%\noindent
+for $0 \le m < n$. We say that ${c}_n$ is reachable in $A$ under the asynchronous semantics, and we call
+the sequence $a_1 \ldots a_n$ the \emph{trace} of ${c}_0 {c}_1 \ldots
+{c}_n$. The \emph{reachable local state vectors} of $A$, denoted $\asynch{R}(A)$, is the
+set of local state vectors in reachable configurations.
+%
+The set of traces of $A$ under the asynchronous semantics is denoted by $\asynchTr{A}$.
+
+\begin{figure} [t]
+\footnotesize{
+  \centering
+  \begin{mathpar}
+    \inferrule[send]{
+      m= \tup{i,j,p}
+    }{
+      \vec{l},\vec{b}
+      \xrightarrow{\send{i}{m}}
+      \vec{l}[\vec{l_i}\gets T(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
+    }%\hspace{5mm}
+    
+    \inferrule[receive]{
+      m = \vec{b}_j.\ \mathrm{rem}() \\
+    }{
+      \vec{l},\vec{b}
+      \xrightarrow{\rec{j}{m}}
+      \vec{l}[\vec{l_j}\gets T(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
+    }%\hspace{5mm}
+  \end{mathpar}
+  }
+% \vspace{-5mm}
+  \caption{The asynchronous semantics of a message passing system $A$. Above, $\vec{l}[\vec{l_i}\gets T(\vec{l}_i,\send{i}{m})]$ denotes an update of $\vec{l}$ where the $i$th element is replaced by one of the local states in $T(\vec{l}_i,\send{i}{m})$. Also, $\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the $j$th element.
+  }
+  \label{fig:asynch-sem}
+%\vspace{-6mm}
+\end{figure}
+
+

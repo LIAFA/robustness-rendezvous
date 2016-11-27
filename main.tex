@@ -1,12 +1,38 @@
-\documentclass[orivec]{llncs}
+\documentclass{llncs} %[orivec]
 
 %\frontmatter          % for the preliminaries
 %\pagestyle{headings}  % switches on printing of running heads
 
-%% Macros standard
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{stmaryrd}
+% \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage[numbers]{natbib}
+\usepackage{xspace}
+\usepackage{balance}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{breakurl}
 \usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{multirow}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
+\usetikzlibrary{decorations.pathmorphing,snakes}
+\usepackage{tkz-graph}
+\usepackage{moresize}
+
+%\newenvironment{proof}{\paragraph{Proof.}}{\hfill$\square$}
+
+\def\ttat{\mitt{@}} % the at package clobbers this
+\usepackage{at}
+
+%\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
 \usepackage{latexsym}
 \usepackage{wasysym} % causing problems with llncs's bold vectors
 \usepackage{stmaryrd}
@@ -14,39 +40,22 @@
 \usepackage{mathpartir}
 \usepackage[ligature,reserved,inference]{semantic}
 \usepackage[lined]{algorithm2e}
-\usepackage{pgf}
-\usepackage{at}
-
-\usepackage[utf8]{inputenc}
-\usepackage{microtype}
-\usepackage[numbers]{natbib}
-\usepackage{xspace}
-\usepackage{balance}
-\usepackage{url}
-\usepackage{breakurl}
-\usepackage{enumerate}
-\usepackage{enumitem}
-\usepackage{listings}
-
-
-%% Figures
 \usepackage{graphicx}
+\usepackage{pgf}
 \usepackage{tikz}
-\usetikzlibrary{positioning,shapes,shadows,arrows}
-\usetikzlibrary{decorations.pathmorphing,snakes}
-\usepackage{tkz-graph}
+\usepackage{multicol}
+\usepackage{fancyvrb}
+\usepackage{rotating}
+\usepackage{latexsym}
+\usepackage{tabulary}
 \usepackage{wrapfig}
+\usepackage{caption,subcaption}
+%\usepackage{pslatex}
 
-%% Hyperlinked references
-\usepackage{hyperref}
-
-%% Short/long versions
-\usepackage{ifthen}
-\provideboolean{sversion} 
-\setboolean{sversion}{false}
-\provideboolean{lversion} 
-\setboolean{lversion}{true}
-%\usepackage{multicol}
+\usetikzlibrary{arrows,automata}
+\usetikzlibrary{positioning,shapes,shadows}
+\usetikzlibrary{decorations}
+\makeatletter
 
 %% Macros plus
 \input macros
@@ -55,6 +64,11 @@
 
 \newcommand{\todo}[1]{\textcolor{blue}{[TODO: #1]}}
 \newcommand{\shuvendu}[1]{\textcolor{green}{[SKL: #1]}}
+\newcommand{\send}[2]{\mathrm{send}_{#1}({#2})}
+\newcommand{\rec}[2]{\mathrm{rec}_{#1}({#2})}
+\newcommand{\asynch}[1]{{#1}_{asynch}}
+\newcommand\asynchTr[1]{{  \llbracket {#1} \rrbracket_{asynch} }}
+\newcommand{\xRightarrow}[2][]{\ext@arrow 0359\Rightarrowfill@{#1}{#2}}
 
 %Abstract Semantic Diffing for Verifying Concurrency Bug Fixes in the Absence of Assertions
 \title{Robustness against rendezvous}
