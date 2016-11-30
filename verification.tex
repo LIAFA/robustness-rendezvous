@@ -1,0 +1,87 @@
+%!TEX root = main.tex
+\section{Checking Synchronizability}
+
+
+Verifying a (bounded state) message passing system using a monitor that maintains the conflict-graph of a trace 
+is undecidable since it requires dealing with known undecidable features, e.g., FIFO queues.
+We show in this section that checking synchronizability can be reduced 
+to a reachability problem in a system that executes under the synchronous semantics, and 
+thus doesn't use unbounded message buffers. This result is based on the following ideas\begin{itemize}	\item consider a class of boarderline violations to synchronizability, i.e., traces whichare not synchronizable and every strict prefix is synchronizable.
+	\item starting from the original system $A$, define a new system $A_0$ executing underthe synchronous semantics, which simulates minimal synchronizability violations of$S$, if any ($S_0$ goes to an error state whenever such a violation exists).
+\end{itemize}
+
+\subsection{Synchronizability Violation Patterns}
+
+
+\begin{figure}[t]
+Causal delivery violation:
+\begin{align*}
+\send{i_1}{i_1,j,v_1}\leadsto \send{i_2}{i_2,j,v_2}\mbox{ and }
+\rec{j}{i_2,j,v_2} \leadsto \rec{j}{i_1,j,v_1} 
+\end{align*}
+Exchange pattern:
+\begin{align*}
+\send{i_1}{i_1,j_1,v_1}\leadsto \rec{j_2}{i_2,j_2,v_2}\mbox{ and }
+\send{i_2}{i_2,j_2,v_2}\leadsto \rec{j_1}{i_1,j_1,v_1}
+\end{align*}
+\caption{Synchronizability violation patterns.}
+\label{fig:patterns}
+\end{figure}
+
+We show that any trace violating synchronizability contains one of the two violation patterns in Figure~\ref{fig:patterns}.
+Intuitively, the first pattern describes a violation to \emph{causal delivery} where two causally related messages sent to the same process
+are received in an order different from that in which they were sent. Here, the causal order between messages is defined
+by the paths in the action graph. The second violation pattern describes a situation in which two messages are sent concurrently 
+and each message is received after the other one is sent. This situation arises for instance in protocols solving consensus which alternate
+between phases in which all processes send messages to their peers and phases in which they receive messages from their peers. 
+In these cases, the sends and receives in the exchange pattern are causally related since they are executed by the same process.
+
+We say that a trace contains a causal delivery violation or an exchange pattern if it contains the actions and the action-graph paths
+specified in Figure~\ref{fig:patterns}.
+
+\begin{theorem}\label{th:patt}
+A trace is not synchronizable if{f} it contains a causal delivery violation or an exchange pattern.
+\end{theorem}
+\begin{proof}
+TODO
+\end{proof}
+
+\subsection{Simulating Borderline Violations}
+
+A violation to synchronizability $t$ is called \emph{borderline} when every strict prefix of $t$ is synchronizable.
+We first show that any borderline synchronizability violation of a message passing system $A$ can be simulated by 
+the synchronous semantics of another message passing system $something(A)$ computable in polynomial time.
+
+Let $t$ be a borderline synchronizability violation.
+By Theorem~\ref{th:patt}, $t$ contains either a causal delivery violation or an exchange pattern.
+Therefore, we have 
+\begin{align*}
+t=t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2\cdot \rec{j_1}{i_1,j_1,v_1}
+\end{align*} 
+where $t'=t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2$ is a synchronous trace.
+The prefix $t'$ can be simulated by the synchronous semantics of a message passing system $A'$ 
+where every send transition in $A$ is cloned to an epsilon transition, i.e., if $A=(T,l_0,\<AdtM>)$
+then $A'=(T',l_0,\<AdtM>)$ where
+\begin{align*}
+T'=T\cup\set{(l,\epsilon,l'): \exists s\in S.\ (l,s,l')\in T}.
+\end{align*}
+
+To simulate the last receive in $t$, we transform $A'$ such that any message sent to some process $j_1$ can be redirected to some 
+distinguished process $i_0$ who relays it to $j_1$ non-deterministically at a later time. We constrain the system such that it can
+redirect only one message.
+
+TODO NEEDS A MONITOR FOR IMPOSING THIS CONSTRAINT. BUT MAYBE WE DON'T NEED IT IF WE ARE JUST INTERESTED IN DEFINING A SYSTEM THAT ADMITS BORDERLINE VIOLATIONS (AND ANYTHING IN ADDITION)
+
+
+%Let us first consider the case of a causal delivery violation. Since $t$ is borderline, it is necessarily of the following form:
+%\begin{align*}
+%t_1\cdot \send{i_1}{i_1,j,v_1} \cdot t_2 \cdot \send{i_2}{i_2,j,v_2} \cdot t_3\cdot \rec{j}{i_2,j,v_2}
+%\end{align*}
+%where $\send{i_1}{i_1,j,v_1}\leadsto \send{i_2}{i_2,j,v_2}$ and $t_2\cdot t_3$ doesn't contain $\rec{j}{i_1,j,v_1}$
+%(otherwise, we would have $\rec{j}{i_1,j,v_1}\leadsto \rec{j}{i_2,j,v_2}$ because these two actions are made by the same process $j$).
+
+
+\subsection{Checking for Synchronizability Violation Patterns}
+
+We define a monitor in the form of a register automaton (a finite state machine equipped with a set of registers)
+that 
