@@ -66,8 +66,9 @@
 \newcommand{\shuvendu}[1]{\textcolor{green}{[SKL: #1]}}
 \newcommand{\send}[2]{\mathrm{send}_{#1}({#2})}
 \newcommand{\rec}[2]{\mathrm{rec}_{#1}({#2})}
-\newcommand{\asynch}[1]{{#1}_{asynch}}
-\newcommand\asynchTr[1]{{  \llbracket {#1} \rrbracket_{asynch} }}
+\newcommand{\asynch}[1]{\mathrm{Asynch}\text{-}\mathrm{#1}}
+\newcommand{\synch}[1]{\mathrm{Synch}\text{-}\mathrm{#1}}
+\newcommand\asynchTr[1]{\mathrm{AsynchTr}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
 \newcommand{\xRightarrow}[2][]{\ext@arrow 0359\Rightarrowfill@{#1}{#2}}
 
 %Abstract Semantic Diffing for Verifying Concurrency Bug Fixes in the Absence of Assertions
@@ -88,6 +89,7 @@
 \input overview
 \input preliminaries
 \input robustness
+\input verification
 \input experiments
 \input related
 \input conclusions

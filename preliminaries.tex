@@ -1,5 +1,7 @@
 %!TEX root = main.tex
-\section{Message passing systems}
+\section{Message passing systems}\label{sec:prelims}
+
+TODO ASSUME PAYLOADS INCLUDE A MESSAGE IDENTIFIER
 
 We fix arbitrary sets $\<Ids>$ and $\<Plds>$ of process ids and message payloads. 
 A \emph{message} is a triple $m = \tup{i,j,p}$ where $i \in \<Ids>$ denotes the source, $j \in \<Ids>$ the destination, and $p \in \<Plds>$ the payload. 
@@ -15,15 +17,18 @@ We denote the message of a send/receive action $a$ by $\<msg>(a)$, and the proce
 Send and receive actions $s\in S$ and $r\in R$ are \emph{matching}, written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
 
 A message passing system consists of a finite set of processes that communicate via messages. Each process is described as a state
-machine that evolves by executing send or receive actions, and it is equipped with an instance of some fixed collection data type, e.g., FIFO queue, 
+machine that evolves by executing send or receive actions, or local actions (specified as $\epsilon$ transitions)
+ and it is equipped with an instance of some fixed collection data type, e.g., FIFO queue, 
 that acts as a message buffer (storing incoming messages before being processed). 
 
 We fix a set $\<Lsts>$ of local process states and a collection data type $\<AdtM>$ with interface $\mathrm{add}(m)$ for adding an element $m$
 to the collection and $\mathrm{rem}()$ that removes and returns an element from the collection (this method returns only when the collection
 is non-empty). 
 
-A message passing system $A=(T,l_0,\<AdtM>)$ is a transition relation $T\subseteq \<Lsts>\times (S\cup R)\times \<Lsts>$ describing the 
-evolution of all processes globally with an initial local state $l_0$ and a collection data type $\<AdtM>$.
+A message passing system $A=(T,l_0,\<AdtM>)$ is a transition relation $T\subseteq \<Lsts>\times (S\cup R\cup\{\epsilon\})\times \<Lsts>$ describing the 
+evolution of all processes globally with an initial local state $l_0$ and a collection data type $\<AdtM>$. To simplify the exposition, we assume
+that each receive action is enabled in every local state, i.e., for every $l\in \<Lsts>$ and every $r\in R$, there exists $l'\in \<Lsts>$ such that $(l,r,l')\in T$.
+TODO GIVE MORE EXPLANATIONS
 
 A configuration $c=\tup{\vec{l},\vec{b}}$ is a vector of local states $\vec{l}$ together with a vector of message buffers $\vec{b}$ that are
 instances of the collection data type $\<AdtM>$. For a vector $\vec{x}$, let $\vec{x}_i$ denote the $i$th element of $\vec{x}$.
@@ -32,7 +37,7 @@ The state of a process is defined by a local state $\vec{l}_i$ and a message buf
 
 The transition relation $\rightarrow$ in Figure~\ref{fig:asynch-sem} is determined by a message passing system $A$, and maps
 a configuration $c_1$ to another configuration $c_2$ and action $a\in S\cup R$.
-\textsc{send} transitions ... \textsc{receive} transitons TODO FILL IN
+\textsc{send} transitions ... \textsc{receive} transitions ... \textsc{local} transitions TODO FILL IN
 
 An \emph{execution} of a system $A$ under the asynchronous semantics to configuration ${c}_n$
 is a configuration sequence ${c}_0 {c}_1 \ldots {c}_n$ such that
@@ -44,7 +49,7 @@ $  {c}_m \xrightarrow{a_{m+1}} {c}_{m+1}$
 %\noindent
 for $0 \le m < n$. We say that ${c}_n$ is reachable in $A$ under the asynchronous semantics, and we call
 the sequence $a_1 \ldots a_n$ the \emph{trace} of ${c}_0 {c}_1 \ldots
-{c}_n$. The \emph{reachable local state vectors} of $A$, denoted $\asynch{R}(A)$, is the
+{c}_n$. The \emph{reachable local state vectors} of $A$, denoted $\asynch{States}(A)$, is the
 set of local state vectors in reachable configurations.
 %
 The set of traces of $A$ under the asynchronous semantics is denoted by $\asynchTr{A}$.
@@ -54,7 +59,8 @@ The set of traces of $A$ under the asynchronous semantics is denoted by $\asynch
   \centering
   \begin{mathpar}
     \inferrule[send]{
-      m= \tup{i,j,p}
+      m= \tup{i,j,p} \\ 
+      T(\vec{l}_i,\send{i}{m}) \neq \emptyset
     }{
       \vec{l},\vec{b}
       \xrightarrow{\send{i}{m}}
@@ -63,10 +69,19 @@ The set of traces of $A$ under the asynchronous semantics is denoted by $\asynch
     
     \inferrule[receive]{
       m = \vec{b}_j.\ \mathrm{rem}() \\
+      T(\vec{l}_j,\rec{j}{m}) \neq \emptyset
     }{
       \vec{l},\vec{b}
       \xrightarrow{\rec{j}{m}}
       \vec{l}[\vec{l_j}\gets T(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
+    }%\hspace{5mm}
+    
+    \inferrule[local]{ 
+      T(\vec{l}_i,\epsilon) \neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xrightarrow{\epsilon}
+      \vec{l}[\vec{l_i}\gets T(\vec{l}_i,\epsilon)],\vec{b}
     }%\hspace{5mm}
   \end{mathpar}
   }
