@@ -69,29 +69,29 @@ A message passing system $A$ is synchronizable when every trace $t\in \asynchTr{
   \begin{mathpar}
     \inferrule[send]{
       m= \tup{i,j,p} \\
-      T(\vec{l}_i,\send{i}{m})\neq \emptyset
+      \delta(\vec{l}_i,\send{i}{m})\neq \emptyset
     }{
       \vec{l},\vec{b}
       \xRightarrow{\send{i}{m}}
-      \vec{l}[\vec{l_i}\gets T(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
     }%\hspace{5mm}
     
         \inferrule[local]{ 
-      T(\vec{l}_i,\epsilon) \neq \emptyset
+      \delta(\vec{l}_i,\epsilon) \neq \emptyset
     }{
       \vec{l},\vec{b}
       \xrightarrow{\epsilon}
-      \vec{l}[\vec{l_i}\gets T(\vec{l}_i,\epsilon)],\vec{b}
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\epsilon)],\vec{b}
     }%\hspace{5mm}
     
     \inferrule[receive]{
       m = \vec{b}_j.\ \mathrm{rem}() \\
-      T(\vec{l}_j,\rec{j}{m}) \neq \emptyset \\
+      \delta(\vec{l}_j,\rec{j}{m}) \neq \emptyset \\
       \vec{b_i}. \mathrm{rem}() \mbox{ is not enabled, for all $i\neq j$} 
     }{
       \vec{l},\vec{b}
       \xRightarrow{\rec{j}{m}}
-      \vec{l}[\vec{l_j}\gets T(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
+      \vec{l}[\vec{l_j}\gets \delta(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
     }%\hspace{5mm}
   \end{mathpar}
   }
@@ -105,7 +105,7 @@ A message passing system $A$ is synchronizable when every trace $t\in \asynchTr{
 The transition relation $\Rightarrow$ in Figure~\ref{fig:asynch-sem} defines a new semantics for  a message passing system $A$
 where a receive for process $i$ is enabled only if the buffers of all the other processes are empty. Executions and reachable local
 state vectors under the new semantics, denoted by $\synch{States}(A)$, are defined as in Section~\ref{sec:prelims}.
-Note that all the traces of $A$ under the new semantics are synchronous.
+The set of traces of $A$ under the new semantics is denoted by $\synch{Tr}(A)$.
 
 \begin{lemma}
 For a given synchronizable message passing system $A$, $\asynch{States}(A)=\synch{States}(A)$.

@@ -6,8 +6,13 @@ Verifying a (bounded state) message passing system using a monitor that maintain
 is undecidable since it requires dealing with known undecidable features, e.g., FIFO queues.
 We show in this section that checking synchronizability can be reduced 
 to a reachability problem in a system that executes under the synchronous semantics, and 
-thus doesn't use unbounded message buffers. This result is based on the following ideas\begin{itemize}	\item consider a class of boarderline violations to synchronizability, i.e., traces whichare not synchronizable and every strict prefix is synchronizable.
-	\item starting from the original system $A$, define a new system $A_0$ executing underthe synchronous semantics, which simulates minimal synchronizability violations of$S$, if any ($S_0$ goes to an error state whenever such a violation exists).
+thus doesn't use unbounded message buffers. This result is based on the following ideas
+\begin{itemize}
+	\item consider a class of boarderline violations to synchronizability, i.e., traces which
+are not synchronizable and every strict prefix is synchronizable.
+	\item starting from the original system $A$, define a new system $A_0$ executing under
+the synchronous semantics, which simulates minimal synchronizability violations of
+$S$, if any ($S_0$ goes to an error state whenever such a violation exists).
 \end{itemize}
 
 \subsection{Synchronizability Violation Patterns}
@@ -58,17 +63,43 @@ Therefore, we have
 \begin{align*}
 t=t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2\cdot \rec{j_1}{i_1,j_1,v_1}
 \end{align*} 
-where $t'=t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2$ is a synchronous trace.
-The prefix $t'$ can be simulated by the synchronous semantics of a message passing system $A'$ 
-where every send transition in $A$ is cloned to an epsilon transition, i.e., if $A=(T,l_0,\<AdtM>)$
-then $A'=(T',l_0,\<AdtM>)$ where
+where the prefix $t'=t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2$ is a synchronous trace.
+The prefix $t'$ may contain send actions without matching receives and it is not admitted as it is by the 
+synchronous semantics of $A$, i.e., $t'\not\in \synch{Tr}(A)$.
+We show however that the configurations reached in $A$ by an execution with trace $t'$ can be reached
+in another message passing system $A'$ even under the synchronous semantics. 
+
+Thus, $A'$ is obtained from $A$ by non-deterministically redirecting messages to some distinguished process $p$
+that accepts any message.
+Formally, if $A=(\<Lsts>,\delta,l_0,\<AdtM>)$
+then $A'=(\<Lsts>\uplus\{l_p\},\delta_2,l_0,\<AdtM>)$ where
+\begin{itemize}
+	\item every send transition to some process $j$ is cloned to a send transition to process $p$, i.e.,
 \begin{align*}
-T'=T\cup\set{(l,\epsilon,l'): \exists s\in S.\ (l,s,l')\in T}.
+\delta_1=\delta\cup\set{(l,\send{i}{i,p,v},l'): \exists\, \send{i}{i,j,v}\in S.\ (l,\send{i}{i,j,v},l')\in \delta}.
 \end{align*}
+	\item the process $p$ can receive any message
+\begin{align*}
+\delta_2=\delta_1\cup\set{(l_p,\rec{p}{i,p,v},l_p): \exists\, \send{i}{i,p,v}\in S.\ (l,\send{i}{i,p,v},l')\in \delta_1}.
+\end{align*}
+	
+\end{itemize}
+For a given synchronous trace $t$, let $\mathrm{redirect}\text{-}\mathrm{orphans}(t)$ be the trace obtained from $t$ by 
+replacing every unmatched send action $\send{i}{i,j,v}$ with $\send{i}{i,p,v}\rec{p}{i,p,v}$.
+
+TODO REDIRECT ORPHANS PRESERVES ACYCLICITY PRECISELY
+
+
+\begin{lemma}
+Let $(\vec{l},\vec{b})$ be a configuration reachable in $A$ with a synchronous trace $t'$ (under the asynchronous semantics). 
+Then, $(\vec{l},\vec{\emptyset})$ is reachable in $A'$ with trace $\mathrm{redirect}\text{-}\mathrm{orphans}(t')$. 
+\end{lemma}
 
 To simulate the last receive in $t$, we transform $A'$ such that any message sent to some process $j_1$ can be redirected to some 
 distinguished process $i_0$ who relays it to $j_1$ non-deterministically at a later time. We constrain the system such that it can
 redirect only one message.
+
+
 
 TODO NEEDS A MONITOR FOR IMPOSING THIS CONSTRAINT. BUT MAYBE WE DON'T NEED IT IF WE ARE JUST INTERESTED IN DEFINING A SYSTEM THAT ADMITS BORDERLINE VIOLATIONS (AND ANYTHING IN ADDITION)
 

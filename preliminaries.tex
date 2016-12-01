@@ -21,19 +21,59 @@ machine that evolves by executing send or receive actions, or local actions (spe
  and it is equipped with an instance of some fixed collection data type, e.g., FIFO queue, 
 that acts as a message buffer (storing incoming messages before being processed). 
 
-We fix a set $\<Lsts>$ of local process states and a collection data type $\<AdtM>$ with interface $\mathrm{add}(m)$ for adding an element $m$
+Formally, a \emph{message passing system} is a tuple $A=(\<Lsts>,\delta,l_0,\<AdtM>)$ where $\<Lsts>$ is a set of local process states,
+$\delta\subseteq \<Lsts>\times (S\cup R\cup\{\epsilon\})\times \<Lsts>$ is a transition relation describing the 
+evolution of all processes, $l_0$ is the initial state of every process, and $\<AdtM>$ is 
+a collection data type  with interface $\mathrm{add}(m)$ for adding an element $m$
 to the collection and $\mathrm{rem}()$ that removes and returns an element from the collection (this method returns only when the collection
 is non-empty). 
-
-A message passing system $A=(T,l_0,\<AdtM>)$ is a transition relation $T\subseteq \<Lsts>\times (S\cup R\cup\{\epsilon\})\times \<Lsts>$ describing the 
-evolution of all processes globally with an initial local state $l_0$ and a collection data type $\<AdtM>$. To simplify the exposition, we assume
-that each receive action is enabled in every local state, i.e., for every $l\in \<Lsts>$ and every $r\in R$, there exists $l'\in \<Lsts>$ such that $(l,r,l')\in T$.
+To simplify the exposition, we assume
+that each receive action is enabled in every local state, i.e., for every $l\in \<Lsts>$ and every $r\in R$, there exists $l'\in \<Lsts>$ such that $(l,r,l')\in \delta$.
 TODO GIVE MORE EXPLANATIONS
 
 A configuration $c=\tup{\vec{l},\vec{b}}$ is a vector of local states $\vec{l}$ together with a vector of message buffers $\vec{b}$ that are
 instances of the collection data type $\<AdtM>$. For a vector $\vec{x}$, let $\vec{x}_i$ denote the $i$th element of $\vec{x}$.
 The state of a process is defined by a local state $\vec{l}_i$ and a message buffer $\vec{b_i}$, for some $i$.
 %The set of configurations is denoted by $C$.
+
+\begin{figure} [t]
+\footnotesize{
+  \centering
+  \begin{mathpar}
+    \inferrule[send]{
+      m= \tup{i,j,p} \\ 
+      \delta(\vec{l}_i,\send{i}{m}) \neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xrightarrow{\send{i}{m}}
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
+    }%\hspace{5mm}
+    
+    \inferrule[receive]{
+      m = \vec{b}_j.\ \mathrm{rem}() \\
+      \delta(\vec{l}_j,\rec{j}{m}) \neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xrightarrow{\rec{j}{m}}
+      \vec{l}[\vec{l_j}\gets \delta(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
+    }%\hspace{5mm}
+    
+    \inferrule[local]{ 
+      \delta(\vec{l}_i,\epsilon) \neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xrightarrow{\epsilon}
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\epsilon)],\vec{b}
+    }%\hspace{5mm}
+  \end{mathpar}
+  }
+% \vspace{-5mm}
+  \caption{The asynchronous semantics of a message passing system $A$. Above, $\vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})]$ denotes an update of $\vec{l}$ where the $i$th element is replaced by one of the local states in $\delta(\vec{l}_i,\send{i}{m})$. Also, $\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the $j$th element.
+  }
+  \label{fig:asynch-sem}
+%\vspace{-6mm}
+\end{figure}
+
 
 The transition relation $\rightarrow$ in Figure~\ref{fig:asynch-sem} is determined by a message passing system $A$, and maps
 a configuration $c_1$ to another configuration $c_2$ and action $a\in S\cup R$.
@@ -47,49 +87,13 @@ $  {c}_m \xrightarrow{a_{m+1}} {c}_{m+1}$
 %\end{align*}
 %%\vspace{-1.5mm}
 %\noindent
-for $0 \le m < n$. We say that ${c}_n$ is reachable in $A$ under the asynchronous semantics, and we call
+for $0 \le m < n$. We call
 the sequence $a_1 \ldots a_n$ the \emph{trace} of ${c}_0 {c}_1 \ldots
-{c}_n$. The \emph{reachable local state vectors} of $A$, denoted $\asynch{States}(A)$, is the
+{c}_n$ and we say that ${c}_n$ is reachable in $A$ under the asynchronous semantics, with trace $a_1\ldots a_n$. The \emph{reachable local state vectors} of $A$, denoted $\asynch{States}(A)$, is the
 set of local state vectors in reachable configurations.
 %
 The set of traces of $A$ under the asynchronous semantics is denoted by $\asynchTr{A}$.
 
-\begin{figure} [t]
-\footnotesize{
-  \centering
-  \begin{mathpar}
-    \inferrule[send]{
-      m= \tup{i,j,p} \\ 
-      T(\vec{l}_i,\send{i}{m}) \neq \emptyset
-    }{
-      \vec{l},\vec{b}
-      \xrightarrow{\send{i}{m}}
-      \vec{l}[\vec{l_i}\gets T(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
-    }%\hspace{5mm}
-    
-    \inferrule[receive]{
-      m = \vec{b}_j.\ \mathrm{rem}() \\
-      T(\vec{l}_j,\rec{j}{m}) \neq \emptyset
-    }{
-      \vec{l},\vec{b}
-      \xrightarrow{\rec{j}{m}}
-      \vec{l}[\vec{l_j}\gets T(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
-    }%\hspace{5mm}
-    
-    \inferrule[local]{ 
-      T(\vec{l}_i,\epsilon) \neq \emptyset
-    }{
-      \vec{l},\vec{b}
-      \xrightarrow{\epsilon}
-      \vec{l}[\vec{l_i}\gets T(\vec{l}_i,\epsilon)],\vec{b}
-    }%\hspace{5mm}
-  \end{mathpar}
-  }
-% \vspace{-5mm}
-  \caption{The asynchronous semantics of a message passing system $A$. Above, $\vec{l}[\vec{l_i}\gets T(\vec{l}_i,\send{i}{m})]$ denotes an update of $\vec{l}$ where the $i$th element is replaced by one of the local states in $T(\vec{l}_i,\send{i}{m})$. Also, $\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the $j$th element.
-  }
-  \label{fig:asynch-sem}
-%\vspace{-6mm}
-\end{figure}
+
 
 
