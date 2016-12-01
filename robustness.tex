@@ -75,6 +75,15 @@ A message passing system $A$ is synchronizable when every trace $t\in \asynchTr{
       \xRightarrow{\send{i}{m}}
       \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
     }%\hspace{5mm}
+
+    \inferrule[orphan send]{
+      m= \tup{i,j,p} \\
+      \delta(\vec{l}_i,\send{i}{m})\neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xRightarrow{\send{i}{m}}
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})],\vec{b}
+    }%\hspace{5mm}
     
         \inferrule[local]{ 
       \delta(\vec{l}_i,\epsilon) \neq \emptyset
@@ -106,6 +115,12 @@ The transition relation $\Rightarrow$ in Figure~\ref{fig:asynch-sem} defines a n
 where a receive for process $i$ is enabled only if the buffers of all the other processes are empty. Executions and reachable local
 state vectors under the new semantics, denoted by $\synch{States}(A)$, are defined as in Section~\ref{sec:prelims}.
 The set of traces of $A$ under the new semantics is denoted by $\synch{Tr}(A)$.
+
+TODO DESCRIBE TRANSITIONS AND TALK ABOUT ORPHAN SEND
+
+\begin{lemma}\label{lem:sync_traces}
+The synchronous semantics admits every synchronous trace.
+\end{lemma}
 
 \begin{lemma}
 For a given synchronizable message passing system $A$, $\asynch{States}(A)=\synch{States}(A)$.
