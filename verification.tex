@@ -80,6 +80,9 @@ A synchronous but lossy trace $t$ can be rewritten to a synchronous trace by red
 to a fixed additional process $\pi_0$. Let $\mathrm{remove\text{-}lossiness}(t)$ be the trace obtained from $t$
 by replacing every unmatched $\send{i}{p,q,v}$ with $\send{i}{p,\pi_0,v}\cdot \rec{i}{\pi_0,v}$.
 
+We define the system $\mathrm{lossy}(A)$ whose 
+
+ admits $\mathrm{remove\text{-}lossiness}(t')$ 
 
 
 By Lemma~\ref{lem:sync_traces}, the synchronous semantics of $A$ admits all synchronous traces. 
