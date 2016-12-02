@@ -12,7 +12,7 @@ thus doesn't use unbounded message buffers. This result is based on the followin
 are not synchronizable and every strict prefix is synchronizable.
 	\item starting from the original system $A$, define a new system $A_0$ executing under
 the synchronous semantics, which simulates minimal synchronizability violations of
-$S$, if any ($S_0$ goes to an error state whenever such a violation exists).
+$A$, if any, and $A_0$ goes to an error state whenever such a violation exists.
 \end{itemize}
 
 \subsection{Synchronizability Violation Patterns}
@@ -21,13 +21,13 @@ $S$, if any ($S_0$ goes to an error state whenever such a violation exists).
 \begin{figure}[t]
 Causal delivery violation:
 \begin{align*}
-\send{i_1}{i_1,j,v_1}\leadsto \send{i_2}{i_2,j,v_2}\mbox{ and }
-\rec{j}{i_2,j,v_2} \leadsto \rec{j}{i_1,j,v_1} 
+\send{1}{p_1,q,\_}\leadsto \send{2}{p_2,q,\_}\mbox{ and }
+ \rec{2}{q,\_}  \leadsto \rec{1}{q,\_}
 \end{align*}
 Exchange pattern:
 \begin{align*}
-\send{i_1}{i_1,j_1,v_1}\leadsto \rec{j_2}{i_2,j_2,v_2}\mbox{ and }
-\send{i_2}{i_2,j_2,v_2}\leadsto \rec{j_1}{i_1,j_1,v_1}
+\send{1}{p_1,q_1,\_}\leadsto \rec{2}{q_2,\_}\mbox{ and }
+\send{2}{p_2,q_2,\_}\leadsto \rec{1}{q_1,\_}
 \end{align*}
 \caption{Synchronizability violation patterns.}
 \label{fig:patterns}
@@ -61,10 +61,53 @@ Let $t$ be a borderline synchronizability violation.
 By Theorem~\ref{th:patt}, $t$ contains either a causal delivery violation or an exchange pattern.
 Therefore, we have 
 \begin{align*}
-t=t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2\cdot \rec{j_1}{i_1,j_1,v_1}
+t=t_1\cdot \send{1}{p_1,q_1,\_} \cdot t_2\cdot \rec{1}{q_1,\_}
 \end{align*} 
-where the prefix $t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2$ is a synchronous trace.
-The trace $t$ can be transformed into a synchronous trace $t'$ by redirecting the message $\tup{i_1,j_1,v_1}$ to
+where the prefix $t' = t_1\cdot \send{1}{p_1,q_1,\_} \cdot t_2$ is a synchronizable trace.
+We first define a system $\mathrm{lossy}(A)$ whose synchronous semantics simulates every synchronizable 
+trace of $A$, and then the system $B$ which simulates the complete trace $t$. The meaning of 
+the term ``simulation'' is defined later on.
+
+A trace $t$ is called \emph{synchronous but lossy} when every receive $r\in R_{id}$ is immediately 
+preceded by the matching send. Formally, for every $0 < k\leq |t| -1$, if $t_k\in R_{id}$ then 
+$t_{k-1}\in S_{id}$ and $t_{k-1}\match t_{k}$.
+
+\begin{lemma}
+A trace $t$ is synchronizable whenever there exists a synchronous but lossy permutation of $t$.
+\end{lemma}
+
+A synchronous but lossy trace $t$ can be rewritten to a synchronous trace by redirecting all unreceived messages 
+to a fixed additional process $\pi_0$. Let $\mathrm{remove\text{-}lossiness}(t)$ be the trace obtained from $t$
+by replacing every unmatched $\send{i}{p,q,v}$ with $\send{i}{p,\pi_0,v}\cdot \rec{i}{\pi_0,v}$.
+
+
+
+By Lemma~\ref{lem:sync_traces}, the synchronous semantics of $A$ admits all synchronous traces. 
+However, it may not admit any conflict-preserving permutation 
+
+
+synchronizable traces are not admitted by the synchronous semantics because some of the sent messages
+are never received, i.e., such traces contain send actions without matching receives. 
+However, they are admitted by the synchronous semantics of another system $\mathrm{lossy}(A)$ where
+messages can be non-deterministically redirected to a fixed additional process $\pi_0$.
+More precisely, given a synchronizable trace
+
+$\synch{Tr}(\mathrm{lossy}(A))$ contains a 
+
+
+Thus, if $A=(\<Lsts>,\delta,l_0,\<AdtM>)$
+then $\mathrm{lossy}(A)=(\<Lsts>,\delta',l_0,\<AdtM>)$ where
+\begin{align*}
+\delta'=\delta\cup\set{(l,\senda{p,\pi_0,v},l'),(l_0,\reca{\pi_0,v},l_0) : \exists\, \senda{p,q,v}\in S.\ (l,\senda{p,q,v},l')\in \delta}.
+\end{align*}
+In words, every send transition to some process $q$ is cloned to a send transition to process $\pi_0$ 
+together with a corresponding receive transition of process $\pi_0$.
+
+\begin{lemma}
+fsdfsf
+\end{lemma}
+
+To deal with the last receive action, the trace $t$ can be transformed into a synchronous trace $t'$ by redirecting the message $\tup{i_1,j_1,v_1}$ to
 a distinguished process $p$ that relays it to $j_1$ later, i.e.,
 \begin{align*}
 t'=t_1\cdot \send{i_1}{i_1,p,v_1}\cdot \rec{p}{i_1,p,v_1} \cdot t_2\cdot \send{p}{p,j_1,v_1}\cdot \rec{j_1}{p,j_1,v_1}

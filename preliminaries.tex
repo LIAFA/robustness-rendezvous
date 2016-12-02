@@ -1,20 +1,24 @@
 %!TEX root = main.tex
 \section{Message passing systems}\label{sec:prelims}
 
-TODO ASSUME PAYLOADS INCLUDE A MESSAGE IDENTIFIER
+TODO A BUFFER FOR EVERY PAIR OF PROCESSES DOESN'T CHANGE THE RESULTS
 
-We fix arbitrary sets $\<Ids>$ and $\<Plds>$ of process ids and message payloads. 
-A \emph{message} is a triple $m = \tup{i,j,p}$ where $i \in \<Ids>$ denotes the source, $j \in \<Ids>$ the destination, and $p \in \<Plds>$ the payload. 
-The set of messages is denoted by $\<Msgs>$. 
-The source, destination, and payload of a message $m$ are denoted by $\<src>(m)$, $\<dst>(m)$, $\<pay>(m)$, respectively.
+We fix arbitrary sets $\<Pids>$ and $\<Val>$ of process ids and message payloads. 
+%A \emph{message} is a triple $m = \tup{i,j,p}$ where $i \in \<Ids>$ denotes the source, $j \in \<Ids>$ the destination, and $p \in \<Plds>$ the payload. 
+%The set of messages is denoted by $\<Msgs>$. 
+%The source, destination, and payload of a message $m$ are denoted by $\<src>(m)$, $\<dst>(m)$, $\<pay>(m)$, respectively.
+%We fix an arbitrary set $\<Mids>$ of message identifiers, and the sets
 For given sets $\<Ids>$ and $\<Plds>$, we fix the sets 
 \begin{align*}
-S = \set{\send{i}{m}: i\in\<Ids>, m\in \<Msgs>, i=\<src>(m)},\mbox{ and }R = \set{\rec{j}{m}: j\in\<Ids>, m\in \<Msgs>, j=\<dst>(m)}
+S = \set{\senda{p,q,v}: p,q\in\<Pids>, v\in \<Val>},\mbox{ and }R = \set{\reca{q,v}: q\in\<Pids>, v\in \<Val>}
 \end{align*}
-of \emph{send actions} and \emph{receive actions}; 
-each send action $\send{i}{m}$ combines a process id $i\in \<Ids>$ with a message $m\in \<Msgs>$ whose source is the same process $i$.
-We denote the message of a send/receive action $a$ by $\<msg>(a)$, and the process id indexing the action by $\<proc>(a)$.
-Send and receive actions $s\in S$ and $r\in R$ are \emph{matching}, written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
+of \emph{send actions} and \emph{receive actions}.
+Each send action $\senda{p,q,v}$ combines two process ids $p, q\in \<Ids>$ denoting 
+the sender and the receiver of the message, respectively, and a message payload $v\in \<Val>$. Receive actions
+specify the process $q\in \<Pids>$ receiving the message, and the message payload $v\in \<Val>$.
+We denote the process executing a send/receive action $a\in S\cup R$ by $\<proc>(a)$, i.e.,
+$\<proc>(a)=p$ for every $a=\senda{p,q,v}$, and $\<proc>(a)=q$ for every $a=\reca{q,v}$.
+%Send and receive actions $s\in S$ and $r\in R$ are \emph{matching}, written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
 
 A message passing system consists of a finite set of processes that communicate via messages. Each process is described as a state
 machine that evolves by executing send or receive actions, or local actions (specified as $\epsilon$ transitions)
@@ -27,13 +31,14 @@ evolution of all processes, $l_0$ is the initial state of every process, and $\<
 a collection data type  with interface $\mathrm{add}(m)$ for adding an element $m$
 to the collection and $\mathrm{rem}()$ that removes and returns an element from the collection (this method returns only when the collection
 is non-empty). 
-To simplify the exposition, we assume
-that each receive action is enabled in every local state, i.e., for every $l\in \<Lsts>$ and every $r\in R$, there exists $l'\in \<Lsts>$ such that $(l,r,l')\in \delta$.
-TODO GIVE MORE EXPLANATIONS
+%To simplify the exposition, we assume
+%that each receive action is enabled in every local state, i.e., for every $l\in \<Lsts>$ and every $r\in R$, there exists $l'\in \<Lsts>$ such that $(l,r,l')\in \delta$.
+%TODO GIVE MORE EXPLANATIONS
 
 A configuration $c=\tup{\vec{l},\vec{b}}$ is a vector of local states $\vec{l}$ together with a vector of message buffers $\vec{b}$ that are
-instances of the collection data type $\<AdtM>$. For a vector $\vec{x}$, let $\vec{x}_i$ denote the $i$th element of $\vec{x}$.
-The state of a process is defined by a local state $\vec{l}_i$ and a message buffer $\vec{b_i}$, for some $i$.
+instances of the collection data type $\<AdtM>$. These two vectors are indexed by elements of $\<Pids>$.
+For a vector $\vec{x}$, let $\vec{x}_p$ denote the element of $\vec{x}$ of index $p$.
+The state of the process $p$ is defined by the local state $\vec{l}_p$ and the message buffer $\vec{b}_p$.
 %The set of configurations is denoted by $C$.
 
 \begin{figure} [t]
@@ -41,42 +46,53 @@ The state of a process is defined by a local state $\vec{l}_i$ and a message buf
   \centering
   \begin{mathpar}
     \inferrule[send]{
-      m= \tup{i,j,p} \\ 
-      \delta(\vec{l}_i,\send{i}{m}) \neq \emptyset
+      m= (i,v) \\ 
+      i\in \<Mids>\mbox{ fresh} \\
+      l\in \delta(\vec{l}_p,\senda{p,q,v}) \neq \emptyset
     }{
       \vec{l},\vec{b}
-      \xrightarrow{\send{i}{m}}
-      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
+      \xrightarrow{\send{i}{p,q,v}}
+      \vec{l}[\vec{l}_p\gets l],\vec{b}[\vec{b}_q.\ \mathrm{add}(m)]
     }%\hspace{5mm}
     
     \inferrule[receive]{
-      m = \vec{b}_j.\ \mathrm{rem}() \\
-      \delta(\vec{l}_j,\rec{j}{m}) \neq \emptyset
+      (i,v) = \vec{b}_q.\ \mathrm{rem}() \\
+      l\in \delta(\vec{l}_q,\reca{q,v}) \neq \emptyset
     }{
       \vec{l},\vec{b}
-      \xrightarrow{\rec{j}{m}}
-      \vec{l}[\vec{l_j}\gets \delta(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
+      \xrightarrow{\rec{i}{q,v}}
+      \vec{l}[\vec{l}_q\gets l],\vec{b}[\vec{b}_q.\ \mathrm{rem}()]
     }%\hspace{5mm}
     
     \inferrule[local]{ 
-      \delta(\vec{l}_i,\epsilon) \neq \emptyset
+      l\in \delta(\vec{l}_p,\epsilon) \neq \emptyset
     }{
       \vec{l},\vec{b}
       \xrightarrow{\epsilon}
-      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\epsilon)],\vec{b}
+      \vec{l}[\vec{l}_p\gets l],\vec{b}
     }%\hspace{5mm}
   \end{mathpar}
   }
 % \vspace{-5mm}
-  \caption{The asynchronous semantics of a message passing system $A$. Above, $\vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})]$ denotes an update of $\vec{l}$ where the $i$th element is replaced by one of the local states in $\delta(\vec{l}_i,\send{i}{m})$. Also, $\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the $j$th element.
+  \caption{The asynchronous semantics of a message passing system $A$. Above, $\vec{l}[\vec{l}_p\gets l]$ denotes an update of $\vec{l}$ where the element of index $p$ is replaced by $l$. Also, $\vec{b}[\vec{b}_q.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the element of index $q$.
   }
   \label{fig:asynch-sem}
 %\vspace{-6mm}
 \end{figure}
 
+We fix an arbitrary set $\<Mids>$ of message identifiers, and the sets 
+\begin{align*}
+S_{id} = \set{s_i: s\in S, i\in \<Mids>} \mbox{ and } R_{id} = \set{r_i: r\in R, i\in \<Mids>}
+\end{align*}
+of indexed actions; an indexed action combines a send/receive action with a message identifier $i\in \<Mids>$.
+Message identifiers are used to pair send and receive actions.
+We denote the message id of an indexed send/receive action $a$ by $\<msg>(a)$.
+Indexed send and receive actions $s\in S_{id}$ and $r\in R_{id}$ are \emph{matching}, 
+written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
+For notational convenience, we often associate $\<Mids>$ with $\<Nats>$, e.g., writing $\send{1}{p,q,v}$ and $\rec{2}{q',v'}$ in place of $\send{i_1}{p,q,v}$ and $\rec{i_2}{q',v'}$.
 
 The transition relation $\rightarrow$ in Figure~\ref{fig:asynch-sem} is determined by a message passing system $A$, and maps
-a configuration $c_1$ to another configuration $c_2$ and action $a\in S\cup R$.
+a configuration $c_1$ to another configuration $c_2$ and indexed action $a\in S_{id}\cup R_{id}$ or $\epsilon$.
 \textsc{send} transitions ... \textsc{receive} transitions ... \textsc{local} transitions TODO FILL IN
 
 An \emph{execution} of a system $A$ under the asynchronous semantics to configuration ${c}_n$
