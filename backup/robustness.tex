@@ -1,0 +1,155 @@
+%!TEX root = main.tex
+\section{Synchronizability}
+
+We define a notion of robustness, called \emph{synchronizability}, which ensures that even if the system uses buffers to store messages it provides the illusion that messages are received instantaneously, as in a synchronous (rendez-vous) semantics. This is analogous to the atomicity criterion for concurrent shared-memory systems, where even though transactions can interleave, every execution is “equivalent” to an execution where transactions happen atomically without interference.
+
+%\subsection{Defining Robustness}
+
+We define a conflict relation $\prec$ on actions in $S\cup R$ that relates every two actions of the same process and every send with the corresponding receive. Formally,
+\begin{align*}
+a \prec a'\mbox{ iff } \<proc>(a) = \<proc>(a')\mbox{ or } a\match r
+\end{align*}
+
+A permutation $t'$ of a trace $t$ is \emph{conflict-preserving} when every pair $a$ and $a'$ of actions of $t$ appear in the same order in $t'$ whenever $a \prec a'$. Intuitively, a message passing system can not distinguish between two traces, one being the conflict-preserving permutation of the other.
+
+\begin{example}\label{ex:perm}
+The following traces 
+\begin{align*}
+\send{i_1}{i_1,j_1,\_}\ 
+\send{i_2}{i_2,j_1,\_}\ 
+\rec{j_1}{i_1,j_1,\_}\ 
+\rec{j_1}{i_2,j_1,\_} \\
+\send{i_1}{i_1,j_1,\_}\ 
+\send{i_2}{i_2,j_2,\_}\ 
+\rec{j_2}{i_2,j_2,\_}\ 
+\rec{j_1}{i_1,j_1,\_} 
+\end{align*}
+have the following conflict-preserving permutations, respectively:
+\begin{align*}
+\send{i_1}{i_1,j_1,\_}\ 
+\rec{j_1}{i_1,j_1,\_}\ 
+\send{i_2}{i_2,j_1,\_}\ 
+\rec{j_1}{i_2,j_1,\_} \\
+\send{i_1}{i_1,j_1,\_}\ 
+\rec{j_1}{i_1,j_1,\_} 
+\send{i_2}{i_2,j_2,\_}\ 
+\rec{j_2}{i_2,j_2,\_}\ 
+\end{align*}
+\end{example}
+
+\begin{lemma}
+For a given trace $t$, $\asynchTr{A}$ contains every conflict-preserving permutation $t'$ of $t$ when $t\in \asynchTr{A}$.
+\end{lemma}
+
+A trace $t$ is called \emph{synchronous} when every receive $r\in R$ is immediately preceded by the matching send. Formally, for every $1\leq k\leq |t|$, if $t_k\in R$ then $t_{k-1}\in S$ and $t_{k-1}\match t_k$.
+
+\begin{definition}
+A trace $t$ is called \emph{synchronizable} when there exists a synchronous conflict-preserving permutation of $t$. 
+\end{definition}
+
+\begin{example}
+The traces in Example~\ref{ex:perm} are synchronizable while the following are not:
+\begin{align*}
+\send{i_1}{i_1,j_1,v_1}\ 
+\send{i_1}{i_1,j_1,v_2}\ 
+\rec{j_1}{i_1,j_1,v_2}\ 
+\rec{j_1}{i_2,j_1,v_1} \\
+\send{i_1}{i_1,j_1,\_}\ 
+\send{j_1}{j_1,i_1,\_}\ 
+\rec{i_1}{j_1,i_1,\_}\ 
+\rec{j_1}{i_1,j_1,\_} 
+\end{align*}
+\end{example}
+
+A message passing system $A$ is synchronizable when every trace $t\in \asynchTr{A}$ is  synchronizable.
+
+\begin{figure} [t]
+\footnotesize{
+  \centering
+  \begin{mathpar}
+    \inferrule[send]{
+      m= \tup{i,j,p} \\
+      \delta(\vec{l}_i,\send{i}{m})\neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xRightarrow{\send{i}{m}}
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})],\vec{b}[\vec{b}_j.\ \mathrm{add}(m)]
+    }%\hspace{5mm}
+
+    \inferrule[orphan send]{
+      m= \tup{i,j,p} \\
+      \delta(\vec{l}_i,\send{i}{m})\neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xRightarrow{\send{i}{m}}
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\send{i}{m})],\vec{b}
+    }%\hspace{5mm}
+    
+        \inferrule[local]{ 
+      \delta(\vec{l}_i,\epsilon) \neq \emptyset
+    }{
+      \vec{l},\vec{b}
+      \xrightarrow{\epsilon}
+      \vec{l}[\vec{l_i}\gets \delta(\vec{l}_i,\epsilon)],\vec{b}
+    }%\hspace{5mm}
+    
+    \inferrule[receive]{
+      m = \vec{b}_j.\ \mathrm{rem}() \\
+      \delta(\vec{l}_j,\rec{j}{m}) \neq \emptyset \\
+      \vec{b_i}. \mathrm{rem}() \mbox{ is not enabled, for all $i\neq j$} 
+    }{
+      \vec{l},\vec{b}
+      \xRightarrow{\rec{j}{m}}
+      \vec{l}[\vec{l_j}\gets \delta(\vec{l}_j,\rec{j}{m})],\vec{b}[\vec{b}_j.\ \mathrm{rem}()]
+    }%\hspace{5mm}
+  \end{mathpar}
+  }
+% \vspace{-5mm}
+  \caption{The synchronous semantics of a message passing system $A$. 
+  }
+  \label{fig:synch-sem}
+%\vspace{-6mm}
+\end{figure}
+
+The transition relation $\Rightarrow$ in Figure~\ref{fig:asynch-sem} defines a new semantics for  a message passing system $A$
+where a receive for process $i$ is enabled only if the buffers of all the other processes are empty. Executions and reachable local
+state vectors under the new semantics, denoted by $\synch{States}(A)$, are defined as in Section~\ref{sec:prelims}.
+The set of traces of $A$ under the new semantics is denoted by $\synch{Tr}(A)$.
+
+TODO DESCRIBE TRANSITIONS AND TALK ABOUT ORPHAN SEND
+
+\begin{lemma}\label{lem:sync_traces}
+The synchronous semantics admits every synchronous trace.
+\end{lemma}
+
+\begin{lemma}
+For a given synchronizable message passing system $A$, $\asynch{States}(A)=\synch{States}(A)$.
+\end{lemma}
+\begin{proof}
+TODO HERE WE USE THE ASSUMPTION ABOUT RECEIVE ENABLEDNESS
+\end{proof}
+
+Checking that a given trace is synchronizable can be done by tracking a ``conflict-graph'' like in serializability 
+where transactions are pairs of sends and corresponding receives. 
+A trace is synchronizable if{f} the conflict-graph is acyclic. Formally,
+
+\begin{definition}[Action-Graph]\label{def:pr_graphs}
+    The \emph{action-graph} of a trace $t$ is the directed graph 
+    $G_t = \tup{V,E}$ where there is a node in $V$ for each action in $t$, and $E$ 
+    contains an edge from $u$ to $v$ iff $\mathrm{act}(u) \prec \mathrm{act}(v)$ and $\mathrm{act}(u)$ occurs before $\mathrm{act}(v)$ in $t$ (where $\mathrm{act}(v)$ is the action of trace $t$ corresponding to the graph node $v$).
+\end{definition}
+Intuitively, one can think of the action-graph of a trace $t$ as a structure that represents the order between all conflicting actions in $t$.
+For two actions $a$ and $a'$ in a trace $t$, $a\leadsto a'$ denotes the fact that $G_t$ contains a path from the node representing $a$ to that representing $a'$.
+
+\begin{definition}[Conflict-Graph]\label{def:conf_graph}
+    The \emph{conflict-graph} of a trace $t$ is the directed graph $CG_t=\tup{V',E'}$ where $V'$ includes one node for each pair of matching send and receive actions, and each unmatched send action, in $t$, and we have $(v,v') \in E'$ iff there exist actions $a \in \mathrm{act}(v)$ and $a' \in \mathrm{act}(v')$ such that $(a,a') \in E$ where $G_t = (V,E)$ is the action-graph of $t$ (and $\mathrm{act}(v)$ is the set of actions of trace $t$ corresponding to the graph node $v$).
+\end{definition}
+
+
+
+\begin{theorem}\label{thm:cg} (from \citep{journals/jacm/Papadimitriou79b})
+A trace $t$ is synchronizable if{f} $CG_t$ is acyclic.
+\end{theorem}
+
+
+

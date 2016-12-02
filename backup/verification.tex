@@ -1,0 +1,157 @@
+%!TEX root = main.tex
+\section{Checking Synchronizability}
+
+
+Verifying a (bounded state) message passing system using a monitor that maintains the conflict-graph of a trace 
+is undecidable since it requires dealing with known undecidable features, e.g., FIFO queues.
+We show in this section that checking synchronizability can be reduced 
+to a reachability problem in a system that executes under the synchronous semantics, and 
+thus doesn't use unbounded message buffers. This result is based on the following ideas
+\begin{itemize}
+	\item consider a class of boarderline violations to synchronizability, i.e., traces which
+are not synchronizable and every strict prefix is synchronizable.
+	\item starting from the original system $A$, define a new system $A_0$ executing under
+the synchronous semantics, which simulates minimal synchronizability violations of
+$S$, if any ($S_0$ goes to an error state whenever such a violation exists).
+\end{itemize}
+
+\subsection{Synchronizability Violation Patterns}
+
+
+\begin{figure}[t]
+Causal delivery violation:
+\begin{align*}
+\send{i_1}{i_1,j,v_1}\leadsto \send{i_2}{i_2,j,v_2}\mbox{ and }
+\rec{j}{i_2,j,v_2} \leadsto \rec{j}{i_1,j,v_1} 
+\end{align*}
+Exchange pattern:
+\begin{align*}
+\send{i_1}{i_1,j_1,v_1}\leadsto \rec{j_2}{i_2,j_2,v_2}\mbox{ and }
+\send{i_2}{i_2,j_2,v_2}\leadsto \rec{j_1}{i_1,j_1,v_1}
+\end{align*}
+\caption{Synchronizability violation patterns.}
+\label{fig:patterns}
+\end{figure}
+
+We show that any trace violating synchronizability contains one of the two violation patterns in Figure~\ref{fig:patterns}.
+Intuitively, the first pattern describes a violation to \emph{causal delivery} where two causally related messages sent to the same process
+are received in an order different from that in which they were sent. Here, the causal order between messages is defined
+by the paths in the action graph. The second violation pattern describes a situation in which two messages are sent concurrently 
+and each message is received after the other one is sent. This situation arises for instance in protocols solving consensus which alternate
+between phases in which all processes send messages to their peers and phases in which they receive messages from their peers. 
+In these cases, the sends and receives in the exchange pattern are causally related since they are executed by the same process.
+
+We say that a trace contains a causal delivery violation or an exchange pattern if it contains the actions and the action-graph paths
+specified in Figure~\ref{fig:patterns}.
+
+\begin{theorem}\label{th:patt}
+A trace is not synchronizable if{f} it contains a causal delivery violation or an exchange pattern.
+\end{theorem}
+\begin{proof}
+TODO
+\end{proof}
+
+\subsection{Simulating Borderline Violations}
+
+A violation to synchronizability $t$ is called \emph{borderline} when every strict prefix of $t$ is synchronizable.
+We first show that any borderline synchronizability violation of a message passing system $A$ can be simulated by 
+the synchronous semantics of another message passing system $B$ computable in polynomial time.
+
+Let $t$ be a borderline synchronizability violation.
+By Theorem~\ref{th:patt}, $t$ contains either a causal delivery violation or an exchange pattern.
+Therefore, we have 
+\begin{align*}
+t=t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2\cdot \rec{j_1}{i_1,j_1,v_1}
+\end{align*} 
+where the prefix $t_1\cdot \send{i_1}{i_1,j_1,v_1} \cdot t_2$ is a synchronous trace.
+The trace $t$ can be transformed into a synchronous trace $t'$ by redirecting the message $\tup{i_1,j_1,v_1}$ to
+a distinguished process $p$ that relays it to $j_1$ later, i.e.,
+\begin{align*}
+t'=t_1\cdot \send{i_1}{i_1,p,v_1}\cdot \rec{p}{i_1,p,v_1} \cdot t_2\cdot \send{p}{p,j_1,v_1}\cdot \rec{j_1}{p,j_1,v_1}
+\end{align*} 
+
+\begin{lemma}
+The trace $t'$ is a synchronous trace when $t$ is a borderline violation.
+\end{lemma}
+
+In the following, we define a message passing system $B$ whose synchronous semantics admits $t'$ whenever 
+$A$ admits $t$ (under the asynchronous semantics).
+
+By Lemma~\ref{lem:sync_traces}, the prefix $t'$ is admitted by the 
+synchronous semantics of $A$, i.e., $t'\in \synch{Tr}(A)$.
+
+%may contain send actions without matching receives and it is not admitted as it is by the 
+%synchronous semantics of $A$, i.e., $t'\not\in \synch{Tr}(A)$.
+%We show however that the configurations reached in $A$ by an execution with trace $t'$ can be reached
+%in another message passing system $A'$ even under the synchronous semantics. 
+%
+%Thus, $A'$ is obtained from $A$ by non-deterministically redirecting messages to some distinguished process $p$
+%that accepts any message.
+%Formally, if $A=(\<Lsts>,\delta,l_0,\<AdtM>)$
+%then $A'=(\<Lsts>\uplus\{l_p\},\delta_2,l_0,\<AdtM>)$ where
+%\begin{itemize}
+%	\item every send transition to some process $j$ is cloned to a send transition to process $p$, i.e.,
+%\begin{align*}
+%\delta_1=\delta\cup\set{(l,\send{i}{i,p,v},l'): \exists\, \send{i}{i,j,v}\in S.\ (l,\send{i}{i,j,v},l')\in \delta}.
+%\end{align*}
+%	\item the process $p$ can receive any message
+%\begin{align*}
+%\delta_2=\delta_1\cup\set{(l_p,\rec{p}{i,p,v},l_p): \exists\, \send{i}{i,p,v}\in S.\ (l,\send{i}{i,p,v},l')\in \delta_1}.
+%\end{align*}
+%	
+%\end{itemize}
+%For a given synchronous trace $t$, let $\mathrm{redirect}\text{-}\mathrm{orphans}(t)$ be the trace obtained from $t$ by 
+%replacing every unmatched send action $\send{i}{i,j,v}$ with $\send{i}{i,p,v}\rec{p}{i,p,v}$.
+%
+%TODO REDIRECT ORPHANS PRESERVES ACYCLICITY PRECISELY
+
+
+%\begin{lemma}
+%Let $(\vec{l},\vec{b})$ be a configuration reachable in $A$ with a synchronous trace $t'$ (under the asynchronous semantics). 
+%Then, $(\vec{l},\vec{\emptyset})$ is reachable in $A'$ with trace $\mathrm{redirect}\text{-}\mathrm{orphans}(t')$. 
+%\end{lemma}
+
+%To simulate the last receive in $t$ we transform $A$ such that any message sent to some process $j_1$ can be redirected to some 
+%distinguished process $p$ who relays it to $j_1$ non-deterministically at a later time. We constrain the system such that it can
+%redirect only one message. Formally, 
+Thus, if $A=(\<Lsts>,\delta,l_0,\<AdtM>)$
+then $B=(\<Lsts>\uplus\set{l_j: j\in\<Plds>},\delta_2,l_0,\<AdtM>)$ where
+\begin{itemize}
+	\item every send transition to some process $j$ is cloned to a send transition to process $p$ 
+and a corresponding receive transition of process $p$ (the local state of $p$ stores the identifier of process $j$), i.e.,
+\begin{align*}
+\delta_1=\delta\cup\set{(l,\send{i}{i,p,v},l),(l_0,\rec{p}{i,p,v},l_{j}) : \exists\, \send{i}{i,j,v}\in S.\ (l,\send{i}{i,j,v},l')\in \delta}.
+\end{align*}
+%
+%	
+%\begin{align*}
+%\delta_1=\delta\cup\set{(l,\send{i}{i,p,(j,v)},l'): \exists\, \send{i}{i,j,v}\in S.\ (l,\send{i}{i,j,v},l')\in \delta}.
+%\end{align*}
+%	\item the process $p$ can receive any message, i.e.,
+%\begin{align*}
+%\delta_2=\delta_1\cup\{(l_0,\epsilon,l_p)\}\cup \set{(l_p,\rec{p}{i,p,v},l_p): \exists\, \send{i}{i,p,v}\in S.\ (l,\send{i}{i,p,v},l')\in \delta_1}.
+%\end{align*}
+	\item every receive transition of some process $j$ is cloned to a send transition of process $p$ 
+and a corresponding receive transition from process $p$, i.e.,
+\begin{align*}
+\delta_2=\delta_1\cup\set{(l_j,\send{p}{p,j,v},l_0),(l,\rec{j}{p,j,v},l'): \exists\, \rec{j}{i,j,v}\in R.\ (l,\rec{j}{i,j,v},l')\in \delta}.
+\end{align*}
+\end{itemize}
+
+TODO CAN WE HAVE PROBLEMS IF THE $i$s IN THE SEND AND RECEIVE TRANSITIONS ARE NOT THE SAME. MAYBE WE SHOULD REMOVE $i$ FROM MESSAGES AND LEAVE ONLY PAYLOAD.
+
+%TODO NEEDS A MONITOR FOR IMPOSING THIS CONSTRAINT. BUT MAYBE WE DON'T NEED IT IF WE ARE JUST INTERESTED IN DEFINING A SYSTEM THAT ADMITS BORDERLINE VIOLATIONS (AND ANYTHING IN ADDITION)
+
+
+%Let us first consider the case of a causal delivery violation. Since $t$ is borderline, it is necessarily of the following form:
+%\begin{align*}
+%t_1\cdot \send{i_1}{i_1,j,v_1} \cdot t_2 \cdot \send{i_2}{i_2,j,v_2} \cdot t_3\cdot \rec{j}{i_2,j,v_2}
+%\end{align*}
+%where $\send{i_1}{i_1,j,v_1}\leadsto \send{i_2}{i_2,j,v_2}$ and $t_2\cdot t_3$ doesn't contain $\rec{j}{i_1,j,v_1}$
+%(otherwise, we would have $\rec{j}{i_1,j,v_1}\leadsto \rec{j}{i_2,j,v_2}$ because these two actions are made by the same process $j$).
+
+
+\subsection{Checking for Synchronizability Violation Patterns}
+
+We define a monitor in the form of a register automaton (a finite state machine equipped with a set of registers)
+that 
