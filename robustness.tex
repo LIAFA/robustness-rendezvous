@@ -12,7 +12,7 @@ a \prec a'\mbox{ iff } \<proc>(a) = \<proc>(a')\mbox{ or } a\match a'
 
 A permutation $t'$ of a trace $t$ is \emph{conflict-preserving} when every pair $a$ and $a'$ of actions of $t$ appear in the same order in $t'$ whenever $a \prec a'$. 
 From now on, whenever we use the term permutation we mean conflict-preserving permutation.
-Intuitively, a message passing system can not distinguish between two traces, one being the conflict-preserving permutation of the other.
+Intuitively, a message passing system can not distinguish between two traces, one being a conflict-preserving permutation of the other.
 
 \begin{example}\label{ex:perm}
 The following traces 
@@ -146,7 +146,14 @@ A trace is synchronizable if{f} the conflict-graph is acyclic. Formally,
     contains an edge from $u$ to $v$ iff $\mathrm{act}(u) \prec \mathrm{act}(v)$ and $\mathrm{act}(u)$ occurs before $\mathrm{act}(v)$ in $t$ (where $\mathrm{act}(v)$ is the action of trace $t$ corresponding to the graph node $v$).
 \end{definition}
 Intuitively, one can think of the action-graph of a trace $t$ as a structure that represents the order between all conflicting actions in $t$.
+%AND THE WEAKEST CONSTRAINTS THAT CAN BE ADDED BY A COMPLETION.
 For two actions $a$ and $a'$ in a trace $t$, $a\leadsto a'$ denotes the fact that $G_t$ contains a path from the node representing $a$ to that representing $a'$.
+
+\begin{lemma}\label{lem:acyclic_ag}
+	The \emph{action-graph} of a trace is acyclic. Moreover, $\rec{1}{q_1,\_}\leadsto \send{2}{p_2,q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ is impossible for any possible instantiation of $p_1$, $q_1$, $p_2$, and $q_2$.
+\end{lemma}
+
+TODO BELOW WE ADD EDGES FROM A SEND/RECEIVE PAIR TO EVERY UNMATCHED SEND THAT HAS THE SAME DESTINATION
 
 \begin{definition}[Conflict-Graph]\label{def:conf_graph}
     The \emph{conflict-graph} of a trace $t$ is the directed graph $CG_t=\tup{V',E'}$ where $V'$ includes one node for each pair of matching send and receive actions, and each unmatched send action, in $t$, and we have $(v,v') \in E'$ iff there exist actions $a \in \mathrm{act}(v)$ and $a' \in \mathrm{act}(v')$ such that $(a,a') \in E$ where $G_t = (V,E)$ is the action-graph of $t$ (and $\mathrm{act}(v)$ is the set of actions of trace $t$ corresponding to the graph node $v$).
