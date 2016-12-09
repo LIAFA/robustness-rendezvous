@@ -17,7 +17,8 @@ Each send action $\senda{p,q,v}$ combines two process ids $p, q\in \<Ids>$ denot
 the sender and the receiver of the message, respectively, and a message payload $v\in \<Val>$. Receive actions
 specify the process $q\in \<Pids>$ receiving the message, and the message payload $v\in \<Val>$.
 We denote the process executing a send/receive action $a\in S\cup R$ by $\<proc>(a)$, i.e.,
-$\<proc>(a)=p$ for every $a=\senda{p,q,v}$, and $\<proc>(a)=q$ for every $a=\reca{q,v}$.
+$\<proc>(a)=p$ for every $a=\senda{p,q,v}$, and $\<proc>(a)=q$ for every $a=\reca{q,v}$,
+and the destination of a send action $s\in S$ by $\<dest>(s)$, i.e., $\<dest>(\senda{p,q,v})=q$.
 %Send and receive actions $s\in S$ and $r\in R$ are \emph{matching}, written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
 
 A message passing system consists of a finite set of processes that communicate via messages. Each process is described as a state
