@@ -149,14 +149,39 @@ Intuitively, one can think of the action-graph of a trace $t$ as a structure tha
 For two actions $a$ and $a'$ in a trace $t$, $a\leadsto a'$ denotes the fact that $G_t$ contains a path from the node representing $a$ to that representing $a'$.
 
 \begin{definition}[Conflict-Graph]\label{def:conf_graph}
-    The \emph{conflict-graph} of a trace $t$ is the directed graph $CG_t=\tup{V',E'}$ where $V'$ includes one node for each pair of matching send and receive actions, and each unmatched send action, in $t$, and we have $(v,v') \in E'$ iff there exist actions $a \in \mathrm{act}(v)$ and $a' \in \mathrm{act}(v')$ such that $(a,a') \in E$ where $G_t = (V,E)$ is the action-graph of $t$ (and $\mathrm{act}(v)$ is the set of actions of trace $t$ corresponding to the graph node $v$).
+    The \emph{conflict-graph} of a trace $t$ is the directed graph $CG_t=\tup{V',E'}$ where $V'$ includes one node for each pair of matching send and receive actions, and each unmatched send action, in $t$, and we have $(v,v') \in E'$ iff one of the following holds
+\begin{itemize}
+    	\item there exist actions $a \in \mathrm{act}(v)$ and $a' \in \mathrm{act}(v')$ such that $(a,a') \in E$ where $G_t = (V,E)$ is the action-graph of $t$ (and $\mathrm{act}(v)$ is the set of actions of trace $t$ corresponding to the graph node $v$), or
+	\item $\mathrm{act}(v)$ consists of a pair of matching send and receive actions, and $\mathrm{act}(v')$ consists of only a send action.
+\end{itemize}
 \end{definition}
 
 
 
-\begin{theorem}\label{thm:cg} (from \citep{journals/jacm/Papadimitriou79b})
+\begin{theorem}\label{thm:cg} 
 A trace $t$ is synchronizable if{f} $CG_t$ is acyclic.
 \end{theorem}
+\begin{proof}
+Let $t$ be a synchronizable trace. Then, there exists a completion $t'$ of $t$ and a permutation $t''$ of $t'$ which is synchronous. The definition of the conflict-graph implies that $CG_{t''}$ is acyclic which implies that $CG_{t'}$ is also acyclic (conflict-preserving permutations have the same conflict-graph as the original trace). Then, $t$ is obtained from $t'$ by removing receive actions and thus, $CG_{t}$ is a sub-graph of $CG_{t'}$ which implies that $CG_{t}$ is also acyclic.
+
+For the reverse, let $t$ be a trace with an acyclic conflict graph. Let $t'=t\cdot t_c$ be a completion of $t$ where the receive actions in $t_c$ occur in the same order as the matching sends in $t$. Thus, for every two send actions $s_1=\send{i}{p_1,q_1,v_1}$ and $s_2=\send{j}{p_2,q_2,v_2}$ unmatched in $t$, $t_c$ contains $\rec{i}{q_1,v_1}$ followed by $\rec{j}{q_2,v_2}$. We show that $CG_{t'}$ is isomorphic to $CG_{t}$. By definition, the two conflict graphs have the same number of nodes. It remains to prove that they have exactly the same set of edges. Thus, let $v$ and $v'$ be two nodes of $CG_{t}$. Assume that $v$ represents an unmatched send action $s_1=\send{i}{p_1,q_1,v_1}$ (the case where $v$ and $v'$ represent pairs of matching send and receive actions is trivial).
+There are two cases to consider:
+\begin{itemize}
+	\item if $v'$ represents a pair of matching send and receive actions, then $CG_{t}$ contains an edge $(v',v)$ (but no $(v,v')$ since $CG_{t}$ is acyclic). And this edge is contained also in $CG_{t'}$.
+	\item otherwise, assume that $v'$ represents an unmatched send action $s_2=\send{j}{p_2,q_2,v_2}$ which follows $s_1$ in $t$. 
+	\begin{itemize}
+		\item if $(v,v')$ is an edge of $CG_{t}$ (by definition, $(v',v)$ can not be an edge of $CG_{t}$) then $p_1=p_2$. Then, $(v,v')$ is also an edge of $CG_{t'}$.
+		\item if $(v,v')$ is an edge of $CG_{t'}$, then there are two cases. Either $p_1=p_2$ which is similar to the previous case, or $q_1=q_2$.
+		Since $\rec{i}{q_1,v_1}$ occurs before $\rec{j}{q_2,v_2}$ in $t'$, $(v,v')$
+	\end{itemize}
+\end{itemize}
+
+
+We define a completion of $t$ for which there exists a synchronous permutation. 
+
+
+Thus, let $s_1=\send{i}{p_1,q_1,v_1}$ and $s_2=\send{j}{p_2,q_2,v_2}$ be two unmatched send actions occurring in this order in $t$. If $s_1\leadsto s_2$, then we choose a completion where $\rec{i}{q_1,v_1}$ occurs before $\rec{j}{q_2,v_2}$.
+\end{proof}
 
 
 
