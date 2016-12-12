@@ -111,6 +111,8 @@ set of local state vectors in reachable configurations.
 %
 The set of traces of $A$ under the asynchronous semantics is denoted by $\asynchTr{A}$.
 
+Given a trace $t$, a send action $s$ in $t$ is called an \emph{unmatched send} when $t$ contains no receive action $r$ with $s\match r$. A trace $t$ is called \emph{matched} when it contains no unmatched send.
+
 
 
 

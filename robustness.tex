@@ -136,16 +136,23 @@ For a given synchronizable XXX message passing system $A$, $\asynch{States}(A)=\
 TODO 
 \end{proof}
 
-Checking that a given trace is synchronizable can be done by tracking a ``conflict-graph'' like in serializability 
-where transactions are pairs of sends and matching receives. 
-A trace is synchronizable if{f} the conflict-graph is acyclic. Formally,
+\section{Monitoring Synchronizability}
+
+Checking that a given trace is synchronizable can be done by tracking a ``conflict-graph'' like in conflict serializability~\cite{}
+to show that every pair of matching send and receive actions can be executed atomically. Roughly, the nodes of this graph
+correspond to such pairs of matching actions, and the edges to conflicts between actions from one pair and another. 
+Then, a trace is synchronizable if{f} the conflict-graph is acyclic. Dealing with unmatched sends and completions 
+poses a technical difficulty since the conflict-graph should contain enough additional edges
+to anticipate for the possible completions. 
+
+Before defining conflict-graphs, we define a notion of action-graph that represents the order between all conflicting actions in some given trace.
 
 \begin{definition}[Action-Graph]\label{def:pr_graphs}
     The \emph{action-graph} of a trace $t$ is the directed graph 
     $G_t = \tup{V,E}$ where there is a node in $V$ for each action in $t$, and $E$ 
     contains an edge from $u$ to $v$ iff $\mathrm{act}(u) \prec \mathrm{act}(v)$ and $\mathrm{act}(u)$ occurs before $\mathrm{act}(v)$ in $t$ (where $\mathrm{act}(v)$ is the action of trace $t$ corresponding to the graph node $v$).
 \end{definition}
-Intuitively, one can think of the action-graph of a trace $t$ as a structure that represents the order between all conflicting actions in $t$.
+%Intuitively, one can think of the action-graph of a trace $t$ as a structure that represents the order between all conflicting actions in $t$.
 %AND THE WEAKEST CONSTRAINTS THAT CAN BE ADDED BY A COMPLETION.
 For two actions $a$ and $a'$ in a trace $t$, $a\leadsto a'$ denotes the fact that $G_t$ contains a path from the node representing $a$ to that representing $a'$.
 
@@ -153,41 +160,50 @@ For two actions $a$ and $a'$ in a trace $t$, $a\leadsto a'$ denotes the fact tha
 	The \emph{action-graph} of a trace is acyclic. Moreover, $\rec{1}{q_1,\_}\leadsto \send{2}{p_2,q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ is impossible for any possible instantiation of $p_1$, $q_1$, $p_2$, and $q_2$.
 \end{lemma}
 
-TODO BELOW WE ADD EDGES FROM A SEND/RECEIVE PAIR TO EVERY UNMATCHED SEND THAT HAS THE SAME DESTINATION
+%TODO BELOW WE ADD EDGES FROM A SEND/RECEIVE PAIR TO EVERY UNMATCHED SEND THAT HAS THE SAME DESTINATION
 
 \begin{definition}[Conflict-Graph]\label{def:conf_graph}
     The \emph{conflict-graph} of a trace $t$ is the directed graph $CG_t=\tup{V',E'}$ where $V'$ includes one node for each pair of matching send and receive actions, and each unmatched send action, in $t$, and we have $(v,v') \in E'$ iff one of the following holds
-\begin{itemize}
+\begin{enumerate}
     	\item there exist actions $a \in \mathrm{act}(v)$ and $a' \in \mathrm{act}(v')$ such that $(a,a') \in E$ where $G_t = (V,E)$ is the action-graph of $t$ (and $\mathrm{act}(v)$ is the set of actions of trace $t$ corresponding to the graph node $v$), or
-	\item $\mathrm{act}(v)$ consists of a pair of matching send and receive actions, and $\mathrm{act}(v')$ consists of only a send action.
-\end{itemize}
+	\item\label{def:conf_graph:item2} $\mathrm{act}(v)$ consists of a pair of matching send action $s_1$ and receive action $r_1$, and $\mathrm{act}(v')$ consists of only a send action $s_2$ with $\<dest>(s_1)=\<dest>(s_2)$.
+\end{enumerate}
 \end{definition}
 
+The fact that a matched trace is synchronizable whenever its conflict-graph is acyclic is a direct consequence of previous results on conflict serializability~\cite{} (in this case, item~\ref{def:conf_graph:item2} of Definition~\ref{def:conf_graph} doesn't apply).
+
+\begin{lemma}\label{lem:cg_matched}
+A matched trace is synchronizable if{f} its conflict-graph is acyclic.
+\end{lemma}
+
+To extend this result to traces with unmatched sends, we first consider a notion of canonical completion that is enough to recognize all synchronizable traces.
+Thus, a \emph{completion} $t\cdot t'$ of a trace $t$ is called \emph{canonical} when for every two unmatched send actions $\send{1}{p_1,q_1,\_}$ and $\send{2}{p_2,q_2,\_}$ occurring in this order in $t$, the suffix $t'$ contains $\rec{1}{q_1,\_}$ before $\rec{2}{q_2,\_}$.
+
+\begin{lemma}\label{lem:synch_canonical}
+A trace $t$ is synchronizable if{f} the canonical completion of $t$ is synchronizable.
+\end{lemma}
+\begin{proof}
+The ``if'' direction is trivial. For the reverse, let $t$ be a synchronizable trace. Therefore, there exists a completion $t\cdot t'$ which is synchronizable. If $t\cdot t'$ is canonical, then the proof is finished. Otherwise, let $\send{1}{p_1,q_1,\_}$ and $\send{2}{p_2,q_2,\_}$ be two unmatched send actions occurring in this order in $t$ such that $\rec{2}{q_2,\_}$ occurs before $\rec{1}{q_1,\_}$ in $t'$. Note that, since $\send{1}{p_1,q_1,\_}$ occurs before $\send{2}{p_2,q_2,\_}$, it is impossible that $\send{2}{p_2,q_2,\_} \leadsto \send{1}{p_1,q_1,\_}$.
+By Lemma~\ref{lem:cg_matched}, the conflict graph of $t\cdot t'$ is acyclic. 
+Let $t\cdot t''$ be a permutation of $t\cdot t'$ where $\rec{2}{q_2,\_}$ and $\rec{1}{q_1,\_}$ are swapped (i.e., $\rec{1}{q_1,\_}$ occurs before $\rec{2}{q_2,\_}$). If $q_1\neq q_2$, then this permutation is conflict-preserving and the conflict graph of $t\cdot t''$ is the same as the one of $t\cdot t'$. 
+Now, assume that $q_1=q_2$. Then, the conflict-graph of $t\cdot t''$ is the conflict-graph of $t\cdot t'$ where the edge from the node $u$ representing $\{\send{2}{p_2,q_2,\_},\rec{2}{q_2,\_}\}$ to the node $v$ representing $\{\send{1}{p_1,q_1,\_}, \rec{1}{q_1,\_}\}$ is replaced with an edge from $v$ to $u$.
+Since the conflict-graph of $t\cdot t'$ is acyclic, the action graph of $t\cdot t'$ contains no path from $\send{1}{p_1,q_1,\_}$ to $\send{2}{p_2,q_2,\_}$ (otherwise, this path together with the edge from $\rec{2}{q_2,\_}$ to $\rec{1}{q_1,\_}$ will induce a conflict-graph cycle). Therefore, the only path in $CG_{t\cdot t'}$ between $u$ and $v$ is the single-edge path from $u$ to $v$, and changing the direction of this edge will result in a graph that remains acyclic. Consequently, the conflict-graph of $t\cdot t''$ is acyclic. Applying this reasoning further for every pair of unmatched send operations in $t$ shows that the canonical completion of $t$ is synchronizable.
+\end{proof}
 
 
 \begin{theorem}\label{thm:cg} 
 A trace $t$ is synchronizable if{f} $CG_t$ is acyclic.
 \end{theorem}
 \begin{proof}
-Let $t$ be a synchronizable trace. Then, there exists a completion $t'$ of $t$ and a permutation $t''$ of $t'$ which is synchronous. The definition of the conflict-graph implies that $CG_{t''}$ is acyclic which implies that $CG_{t'}$ is also acyclic (conflict-preserving permutations have the same conflict-graph as the original trace). Then, $t$ is obtained from $t'$ by removing receive actions and thus, $CG_{t}$ is a sub-graph of $CG_{t'}$ which implies that $CG_{t}$ is also acyclic.
+Let $t$ be a synchronizable trace. Then, there exists a completion $t\cdot t'$ of $t$ such that $CG_{t\cdot t'}$ is acyclic. Note that $CG_{t}$ is a subgraph of $CG_{t\cdot t'}$, which implies that $CG_{t}$ is acyclic as well.
 
-For the reverse, let $t$ be a trace with an acyclic conflict graph. Let $t'=t\cdot t_c$ be a completion of $t$ where the receive actions in $t_c$ occur in the same order as the matching sends in $t$. Thus, for every two send actions $s_1=\send{i}{p_1,q_1,v_1}$ and $s_2=\send{j}{p_2,q_2,v_2}$ unmatched in $t$, $t_c$ contains $\rec{i}{q_1,v_1}$ followed by $\rec{j}{q_2,v_2}$. We show that $CG_{t'}$ is isomorphic to $CG_{t}$. By definition, the two conflict graphs have the same number of nodes. It remains to prove that they have exactly the same set of edges. Thus, let $v$ and $v'$ be two nodes of $CG_{t}$. Assume that $v$ represents an unmatched send action $s_1=\send{i}{p_1,q_1,v_1}$ (the case where $v$ and $v'$ represent pairs of matching send and receive actions is trivial).
-There are two cases to consider:
+For the reverse, let $t$ be a trace with an acyclic conflict graph. Let $t\cdot t'$ be the canonical completion of $t$. We show that $CG_{t\cdot t'}$ is acyclic which implies by Lemma~\ref{lem:synch_canonical}, that $t$ is synchronizable. Note that $CG_{t}$ is a subgraph of $CG_{t\cdot t'}$. Also, the edges that are in $CG_{t\cdot t'}$ and not in $CG_{t}$ are of the form $(v,v')$ where 
 \begin{itemize}
-	\item if $v'$ represents a pair of matching send and receive actions, then $CG_{t}$ contains an edge $(v',v)$ (but no $(v,v')$ since $CG_{t}$ is acyclic). And this edge is contained also in $CG_{t'}$.
-	\item otherwise, assume that $v'$ represents an unmatched send action $s_2=\send{j}{p_2,q_2,v_2}$ which follows $s_1$ in $t$. 
-	\begin{itemize}
-		\item if $(v,v')$ is an edge of $CG_{t}$ (by definition, $(v',v)$ can not be an edge of $CG_{t}$) then $p_1=p_2$. Then, $(v,v')$ is also an edge of $CG_{t'}$.
-		\item if $(v,v')$ is an edge of $CG_{t'}$, then there are two cases. Either $p_1=p_2$ which is similar to the previous case, or $q_1=q_2$.
-		Since $\rec{i}{q_1,v_1}$ occurs before $\rec{j}{q_2,v_2}$ in $t'$, $(v,v')$
-	\end{itemize}
+	\item $\mathrm{act}(v)=\{\send{1}{p_1,q,\_}\}$, $\send{2}{p_2,q,\_}\in \mathrm{act}(v')$, and $\send{1}{p_1,q,\_}$ occurs before $\send{2}{p_2,q,\_}$ in $t$, for any $p_1\neq p_2$ (the set $\mathrm{act}(v')$ may or not contain a matching receive).
 \end{itemize}
+These edges come from the conflicting actions $\rec{1}{q,\_}$ and $\rec{2}{q,\_}$ occurring in this order in $t'$. Note that $(v,v')$ would be already an edge of $CG_{t}$ if $p_1=p_2$. 
 
-
-We define a completion of $t$ for which there exists a synchronous permutation. 
-
-
-Thus, let $s_1=\send{i}{p_1,q_1,v_1}$ and $s_2=\send{j}{p_2,q_2,v_2}$ be two unmatched send actions occurring in this order in $t$. If $s_1\leadsto s_2$, then we choose a completion where $\rec{i}{q_1,v_1}$ occurs before $\rec{j}{q_2,v_2}$.
+Since $\send{1}{p_1,q,\_}$ occurs before $\send{2}{p_2,q,\_}$ in $t$, $CG_{t}$ contains no path from $v'$ to $v$. Therefore, these edges of $CG_{t\cdot t'}$ do not create any cycles (together with the paths in  $CG_{t}$).
 \end{proof}
 
 

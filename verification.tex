@@ -22,14 +22,14 @@ $A$, if any, and $A_0$ goes to an error state whenever such a violation exists.
 Causal delivery violation:
 \begin{align*}
 \send{1}{p_1,q,\_}\leadsto \send{2}{p_2,q,\_}\mbox{ and }
-  \rec{1}{q,\_} \not \leadsto \rec{2}{q,\_}  
+\rec{2}{q,\_}  \leadsto_{lossy}  \rec{1}{q,\_} 
 \end{align*}
 Exchange pattern:
 \begin{align*}
 \send{1}{p_1,q_1,\_}\leadsto \rec{2}{q_2,\_}\mbox{ and }
-\send{2}{p_2,q_2,\_}\leadsto \rec{1}{q_1,\_}
+\send{2}{p_2,q_2,\_}\leadsto_{lossy} \rec{1}{q_1,\_}
 \end{align*}
-\caption{Synchronizability violation patterns. The predicate $\rec{1}{q,\_} \not \leadsto \rec{2}{q,\_} $ holds either when the trace contains no action $\rec{1}{q,\_}$, or when this action occurs after $\rec{2}{q,\_} $.}
+\caption{Synchronizability violation patterns.}
 \label{fig:patterns}
 \end{figure}
 
@@ -41,8 +41,8 @@ and each message is received after the other one is sent. This situation arises 
 between phases in which all processes send messages to their peers and phases in which they receive messages from their peers. 
 In these cases, the sends and receives in the exchange pattern are causally related since they are executed by the same process.
 
-We say that a trace contains a causal delivery violation or an exchange pattern if it contains the actions and the action-graph paths
-specified in Figure~\ref{fig:patterns}.
+We say that a trace contains a causal delivery violation or an exchange pattern if it contains the actions and the action-graph paths specified in Figure~\ref{fig:patterns}.
+The predicate $a \leadsto_{lossy}  \rec{1}{q,\_}$ holds in a trace $t$ when $a$ is an action of $t$ and either $a\leadsto \rec{1}{q,\_}$ (which implies that $\rec{1}{q,\_}$ is also an action of $t$), or $t$ contains an action $b$ with $\<proc>(b)=q$ such that  $a \leadsto b$, or $\<proc>(a)=q$. 
 
 \begin{theorem}\label{th:patt}
 A trace is not synchronizable if{f} it contains a causal delivery violation or an exchange pattern.
