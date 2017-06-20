@@ -1,7 +1,7 @@
 %!TEX root = main.tex
 \section{Message passing systems}\label{sec:prelims}
 
-TODO A BUFFER FOR EVERY PAIR OF PROCESSES DOESN'T CHANGE THE RESULTS
+%TODO A BUFFER FOR EVERY PAIR OF PROCESSES DOESN'T CHANGE THE RESULTS
 
 We fix arbitrary sets $\<Pids>$ and $\<Val>$ of process ids and message payloads. 
 %A \emph{message} is a triple $m = \tup{i,j,p}$ where $i \in \<Ids>$ denotes the source, $j \in \<Ids>$ the destination, and $p \in \<Plds>$ the payload. 
@@ -32,7 +32,7 @@ $\delta\subseteq \<Lsts>\times (S\cup R\cup\{\epsilon\})\times \<Lsts>$ is a tra
 evolution of all processes, $l_0$ is the initial state of every process, and $\<AdtM>$ is 
 a collection data type  with interface $\mathrm{add}(m)$ for adding an element $m$
 to the collection and $\mathrm{rem}()$ that removes and returns an element from the collection (this method returns only when the collection
-is non-empty). 
+is non-empty, otherwise it blocks). 
 %To simplify the exposition, we assume
 %that each receive action is enabled in every local state, i.e., for every $l\in \<Lsts>$ and every $r\in R$, there exists $l'\in \<Lsts>$ such that $(l,r,l')\in \delta$.
 %TODO GIVE MORE EXPLANATIONS
