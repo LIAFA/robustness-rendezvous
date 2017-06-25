@@ -1,4 +1,4 @@
-\documentclass[acmsmall,10pt,review,anonymous]{acmart}\settopmatter{printfolios=true}
+\documentclass[acmlarge,review,anonymous]{acmart}\settopmatter{printfolios=true}
 
 %\frontmatter          % for the preliminaries
 %\pagestyle{headings}  % switches on printing of running heads
@@ -118,7 +118,14 @@
 \newcommand{\asynch}[1]{\mathrm{Asynch}\text{-}\mathrm{#1}}
 \newcommand{\synch}[1]{\mathrm{Synch}\text{-}\mathrm{#1}}
 \newcommand\asynchTr[1]{\mathrm{AsynchTr}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\asynchExec[1]{\mathrm{AsynchExec}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\synchTr[2]{\mathrm{SynchTr}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\synchExec[2]{\mathrm{SynchExec}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
 \newcommand{\xRightarrow}[2][]{\ext@arrow 0359\Rightarrowfill@{#1}{#2}}
+
+\newcommand\asynchSt[1]{\mathrm{AsynchSt}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\synchSt[2]{\mathrm{SynchSt}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+
 
 \title[Robustness]{Robustness against rendezvous} %% [Short Title] is optional;
                                         %% when present, will be used in
@@ -251,9 +258,10 @@
 
 \input intro
 \input overview
-\input preliminaries
+\input asynch-semantics
+\input synch-semantics
 \input robustness
-%\input verification
+\input verification
 %\input experiments
 %\input related
 %\input conclusions

@@ -16,83 +16,83 @@ the synchronous semantics, which simulates borderline synchronizability violatio
 $A$, if any, and $A_0$ goes to an error state whenever such a violation exists.
 \end{itemize}
 
-\subsection{Synchronizability Violation Patterns}
-
-
-\begin{figure}[t]
-Causal delivery violation:
-\begin{align*}
-\send{1}{p_1,q,\_}\leadsto \send{2}{p_2,q,\_}\mbox{ and }
-\rec{2}{q,\_}  \leadsto_{lossy}  \rec{1}{q,\_} 
-\end{align*}
-Exchange pattern:
-\begin{align*}
-\send{1}{p_1,q_1,\_}\leadsto_{lossy} \rec{2}{q_2,\_}\mbox{ and }
-\send{2}{p_2,q_2,\_}\leadsto_{lossy} \rec{1}{q_1,\_}
-\end{align*}
-\caption{Synchronizability violation patterns.}
-\label{fig:patterns}
-\end{figure}
-
-We show that any trace violating synchronizability contains one of the two violation patterns in Figure~\ref{fig:patterns}.
-Intuitively, the first pattern describes a violation to \emph{causal delivery} where two causally related messages sent to the same process
-are received in an order different from that in which they were sent. Here, the causal order between messages is defined
-by the paths in the action graph (ignoring unmatched sends, the predicate $\leadsto_{lossy}$ is exactly $\leadsto$). 
-The second violation pattern describes a situation in which two messages are sent concurrently 
-and each message is received after the other one is sent. This situation arises for instance in distributed protocols which alternate
-between phases in which all processes send messages to their peers and phases in which they receive messages from their peers. 
-In these cases, the sends and receives in the exchange pattern are causally related since they are executed by the same process.
-
-We say that a trace contains a causal delivery violation or an exchange pattern if it contains the actions and the action-graph paths specified in Figure~\ref{fig:patterns}.
-In the context of matched traces, the predicate $\leadsto_{lossy}$ is exactly $\leadsto$ (describing action-graph paths). Otherwise, the interpretation of $\leadsto_{lossy}$ takes into consideration the fact that the receive action in the right-hand side can occur in the completion of an unmatched trace. 
-Thus, $a \leadsto_{lossy}  \rec{1}{q,\_}$ holds in a trace $t$ when $a$ is an action of $t$ and either $a\leadsto \rec{1}{q,\_}$ (which implies that $\rec{1}{q,\_}$ is also an action of $t$), or $t$ contains an action $b$ such that $\<proc>(b)=q$ and  $a \leadsto b$, or $\<proc>(a)=q$. 
-
-\begin{theorem}\label{th:patt}
-A trace is not synchronizable if{f} it contains a causal delivery violation or an exchange pattern.
-\end{theorem}
-\begin{proof}
-The ``only if'' direction is trivial. For both violation patterns, the two pairs of matching send/receive actions (or one pair and an unmatched send, in the case of the causal delivery violations) will define a conflict graph cycle.
-
-For the ``if'' direction, let $t$ be a non-synchronizable trace. Let us first assume that $t$ is matched. Then, the conflict graph of $t$ contains two nodes $v_1$ and $v_2$ such that there is a path from $v_1$ to $v_2$ and vice-versa. 
-%By an abuse of notation, assume that the action graph contains also edges 
-%$v_1\leadsto v_2$ and $v_2\leadsto v_1$.
-%Let $G_t'$ be the action graph of $t$ extended with edges between every two nodes $u$ and $v$ such that 
-%$\mathrm{act}(u)\in R_{id}$, $\mathrm{act}(v)\in S_{id}$ is an unmatched send, and $\<proc>(\mathrm{act}(u))=\<dest>(\mathrm{act}(v))$.
-%These edges are present in every completion of $t$. By an abuse of notation, for two actions $a$ and $a'$ in $t$, $a\leadsto a'$ (resp., $a\leadsto_1 a'$) denotes the fact that $G'_t$ contains a path (resp., an edge) from the node representing $a$ to that representing $a'$.
-%
-%Let us first assume the case that $G_t'$ is cyclic. By definition, any cycle in $G_t'$ must contain at least one receive action and by Lemma~\ref{lem:acyclic_ag}, at least one of the edges that are not present in $G_t$. Therefore, there exist two actions $\rec{1}{q_1,\_}$ and $\send{2}{p_2,q_1,\_}$, the latter being an unmatched send, such that $\rec{1}{q_1,\_}\leadsto_1 \send{2}{p_2,q_1,\_}$ and $\send{2}{p_2,q_1,\_}\leadsto \rec{1}{q_1,\_}$. 
+%\subsection{Synchronizability Violation Patterns}
 %
 %
+%\begin{figure}[t]
+%Causal delivery violation:
+%\begin{align*}
+%\send{1}{p_1,q,\_}\leadsto \send{2}{p_2,q,\_}\mbox{ and }
+%\rec{2}{q,\_}  \leadsto_{lossy}  \rec{1}{q,\_} 
+%\end{align*}
+%Exchange pattern:
+%\begin{align*}
+%\send{1}{p_1,q_1,\_}\leadsto_{lossy} \rec{2}{q_2,\_}\mbox{ and }
+%\send{2}{p_2,q_2,\_}\leadsto_{lossy} \rec{1}{q_1,\_}
+%\end{align*}
+%\caption{Synchronizability violation patterns.}
+%\label{fig:patterns}
+%\end{figure}
 %
-%Since we assume well-formed traces, $t$ contains a send action $\send{1}{p_1,q_1,\_}$. Also, since $p_2\neq q_1$, $\send{2}{p_2,q_1,\_}\leadsto \rec{1}{q_1,\_}$ implies that $\send{2}{p_2,q_1,\_}\leadsto \send{1}{p_1,q_1,\_}$.
+%We show that any trace violating synchronizability contains one of the two violation patterns in Figure~\ref{fig:patterns}.
+%Intuitively, the first pattern describes a violation to \emph{causal delivery} where two causally related messages sent to the same process
+%are received in an order different from that in which they were sent. Here, the causal order between messages is defined
+%by the paths in the action graph (ignoring unmatched sends, the predicate $\leadsto_{lossy}$ is exactly $\leadsto$). 
+%The second violation pattern describes a situation in which two messages are sent concurrently 
+%and each message is received after the other one is sent. This situation arises for instance in distributed protocols which alternate
+%between phases in which all processes send messages to their peers and phases in which they receive messages from their peers. 
+%In these cases, the sends and receives in the exchange pattern are causally related since they are executed by the same process.
 %
+%We say that a trace contains a causal delivery violation or an exchange pattern if it contains the actions and the action-graph paths specified in Figure~\ref{fig:patterns}.
+%In the context of matched traces, the predicate $\leadsto_{lossy}$ is exactly $\leadsto$ (describing action-graph paths). Otherwise, the interpretation of $\leadsto_{lossy}$ takes into consideration the fact that the receive action in the right-hand side can occur in the completion of an unmatched trace. 
+%Thus, $a \leadsto_{lossy}  \rec{1}{q,\_}$ holds in a trace $t$ when $a$ is an action of $t$ and either $a\leadsto \rec{1}{q,\_}$ (which implies that $\rec{1}{q,\_}$ is also an action of $t$), or $t$ contains an action $b$ such that $\<proc>(b)=q$ and  $a \leadsto b$, or $\<proc>(a)=q$. 
 %
-%The former implies that there exists a send action $\send{1}{p_1,q_1,\_}$ such that $\send{1}{p_1,q_1,\_}\leadsto \send{2}{p_2,q_1,\_}$ and 
+%\begin{theorem}\label{th:patt}
+%A trace is not synchronizable if{f} it contains a causal delivery violation or an exchange pattern.
+%\end{theorem}
+%\begin{proof}
+%The ``only if'' direction is trivial. For both violation patterns, the two pairs of matching send/receive actions (or one pair and an unmatched send, in the case of the causal delivery violations) will define a conflict graph cycle.
 %
-%TODO THESE PATHS CAN INCLUDE EDGES $\{\send{1}{p_1,q_1,\_},\rec{1}{q_1,\_}\}\rightarrow \{\send{2}{p_3,q_1,\_}\}$ 
+%For the ``if'' direction, let $t$ be a non-synchronizable trace. Let us first assume that $t$ is matched. Then, the conflict graph of $t$ contains two nodes $v_1$ and $v_2$ such that there is a path from $v_1$ to $v_2$ and vice-versa. 
+%%By an abuse of notation, assume that the action graph contains also edges 
+%%$v_1\leadsto v_2$ and $v_2\leadsto v_1$.
+%%Let $G_t'$ be the action graph of $t$ extended with edges between every two nodes $u$ and $v$ such that 
+%%$\mathrm{act}(u)\in R_{id}$, $\mathrm{act}(v)\in S_{id}$ is an unmatched send, and $\<proc>(\mathrm{act}(u))=\<dest>(\mathrm{act}(v))$.
+%%These edges are present in every completion of $t$. By an abuse of notation, for two actions $a$ and $a'$ in $t$, $a\leadsto a'$ (resp., $a\leadsto_1 a'$) denotes the fact that $G'_t$ contains a path (resp., an edge) from the node representing $a$ to that representing $a'$.
+%%
+%%Let us first assume the case that $G_t'$ is cyclic. By definition, any cycle in $G_t'$ must contain at least one receive action and by Lemma~\ref{lem:acyclic_ag}, at least one of the edges that are not present in $G_t$. Therefore, there exist two actions $\rec{1}{q_1,\_}$ and $\send{2}{p_2,q_1,\_}$, the latter being an unmatched send, such that $\rec{1}{q_1,\_}\leadsto_1 \send{2}{p_2,q_1,\_}$ and $\send{2}{p_2,q_1,\_}\leadsto \rec{1}{q_1,\_}$. 
+%%
+%%
+%%
+%%Since we assume well-formed traces, $t$ contains a send action $\send{1}{p_1,q_1,\_}$. Also, since $p_2\neq q_1$, $\send{2}{p_2,q_1,\_}\leadsto \rec{1}{q_1,\_}$ implies that $\send{2}{p_2,q_1,\_}\leadsto \send{1}{p_1,q_1,\_}$.
+%%
+%%
+%%The former implies that there exists a send action $\send{1}{p_1,q_1,\_}$ such that $\send{1}{p_1,q_1,\_}\leadsto \send{2}{p_2,q_1,\_}$ and 
+%%
+%%TODO THESE PATHS CAN INCLUDE EDGES $\{\send{1}{p_1,q_1,\_},\rec{1}{q_1,\_}\}\rightarrow \{\send{2}{p_3,q_1,\_}\}$ 
+%%
+%%There are several cases to consider:
+%%\begin{itemize}
+%Let $\mathrm{act}(v_i)=\{\send{i}{p_i,q_i,\_}, \rec{i}{q_i,\_}\}$, for $i\in [1,2]$. Then, one of the following holds:
+%	\begin{itemize}
+%		\item $\send{1}{p_1,q_1,\_}\leadsto \send{2}{p_2,q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \rec{1}{q_1,\_}$, which corresponds to a violation to causal delivery when $q_1=q_2$. Otherwise, when $q_1\neq q_2$, we show that this cycle induces another (smaller cycle) that contains a causal delivery violation. Thus, consider the path between $\rec{2}{q_2,\_}$ and $\rec{1}{q_1,\_}$. By the definition of the conflict relation, the last conflict in this path is necessarily between another action $a$ of $q_1$ (i.e., $\<proc>(a)=q_1$) and $\rec{1}{q_1,\_}$. Otherwise, this path will contain $\send{1}{p_1,q_1,\_}$ and we would have $\send{1}{p_1,q_1,\_}\leadsto  \send{2}{p_2,q_2,\_} \match \rec{2}{q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ which is impossible by Lemma~\ref{lem:acyclic_ag} (the action graph would be cyclic). Now, the path between $\rec{2}{q_2,\_}$ and $a$ will necessarily contain a conflict due to matching (i.e., a pair of matching send/receive actions); otherwise, $q_1=q_2$. Let $\send{3}{p_3,q_3,\_} \match \rec{3}{q_3,\_}$ be the last such conflict (according to the order in this path). Since it is the last such conflict, we have that $q_3 = q_1$. Therefore, we have $\rec{3}{q_1,\_}\leadsto \rec{1}{q_1,\_}$, and $\send{1}{p_1,q_1,\_}\leadsto \send{2}{p_2,q_2,\_}\match \rec{2}{q_2,\_}\leadsto \send{3}{p_3,q_1,\_}$ which is equivalent to $\send{1}{p_1,q_1,\_}\leadsto \send{3}{p_3,q_1,\_}$. The latter is a violation to causal delivery.
+%		
+%		\item $\send{1}{p_1,q_1,\_}\leadsto \rec{2}{q_2,\_}$ and $\send{2}{p_2,q_2,\_}\leadsto \rec{1}{q_1,\_}$ which is an exchange pattern.
+%		\item $\send{1}{p_1,q_1,\_}\leadsto \rec{2}{q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ which is impossible by Lemma~\ref{lem:acyclic_ag} because it would imply a cyclic action graph.
+%		\item $\rec{1}{q_1,\_}\leadsto \send{2}{p_2,q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ which is impossible, by Lemma~\ref{lem:acyclic_ag}.
+%	\end{itemize}
+%%	\item $\mathrm{act}(v_1)=\{\send{1}{p_1,q_1,\_}\}$ and $\mathrm{act}(v_2)=\{\send{2}{p_2,q_2,\_}, \rec{2}{q_2,\_}\}$.
+%%\end{itemize}
+%%
+%%
+%%there exist two pairs of matching send/receive actions
+%%$\send{1}{p_1,q_1,\_}$, $\rec{1}{q_1,\_}$, and $\send{2}{p_2,q_2,\_}$, $\rec{2}{q_2,\_}$ such that one of the following holds:
+%%\begin{itemize}
+%%	\item $\send{1}{p_1,q,\_}\leadsto \send{2}{p_2,q,\_}$ and 
+%%\end{itemize}
 %
-%There are several cases to consider:
-%\begin{itemize}
-Let $\mathrm{act}(v_i)=\{\send{i}{p_i,q_i,\_}, \rec{i}{q_i,\_}\}$, for $i\in [1,2]$. Then, one of the following holds:
-	\begin{itemize}
-		\item $\send{1}{p_1,q_1,\_}\leadsto \send{2}{p_2,q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \rec{1}{q_1,\_}$, which corresponds to a violation to causal delivery when $q_1=q_2$. Otherwise, when $q_1\neq q_2$, we show that this cycle induces another (smaller cycle) that contains a causal delivery violation. Thus, consider the path between $\rec{2}{q_2,\_}$ and $\rec{1}{q_1,\_}$. By the definition of the conflict relation, the last conflict in this path is necessarily between another action $a$ of $q_1$ (i.e., $\<proc>(a)=q_1$) and $\rec{1}{q_1,\_}$. Otherwise, this path will contain $\send{1}{p_1,q_1,\_}$ and we would have $\send{1}{p_1,q_1,\_}\leadsto  \send{2}{p_2,q_2,\_} \match \rec{2}{q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ which is impossible by Lemma~\ref{lem:acyclic_ag} (the action graph would be cyclic). Now, the path between $\rec{2}{q_2,\_}$ and $a$ will necessarily contain a conflict due to matching (i.e., a pair of matching send/receive actions); otherwise, $q_1=q_2$. Let $\send{3}{p_3,q_3,\_} \match \rec{3}{q_3,\_}$ be the last such conflict (according to the order in this path). Since it is the last such conflict, we have that $q_3 = q_1$. Therefore, we have $\rec{3}{q_1,\_}\leadsto \rec{1}{q_1,\_}$, and $\send{1}{p_1,q_1,\_}\leadsto \send{2}{p_2,q_2,\_}\match \rec{2}{q_2,\_}\leadsto \send{3}{p_3,q_1,\_}$ which is equivalent to $\send{1}{p_1,q_1,\_}\leadsto \send{3}{p_3,q_1,\_}$. The latter is a violation to causal delivery.
-		
-		\item $\send{1}{p_1,q_1,\_}\leadsto \rec{2}{q_2,\_}$ and $\send{2}{p_2,q_2,\_}\leadsto \rec{1}{q_1,\_}$ which is an exchange pattern.
-		\item $\send{1}{p_1,q_1,\_}\leadsto \rec{2}{q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ which is impossible by Lemma~\ref{lem:acyclic_ag} because it would imply a cyclic action graph.
-		\item $\rec{1}{q_1,\_}\leadsto \send{2}{p_2,q_2,\_}$ and $\rec{2}{q_2,\_}\leadsto \send{1}{p_1,q_1,\_}$ which is impossible, by Lemma~\ref{lem:acyclic_ag}.
-	\end{itemize}
-%	\item $\mathrm{act}(v_1)=\{\send{1}{p_1,q_1,\_}\}$ and $\mathrm{act}(v_2)=\{\send{2}{p_2,q_2,\_}, \rec{2}{q_2,\_}\}$.
-%\end{itemize}
-%
-%
-%there exist two pairs of matching send/receive actions
-%$\send{1}{p_1,q_1,\_}$, $\rec{1}{q_1,\_}$, and $\send{2}{p_2,q_2,\_}$, $\rec{2}{q_2,\_}$ such that one of the following holds:
-%\begin{itemize}
-%	\item $\send{1}{p_1,q,\_}\leadsto \send{2}{p_2,q,\_}$ and 
-%\end{itemize}
-
-TODO EXTEND TO UNMATCHED TRACES
-\end{proof}
+%TODO EXTEND TO UNMATCHED TRACES
+%\end{proof}
 
 \subsection{Simulating Borderline Violations}
 
@@ -100,9 +100,7 @@ A violation to synchronizability $t$ is called \emph{borderline} when every stri
 We first show that any borderline synchronizability violation of a message passing system $A$ can be simulated by 
 the synchronous semantics of another message passing system $B$ computable in polynomial time.
 
-Let $t$ be a borderline synchronizability violation.
-By Theorem~\ref{th:patt}, $t$ contains either a causal delivery violation or an exchange pattern.
-Therefore, we have 
+Let $t$ be a borderline synchronizability violation. By definition 
 \begin{align*}
 t=t_1\cdot \send{1}{p_1,q_1,\_} \cdot t_2\cdot \rec{1}{q_1,\_}
 \end{align*} 
