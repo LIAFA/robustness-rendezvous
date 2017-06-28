@@ -1,19 +1,23 @@
 %!TEX root = main.tex
 \section{Checking Synchronizability}
 
-
-
 Verifying synchronizability for a message passing system using a monitor that maintains the conflict-graph of a trace 
 is undecidable since it requires dealing with known undecidable features, e.g., FIFO queues.
 We show in this section that checking synchronizability can be reduced 
-to a reachability problem in a system that executes under the synchronous semantics, and 
-thus doesn't use unbounded message buffers. This result is based on the following ideas
+to a reachability problem in a system that executes under the \emph{synchronous} semantics, and 
+thus doesn't use unbounded message buffers. This result is based on the following ideas:
 \begin{itemize}
-	\item consider a class of borderline violations to synchronizability, i.e., traces which
-are not synchronizable and every strict prefix is synchronizable.
-	\item starting from the original system $A$, define a new system $A_0$ executing under
-the synchronous semantics, which simulates borderline synchronizability violations of
-$A$, if any, and $A_0$ goes to an error state whenever such a violation exists.
+	\item since the set of synchronous executions is prefix-closed, it is enough to look for \emph{borderline} violations, i.e., executions which
+are not synchronous but for which every strict prefix is synchronous,
+	\item starting from the original system $\mathcal{S}$, define a new system $\mathcal{S'}$ whose set of executions under
+the synchronous semantics contains all the borderline synchronizability violations of $\mathcal{S}$, 
+	\item define a monitor $\mathcal{M}_{\mathit{fifo}}$, which identifies executions of $\mathcal{S'}$ under the synchronous semantics
+which are not executions of the original system $\mathcal{S}$ ($\mathcal{M}_{\mathit{fifo}}$ goes to an error state whenever it finds such 
+an execution), 
+	\item define a \emph{monitor} $\mathcal{M}_{\mathit{viol}}$, which identifies synchronizability violations of $\mathcal{S}$ 
+($\mathcal{M}_{\mathit{viol}}$ goes to an error state whenever it finds such an execution),
+	\item establish that $\mathcal{S}$ is $k$-synchronizable whenever $\mathcal{S}\paral \mathcal{M}_{\mathit{fifo}}\paral \mathcal{M}_{\mathit{viol}}$
+doesn't reach an error state (more precisely, none of the two monitors $\mathcal{M}_{\mathit{fifo}}$ and $\mathcal{M}_{\mathit{viol}}$ goes to an error state).
 \end{itemize}
 
 %\subsection{Synchronizability Violation Patterns}
@@ -94,15 +98,97 @@ $A$, if any, and $A_0$ goes to an error state whenever such a violation exists.
 %TODO EXTEND TO UNMATCHED TRACES
 %\end{proof}
 
-\subsection{Simulating Borderline Violations}
+\subsection{Simulating Borderline Violations on the Synchronous Semantics}
 
-A violation to synchronizability $t$ is called \emph{borderline} when every strict prefix of $t$ is synchronizable.
-We first show that any borderline synchronizability violation of a message passing system $A$ can be simulated by 
-the synchronous semantics of another message passing system $B$ computable in polynomial time.
+For a system $\mathcal{S}$, a violation to $k$-synchronizability $e$ is called \emph{borderline} when every strict prefix of 
+$e$ is $k$-synchronous. We define a system $\mathcal{S'}$ whose synchronous semantics admits all the borderline violations of 
+$\mathcal{S}$, if any, where essentially, the reception of exactly one message is delayed (w.r.t. the synchronous semantics).
+The reception of a message $m$ sent from $p$ to $q$ is delayed by redirecting it to an additional process $\pi$ which relays it
+to $q$ at a later time. 
 
-Let $t$ be a borderline synchronizability violation. By definition 
+Formally, the system $\mathcal{S'}$ is defined by $\mathcal{S'}=((\<Lsts>_p,\delta'_p,l_p^0)|p\in\<Pids>\cup\{\pi\})$ where
+\begin{itemize}
+	\item every send of a process $p$ can be non-deterministically redirected to the process $\pi$ (the message payload contains the destination process), i.e., 
+	\begin{align*}
+	&\delta'_p(l,\senda{p,\pi,(q,v)}) = \delta'_p(l,\senda{p,q,v})\mbox{, and} \\ 
+	&\delta'_p(l,a)=\delta_p(l,a)\mbox{ for all $p\in\<Pids>$, $l\in \<Lsts>_p$, and $a\not\in \{\senda{p,\pi,v}| p\in\<Pids>, v\in\<Vals>\}$}
+	\end{align*}
+	\item the process $\pi$ stores the received message in its state and relays it later, i.e., $\<Lsts>_\pi=\{l_\pi^0,l_f\}\cup\{(q,v)\mid q\in\<Pids>, v\in\<Vals>\}$, and
+	for all $q\in\<Pids>$ and $v\in\<Vals>$, 
+	\begin{align*}
+	&\delta'_p(l_\pi^0,\reca{\pi,(q,v)}) = \{(q,v)\} \mbox{ and }
+	\delta'_p((q,v),\senda{\pi,q,v})=l_f
+	\end{align*}	
+\end{itemize}
+
+We first show that $\synchExec{\mathcal{S'}}{k}$ contains all the borderline violations of $\mathcal{S}$. An experienced reader may notice that
+redirecting messages to $\pi$ may lead to scenarios where a message sent later than the redirected one and to the same destination is received
+earlier (which violate the FIFO semantics of the message buffers in $\mathcal{S}$). We show how to exclude such scenarios later in this section.
+
+A preliminary result is that every borderline violation $e$ ends with a receive action and this action is included in every cycle of $CG_{tr(e)}$ that is 
+bad or exceeds the bound $k$. 
+
+\begin{lemma}
+Let $e$ be a borderline violation to $k$-synchronizability of $\mathcal{S}$. Then, $e = e'\cdot r$ for some $e'\in (S_{id}\cup R_{id})^*$ and $r\in R_{id}$.
+\end{lemma}
+\begin{proof}
+Assume by contradiction that $e=e'\cdot s$ for some $e'\in (S_{id}\cup R_{id})^*$ and $s\in S_{id}$. By definition, $CG_{tr(e)}$ contains no outgoing
+edge from the node representing $s$, which implies that any cycle of $CG_{tr(e)}$ is already contained in $CG_{tr(e')}$. This is a contradiction to 
+the fact that $e$ is borderline.
+\end{proof}
+
+Given a cycle $c = v,v_1,\ldots,v_n,v$ of a conflict graph $CG_t$, the node $v$ is called a \emph{critical} node of $c$ when $(v,v_1)$ is an $SX$ edge with $X\in \{S,R\}$ 
+and $(v_n,v)$ is an $YR$ edge with $Y\in \{S,R\}$.
+
+\begin{lemma}
+Let $e = e'\cdot r$, for some $e'\in (S_{id}\cup R_{id})^*$ and $r\in R_{id}$, be a borderline violation to $k$-synchronizability of $\mathcal{S}$. 
+Then, the node $v$ of $CG_{tr(e)}$ representing $r$ (and the corresponding send) is a critical node of every cycle of 
+$CG_{tr(e)}$ which is bad or of size bigger than $k$. % is of the form $v, v_1,\ldots, v_n,v$ where $(v,v_1)$ is an $SX$ edge for $X\in \{S,R\}$ and $(v_n,v)$ is an $YR$ edge for $Y\in \{S,R\}$.
+\end{lemma}
+\begin{proof}
+Let $v_0,v_1,\ldots,v_n,v_0$ be a cycle of $CG_{tr(e)}$ which is bad or of size bigger than $k$. We first show that $v=v_i$ for some $0\leq i\leq n$. 
+Assume by contradiction that this is not the case. Then, the execution $e'$ is already a violation to $k$-synchronizability which violates the assumption that $e$ is borderline.
+
+For the following, w.l.o.g., we assume that $v=v_0$. Since $r$ is the last action of $e$, the only outgoing edge of $v$ is an edge labeled by $SX$ with $X\in \{S,R\}$. Therefore $(v,v_1)$ is an $SX$ edge. 
+Assuming by contradiction that the edge $(v_n,v)$ is labeled by $YS$ for some $Y\in \{S,R\}$ implies that $e'$ is already a $k$-synchronizability violation, which contradicts the hypothesis.
+\end{proof}
+
+The following result shows that indeed $\synchExec{\mathcal{S'}}{k}$ contains all the borderline violations of $\mathcal{S}$, modulo a substitution of the message identifiers. 
+%For two executions $e$ and $e'$, $e =_{\mathit{id}} e'$ denotes the fact that $e'$ is obtained from $e$ by renaming message identifiers, i.e., there exists a function $f:\<Mids>->\<Mids>$ such that $e[i]=a_j$, for some $a\in S\cup R$ and $j\in\<Mids>$, iff $e'[i]=a_{f(j)}$ (where $e[i]$ denotes the $i$-th element of the sequence $e$).
+
+TODO BELONGS TO THIS MODULO CONFLICT-PRESERVING PERMUTATIONS
+
+\begin{theorem}
+Let $e$ be a borderline violation to $k$-synchronizability of $\mathcal{S}$. Then, $e\in \synchExec{\mathcal{S'}}{k}$ (modulo a substitution of message identifiers).
+\end{theorem}
+\begin{proof}
+Let $e=e_1\cdot s\cdot e_2\cdot r$ be a borderline violation to $k$-synchronizability of $\mathcal{S}$, where $s\match r$. 
+Since $e_1\cdot s\cdot e_2$ is $k$-synchronous, there exists a conflict-preserving permutation $e_1'\cdot s\cdot e_2'$ of $e_1\cdot s\cdot e_2$ which belongs to $\synchExec{\mathcal{S'}}{k}$ (modulo a substitution of message identifiers). The execution $e_1'\cdot s\cdot e_2'$ is obtained through a sequence of \textsc{$k$-exchange} transitions. We show 
+
+ $e_1''\cdot s\cdot e_2''$ 
+
+Let $s'$ be a send action in $e_1$ (occurring before $s$ in $e$) matching a receive $r'$ in $e$. We first show that there exists a conflict-preserving permutation of $e_1\cdot s\cdot e_2$ where $r'$ occurs before $s$ as well. Assuming by contradiction that such a permutation doesn't exist, we get that $s'\leadsto s$ and $s\leadsto r'$. 
+
+ Assuming by contradiction that this is not the case, 
+
+$e_1'\cdot s\cdot e_2'$  in which every message sent 
+during $e_1'$ is received during $e_1'$ as well. 
+
+receive action matching a send action in $e_1$ is also contained in $e_1$. 
+
+
+Since $e$ is a borderline violation, w.l.o.g., we assume that $e_1\cdot s\cdot e_2$ is $k$-synchronous. 
+
+
+This implies that for every send action in 
+$e_1$, the matching receive action is  contained also in $e_1$. Assume by contradiction that this is not the case. Then, 
+\end{proof}
+
+%We first show that any borderline synchronizability violation of a message passing system $A$ can be simulated by 
+%the synchronous semantics of another message passing system $B$ computable in polynomial time.
+Let $e$ be a borderline $k$-synchronizability violation: 
 \begin{align*}
-t=t_1\cdot \send{1}{p_1,q_1,\_} \cdot t_2\cdot \rec{1}{q_1,\_}
+e=e_1\cdot \send{1}{p_1,q_1,\_} \cdot e_2\cdot \rec{1}{q_1,\_}
 \end{align*} 
 where the prefix $t' = t_1\cdot \send{1}{p_1,q_1,\_} \cdot t_2$ is a synchronizable trace.
 We first define a system $\mathrm{lossy}(A)$ whose synchronous semantics simulates every synchronizable 

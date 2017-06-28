@@ -138,9 +138,10 @@ We give a characterization of the traces under the $k$-synchronous semantics tha
 %TODO BELOW WE ADD EDGES FROM A SEND/RECEIVE PAIR TO EVERY UNMATCHED SEND THAT HAS THE SAME DESTINATION
 
 \begin{definition}[Conflict-Graph]\label{def:conf_graph}
-    The \emph{conflict-graph} of a trace $t=(A,po,src)$ is the labeled directed graph $CG_t=\tup{V,E,\ell_V,\ell_E}$ where:
+    The \emph{conflict-graph} of a trace $t=(A,po,src)$ is the labeled directed graph $CG_t=\tup{V,E,\ell_E}$ where:
 \begin{itemize}
-	\item the set of nodes $V$ includes one node for each pair of matching send and receive actions, and each unmatched send action in $t$. Nodes $v$ corresponding to pairs of send/receive actions are labeled by $M$, i.e., $\ell_V(v)=M$, and those corresponding to unmatched sends by $U$, i.e., $\ell_V(v)=U$.
+	\item the set of nodes $V$ includes one node for each pair of matching send and receive actions, and each unmatched send action in $t$. 
+	%Nodes $v$ corresponding to pairs of send/receive actions are labeled by $M$, i.e., $\ell_V(v)=M$, and those corresponding to unmatched sends by $U$, i.e., $\ell_V(v)=U$.
     	\item the set of edges $E$ is defined by: $(v,v') \in E'$ iff there exist actions $a \in \mathrm{act}(v)$ and $a' \in \mathrm{act}(v')$ such that $(a,a') \in po$ (where $\mathrm{act}(v)$ is the set of actions of trace $t$ corresponding to the graph node $v$). The label of the edge $(v,v')$ records whether $a$ and $a'$ are send or receive actions, i.e., $\ell(v,v')=XY$ iff $a\in X_{id}$ and $a'\in Y_{id}$, for all $X,Y\in \{S,R\}$.
 \end{itemize}
 \end{definition}
@@ -152,7 +153,8 @@ a trace is $1$-synchronous whenever its conflict-graph is acyclic.
 A trace $t$ is $1$-synchronous if{f} its conflict-graph is acyclic.
 \end{lemma}
 
-A cycle of a conflict graph $CG_t$ is called \emph{bad} when it contains a node labeled by $U$, or an edge labeled by $RS$, or it is formed of two edges, one labeled by $SS$ and one by $RR$. Otherwise, it is called \emph{good}.
+A cycle of a conflict graph $CG_t$ is called \emph{bad} when it contains %a node labeled by $U$, or 
+an edge labeled by $RS$, or it is formed of two edges, one labeled by $SS$ and one by $RR$. Otherwise, it is called \emph{good}.
 
 The following extends Lemma~\ref{lem:cg_1} to $k$-synchronous traces.
 
@@ -160,11 +162,12 @@ The following extends Lemma~\ref{lem:cg_1} to $k$-synchronous traces.
 A trace $t$ is $k$-synchronous if{f} every cycle in its conflict-graph is good and of size at most $k$.
 \end{theorem}
 \begin{proof}
-For the only if direction, $t$ is the trace of an execution $e\in \synchExec{\mathcal{S}}{k}$ for some system $\mathcal{S}$. The execution $e$ is obtained through a sequence of \textsc{$k$-exchange} and \textsc{drop} transitions. The set of actions of every node $v$ of $CG_t$ appear in the label of a single such transition. Moreover, for every cycle in $CG_t$, the actions corresponding to the nodes in this cycle occur in the label of a single \textsc{$k$-exchange} transition. Therefore, every cycle in $CG_t$ is good and of size at most $k$.
+For the only if direction, $t$ is the trace of an execution $e\in \synchExec{\mathcal{S}}{k}$ for some system $\mathcal{S}$. The execution $e$ is obtained through a sequence of \textsc{$k$-exchange} transitions. The set of actions of every node $v$ of $CG_t$ appear in the label of a single such transition. Moreover, for every cycle in $CG_t$, the actions corresponding to the nodes in this cycle occur in the label of a single \textsc{$k$-exchange} transition. Therefore, every cycle in $CG_t$ is good and of size at most $k$.
 
-For the if direction, we first show that any strongly-connected component $C$ of $CG_t$ is $k$-synchronous. Since all the cycles in $CG_t$ are of size at most $k$, we get that $C$ contains at most $k$ nodes. The case of strongly-connected components formed of a single node $v$ is trivial. The actions corresponding to $v$ are either a matching pair of send/receive actions, which can be generated through a \textsc{$1$-exchange} transition, or an unmatched send, which can be generated through a \textsc{drop} transition. Now, let $C$ be formed of a set of nodes 
-$v_1$,$\ldots$, $v_n$, for some $2\leq n\leq k$ such that $act(v_i)=\{s_i,r_i\}$, for all $1\leq i\leq n$. 
-W.l.o.g., assume that the indexing of the nodes in $C$ is consistent with the edges labeled by SS (note that there is no cycle formed only of edges labeled by SS), i.e., for every $1\leq i_1<i_2\leq n$, $C$ doesn't contain an edge labeled by SS from $i_2$ to $i_1$, and for every $1\leq i_1<i_2<i_3\leq n$, if $\<proc>(s_{i_1})=\<proc>(s_{i_3})$, then $\<proc>(s_{i_1})=\<proc>(s_{i_2})$,  We have that $C$ is the trace of the execution $e=s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_n$. The fact that all sends can be executed before the receives is a consequence of the fact that $C$ doesn't contain edges labeled by $RS$. Then, the order between receives is consistent with the one between sends because $C$ doesn't contain a cycle formed of an $SS$ and an $RR$ edge. By definition, $e$ is the label of an \textsc{$n$-exchange} transition, and therefore, $C$ is $k$-synchronous. 
+For the if direction, we first show that any strongly-connected component $C$ of $CG_t$ is $k$-synchronous. Since all the cycles in $CG_t$ are of size at most $k$, we get that $C$ contains at most $k$ nodes. The case of strongly-connected components formed of a single node $v$ is trivial. The actions corresponding to $v$ are either a matching pair of send/receive actions, which can be generated through a \textsc{$1$-exchange} transition, or an unmatched send, which can also be generated through a \textsc{$1$-exchange} transition. Now, let $C$ be formed of a set of nodes 
+$v_1$,$\ldots$, $v_n$, for some $2\leq n\leq k$ such that $s_i\in act(v_i)$, for all $1\leq i\leq n$. 
+W.l.o.g., assume that the indexing of the nodes in $C$ is consistent with the edges labeled by SS (note that there is no cycle formed only of edges labeled by SS), i.e., for every $1\leq i_1<i_2\leq n$, $C$ doesn't contain an edge labeled by SS from $i_2$ to $i_1$, and for every $1\leq i_1<i_2<i_3\leq n$, if $\<proc>(s_{i_1})=\<proc>(s_{i_3})$, then $\<proc>(s_{i_1})=\<proc>(s_{i_2})$. Let $i_1$,$\ldots$,$i_m$ be the maximal subsequence of $1$,$\ldots$,$n$ such that $r_{i_j}\in act(v_i)$ for every $1\leq j\leq m$. 
+We have that $C$ is the trace of the execution $e=s_1\cdot\ldots\cdot s_n\cdot r_{i_1}\cdot\ldots\cdot r_{i_m}$. The fact that all sends can be executed before the receives is a consequence of the fact that $C$ doesn't contain edges labeled by $RS$. Then, the order between receives is consistent with the one between sends because $C$ doesn't contain a cycle formed of an $SS$ and an $RR$ edge. By definition, $e$ is the label of an \textsc{$n$-exchange} transition, and therefore, $C$ is $k$-synchronous. 
 
 To complete the proof we proceed by induction on the number of strongly connected components of $CG_t$. The base case is trivial. 
  For the induction step, assume that the claim holds for every trace whose conflict-graph has at most $n$ strongly connected components, and 
@@ -177,5 +180,13 @@ To complete the proof we proceed by induction on the number of strongly connecte
 Theorem~\ref{lem:cg_k} can be used to define a runtime monitor checking for $k$-synchronizability. 
 The monitor maintains the conflict-graph of the trace produced by the message passing system and checks whether it contains some bad cycle, or a cycle of size bigger than $k$.
 While this approach requires dealing with the complexity of the asynchronous semantics (the unbounded message buffers), the next section shows that this is not necessary. Synchronizability violations, if any, can be exposed by executing the system under the \emph{synchronous} semantics.
+
+\begin{theorem}
+Let $e$ be a $k$-synchronous execution. Then, every prefix of $e$ is $k$-synchronous. 
+\end{theorem}
+\begin{proof}
+%We have to show that every cycle in a prefix $e'$ of $e$ is good and of size at most $k$. 
+Since the conflict graph $CG_{tr(e')}$ is a subgraph of $CG_{tr(e)}$, every cycle in $CG_{tr(e')}$ occurs also in $CG_{tr(e)}$. Therefore, since all the cycles of $e$ are good and of size at most $k$, the same holds for all the cycles in $e'$.
+\end{proof}
 
 
