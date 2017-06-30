@@ -1,0 +1,105 @@
+%!TEX root = main.tex
+\section{Synchronizability}
+
+We define a notion of robustness, called \emph{synchronizability}, which ensures that even if the system uses buffers to store messages it provides the illusion that TODO
+
+We define a synchronous semantics which uses an extended version of the standard rendez-vous primitive where the message sent by a process is instantaneously received by the target process. In this extension, more than one process is allowed to send a message and a process can send multiple messages, but all these messages must be received before being allowed to send more messages. This  primitive is called \emph{$k$-exchange} if the number of messages sent is smaller than $k$. The standard rendez-vous primitive corresponds to the $1$-exchange. 
+The semantics allows messages to be dropped, but a process $q$ is forbidden to receive messages once a message sent to process $q$ is dropped. TODO SAY THAT THIS IS RELATED TO AN IMPLICIT FIFO SEMANTICS FOR THE BUFFERS
+
+\begin{figure} [t]
+\footnotesize{
+  \centering
+  \begin{mathpar}
+    \inferrule[$k$-exchange]{
+      e\in S_{id}^*\cdot R_{id}^* \\ 
+      \<msg>(a)\in [1,k]\mbox{ for every $a$ in $e$} \\
+      |e| \leq 2\cdot k\\
+      \forall a\in e\cap S_{id}^*.\ \<dest>(a)\not\in F \\
+      (\vec{l},\vec{\epsilon})\xrightarrow{e} (\vec{l'},\vec{b}),\mbox{ for some $\vec{b}$}
+    }{
+      (\vec{l},F)
+      \xRightarrow{e}{_k}
+      (\vec{l'},F\cup \{q|\mbox{ $e$ contains an unmatched $\send{i}{p,q,v}$, for some $i$, $p$, $v$}\})
+    }%\hspace{5mm}
+    
+%    \inferrule[drop]{
+%      l\in \delta_p(\vec{l}_p,\senda{p,q,v}) \neq \emptyset
+%    }{
+%      (\vec{l},F)
+%      \xRightarrow{\senda{p,q,v}}{_k}
+%      (\vec{l}[\vec{l}_p\gets l],F\cup \{q\})
+%    }%\hspace{5mm}
+    
+%    \inferrule[local]{ 
+%      l\in \delta(\vec{l}_p,\epsilon) \neq \emptyset
+%    }{
+%      \vec{l},\vec{b}
+%      \xrightarrow{\epsilon}
+%      \vec{l}[\vec{l}_p\gets l],\vec{b}
+%    }%\hspace{5mm}
+  \end{mathpar}
+  }
+% \vspace{-5mm}
+  \caption{The synchronous semantics of a message passing system $\mathcal{S}$. Above, $\vec{\epsilon}$ denotes a vector where all the components are $\epsilon$.
+  %and for a sequence of indexed actions $e\in(S_{id}\cup R_{id})^*$, $\overline{e}$ denotes the sequence of \emph{actions} obtained from $e$ by removing message identifiers.
+  %$\vec{b}[\vec{b}_q.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the element of index $q$.
+  }
+  \label{fig:synch-sem}
+%\vspace{-6mm}
+\end{figure}
+
+A configuration $c'=(\vec{l},F)$ in the synchronous semantics is a vector $\vec{l}$ of local states together with a set of process $F\subseteq \<Pids>$. The transition relation $\Rightarrow_k$ is defined in Figure~\ref{fig:synch-sem}. \textsc{$k$-exchange} transitions ... TODO FILL IN
+The semantics defined by $\Rightarrow_k$ is called the $k$-synchronous semantics.
+
+Executions and traces are defined as in the case of the asynchronous semantics, using $\Rightarrow_k$ for some fixed $k$ instead of $\rightarrow$. The set of executions, resp., traces, of $\mathcal{S}$ under the $k$-synchronous semantics is denoted by $\synchExec{\mathcal{S}}{k}$, resp., $\synchTr{\mathcal{S}}{k}$. An execution in $\synchExec{\mathcal{S}}{k}$ is called $k$-synchronous. 
+
+A trace $t\in \synchTr{\mathcal{S}}{k}$, for some $\mathcal{S}$, is called $k$-synchronous. An execution $e$ such that $tr(e)$ is $k$-synchronous is called $k$-synchronizable. We omit $k$ when it is not important.
+
+\begin{lemma}\label{lem:zable_nous}
+For every $k$-synchronizable execution $e$, there exists a permutation $e'$ of $e$ which is $k$-synchronous.
+\end{lemma}
+
+
+\begin{definition}\label{def:synchron}
+A message passing system $\mathcal{S}$ is called \emph{$k$-synchronizable} when $\asynchTr{\mathcal{S}}=\synchTr{\mathcal{S}}{k}$.
+\end{definition}
+
+As a consequence of Definition~\ref{def:synchron}, a system $\mathcal{S}$ is not $k$-synchronizable when it admits an execution $e$ (under the asynchronous semantics) which is not $k$-synchronous (i.e., its trace is not $k$-synchronous). Such an execution $e$ is called a \emph{violation to $k$-synchronizability}.
+
+The following result shows that $k$-synchronizable systems reach exactly the same set of local state vectors under the asynchronous and the $k$-synchronous semantics. 
+
+\begin{theorem}
+For a $k$-synchronizable message passing system $\mathcal{S}$, $\asynchSt{\mathcal{S}}=\synchSt{\mathcal{S}}{k}$.
+\end{theorem}
+\begin{proof}
+TODO 
+\end{proof}
+
+We consider several notions of deadlock in message passing systems and show how they can be checked on the $k$-synchronous semantics assuming that the system is $k$-synchronizable. Thus, a configuration $c=(\vec{l},\vec{b})$ is called 
+\begin{itemize}
+	\item \emph{empty-buffer deadlock} when all the buffers are empty, there is at least one machine waiting for a message, and all the other machines are either in a final or receiving state, i.e., $\vec{b}=\vec{\epsilon}$, there is some $p\in\<Pids>$ such that $(\vec{l}_p,r,l')\in\delta_p$ for some $r\in R$, and for all $p\in \<Pids>$, $\vec{l}_p$ is receiving or final,
+	\item \emph{orphan message configuration} when there is at least a non-empty buffer and each machine is in a final state, i.e., $\vec{b}\neq\vec{\epsilon}$ and for all $p\in \<Pids>$, $\vec{l}_p$ is final,
+	\item \emph{unspecified reception} when some process is prevented from receiving any message from its buffer, i.e., there exists $q\in\<Pids>$ such that $\vec{l}_q$ is receiving, and for all $\reca{q,v}\in R$, if $(\vec{l}_r,\reca{q,v},l')\in \delta_q$, for some $l'$, then $\vec{b}_q\not\in v\<Val>^*$.
+\end{itemize}
+
+We extend the notion of empty-buffer deadlock to configurations of the synchronous semantics by removing the condition that the buffers are empty.
+
+\begin{theorem}
+Let $\mathcal{S}$ be a $k$-synchronizable message passing system. Then, $\mathcal{S}$ reaches an empty-buffer deadlock configuration under the asynchronous semantics iff the $k$-synchronous semantics of $\mathcal{S}$ admits a matched execution to an empty-buffer deadlock configuration $(\vec{l},F)$.
+\end{theorem}
+\begin{proof}
+fds
+\end{proof}
+
+A configuration $(\vec{l},F)$ of the synchronous semantics is called \emph{final} when every local state $\vec{l}_p$ with $p\in\<Pids>$ is final.
+
+\begin{theorem}
+Let $\mathcal{S}$ be a $k$-synchronizable message passing system. Then, $\mathcal{S}$ reaches an orphan message configuration under the asynchronous semantics iff the $k$-synchronous semantics of $\mathcal{S}$ admits an execution containing at least one instance of the \textsc{drop} transition to a final configuration.
+\end{theorem}
+
+TODO UNSPECIFIED RECEPTION (pay attention to exclude traces where the \textsc{drop} is executed too early and blocks a process to receive messages, the dropped message should be causally related to any message sent to the blocked machine to be relevant)
+
+\begin{theorem}
+Let $\mathcal{S}$ be a $k$-synchronizable message passing system. Then, $\mathcal{S}$ reaches an unspecified reception configuration under the asynchronous semantics iff the $k$-synchronous semantics of $\mathcal{S}$ admits an execution TODO.
+\end{theorem}
+
