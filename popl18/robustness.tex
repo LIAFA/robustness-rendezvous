@@ -181,9 +181,9 @@ Theorem~\ref{lem:cg_k} can be used to define a runtime monitor checking for $k$-
 The monitor maintains the conflict-graph of the trace produced by the message passing system and checks whether it contains some bad cycle, or a cycle of size bigger than $k$.
 While this approach requires dealing with the complexity of the asynchronous semantics (the unbounded message buffers), the next section shows that this is not necessary. Synchronizability violations, if any, can be exposed by executing the system under the \emph{synchronous} semantics.
 
-\begin{theorem}
-Let $e$ be a $k$-synchronous execution. Then, every prefix of $e$ is $k$-synchronous. 
-\end{theorem}
+\begin{lemma}\label{lem:pref_closed}
+Let $e$ be a $k$-synchronizable execution. Then, every prefix of $e$ is $k$-synchronizable. 
+\end{lemma}
 \begin{proof}
 %We have to show that every cycle in a prefix $e'$ of $e$ is good and of size at most $k$. 
 Since the conflict graph $CG_{tr(e')}$ is a subgraph of $CG_{tr(e)}$, every cycle in $CG_{tr(e')}$ occurs also in $CG_{tr(e)}$. Therefore, since all the cycles of $e$ are good and of size at most $k$, the same holds for all the cycles in $e'$.
