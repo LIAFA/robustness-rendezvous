@@ -154,9 +154,11 @@ A trace $t$ is $1$-synchronous if{f} its conflict-graph is acyclic.
 \end{lemma}
 
 A cycle of a conflict graph $CG_t$ is called \emph{bad} when it contains %a node labeled by $U$, or 
-an edge labeled by $RS$, or it is formed of two edges, one labeled by $SS$ and one by $RR$. Otherwise, it is called \emph{good}.
+an edge labeled by $RS$ or it is formed of two edges, one labeled by $SS$ and one by $RR$. Otherwise, it is called \emph{good}.
 
 The following extends Lemma~\ref{lem:cg_1} to $k$-synchronous traces.
+
+TODO IN THE FOLLOWING I'M ASSUMING THAT THE TRACE COMES FROM THE FIFO SEMANTICS (SO $S_1 S_2 R_2$ CAN'T HAPPEN). 
 
 \begin{theorem}\label{lem:cg_k}
 A trace $t$ is $k$-synchronous if{f} every cycle in its conflict-graph is good and of size at most $k$.

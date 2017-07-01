@@ -58,7 +58,27 @@
 \usepackage{breakurl}
 \usepackage{enumerate}
 \usepackage{enumitem}
+
 \usepackage{listings}
+\lstdefinelanguage{program}{%
+  keywords={%
+    let,pass,function,%
+    var,const,bool,int,void,atomic,%
+    while,do,if,then,else,assume,assert,call,return,rule,forall,with,new,choose,skip,%
+    task,async,yield,for,wait%
+  },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morecomment=[n]{(*}{*)},
+  mathescape=true,
+  escapeinside=`',
+}
+\lstset{
+  language={program},
+  basicstyle=\ttfamily\scriptsize
+}
+
+
 \usepackage{multirow}
 
 \usepackage{graphicx}
@@ -103,7 +123,7 @@
 
 %% Macros plus
 \input macros
-\input macros-programs
+%\input macros-programs
 \input macros-local
 
 \newcommand{\todo}[1]{\textcolor{blue}{[TODO: #1]}}
