@@ -4,7 +4,7 @@
 We define a notion of robustness, called \emph{synchronizability}, which ensures that even if the system uses buffers to store messages it provides the illusion that TODO
 
 We define a synchronous semantics which uses an extended version of the standard rendez-vous primitive where the message sent by a process is instantaneously received by the target process. In this extension, more than one process is allowed to send a message and a process can send multiple messages, but all these messages must be received before being allowed to send more messages. This  primitive is called \emph{$k$-exchange} if the number of messages sent is smaller than $k$. The standard rendez-vous primitive corresponds to the $1$-exchange. 
-The semantics allows messages to be dropped, but a process $q$ is forbidden to receive messages once a message sent to process $q$ is dropped. TODO SAY THAT THIS IS RELATED TO AN IMPLICIT FIFO SEMANTICS FOR THE BUFFERS
+The semantics allows messages to be dropped, but  TODO SAY THAT THIS IS RELATED TO AN IMPLICIT FIFO SEMANTICS FOR THE BUFFERS
 
 \begin{figure} [t]
 \footnotesize{
@@ -12,14 +12,15 @@ The semantics allows messages to be dropped, but a process $q$ is forbidden to r
   \begin{mathpar}
     \inferrule[$k$-exchange]{
       e\in S_{id}^*\cdot R_{id}^* \\ 
-      \<msg>(a)\in [1,k]\mbox{ for every $a$ in $e$} \\
-      |e| \leq 2\cdot k\\
-      \forall a\in e\cap S_{id}^*.\ \<dest>(a)\not\in F \\
-      (\vec{l},\vec{\epsilon})\xrightarrow{e} (\vec{l'},\vec{b}),\mbox{ for some $\vec{b}$}
+       |e| \leq 2\cdot k\\
+%      \<msg>(a)\in [1,k]\mbox{ for every $a$ in $e$} \\
+      (\vec{l},\vec{\epsilon})\xrightarrow{e} (\vec{l'},\vec{b}),\mbox{ for some $\vec{b}$}\\
+            \forall s,r\in e.\ s\match r\implies\<proc>(s)\not\in B(\<dest>(s)) \\
+       B'(q) = B(q) \cup \{p: \exists s\in e\cap S_{id}.\ ((\not\exists r\in e.\ s\match r)\land p = \<proc>(s)\land q=\<dest>(s)) \lor (\<proc>(s)\in B(q)\land \<dest>(s) = p)\}
     }{
-      (\vec{l},F)
+      (\vec{l},B)
       \xRightarrow{e}{_k}
-      (\vec{l'},F\cup \{q|\mbox{ $e$ contains an unmatched $\send{i}{p,q,v}$, for some $i$, $p$, $v$}\})
+      (\vec{l'},B')
     }%\hspace{5mm}
     
 %    \inferrule[drop]{

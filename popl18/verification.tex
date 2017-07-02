@@ -121,9 +121,8 @@ Formally, given $\mathcal{S}=((\<Lsts>_p,\delta_p,l_p^0)\mid p\in\<Pids>)$, we d
 	\end{align*}	
 \end{itemize}
 
-An experienced reader may notice that
-redirecting messages to $\pi$ may lead to scenarios where a message sent later than the redirected one and to the same destination is received
-earlier (which violate the FIFO semantics of the message buffers in $\mathcal{S}$). We show how to exclude such scenarios in Section~\ref{ssec:verif1}.
+Redirecting messages to $\pi$ may lead to scenarios violating causal delivery (where a message sent later than the redirected one and to the same destination is received
+earlier). We show how to exclude such scenarios in Section~\ref{ssec:verif2}.
 
 %We first show that $\synchExec{\mathcal{S'}}{k}$ contains all the borderline violations of $\mathcal{S}$. 
 
@@ -167,13 +166,13 @@ Let $e=e_1\cdot \send{i}{p,q,v}\cdot e_2\cdot \rec{i}{q,v}$ be a borderline viol
 \begin{align*}
 e'=e_1'\cdot \send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}\cdot e_2'\cdot \send{j}{\pi,q,v}\cdot \rec{j}{q,v}
 \end{align*}
-where $e_1'\cdot \send{i}{p,q,v} \cdot e_2'$ is a permutation of $e_1\cdot \send{i}{p,q,v}\cdot e_2$.
+such that $e_1'\cdot \send{i}{p,q,v} \cdot e_2'$ is a permutation of $e_1\cdot \send{i}{p,q,v}\cdot e_2$.
 \end{theorem}
 \begin{proof}
 A direct consequence of the definition of $\mathcal{S'}$ is that $e'\in\asynchExec{\mathcal{S'}}$. We show that the trace of $e'$ is $k$-synchronous. The conflict graph of $tr(e')$ can be obtained from the one of $tr(e)$ as follows:
 \begin{itemize}
 	\item the node $v$ representing the pair of actions $\{\send{i}{p,q,v},\rec{i}{q,v}\}$ is replaced by two nodes $v'$ and $v''$ representing $\{\send{i}{p,\pi,(q,v)}, \rec{i}{\pi,(q,v)}\}$ and $\{\send{j}{\pi,q,v}, \rec{j}{q,v}\}$, respectively,
-	\item for every $SS$ edge from $v$ to a node $w$ in $CG_{tr(e)}$, there exists an $SS$ edge from $v'$ to $w$ in $CG_{tr(e')}$,
+	\item for every $SX$ edge from $v$ to a node $w$ in $CG_{tr(e)}$, where $X\in\{S,R\}$, there exists an $SX$ edge from $v'$ to $w$ in $CG_{tr(e')}$,
 	\item $v'$ is connected to $v''$ by an $RS$ edge,
 	\item there is no outgoing edge from $v''$.
 \end{itemize}
@@ -190,23 +189,24 @@ Let $e$ be an execution in $\synchExec{\mathcal{S'}}{k}$ of the form
 \begin{align*}
 e_1\cdot \send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}\cdot e_2\cdot \send{j}{\pi,q,v}\cdot \rec{j}{q,v}.
 \end{align*}
-If $e$ satisfies causal delivery, then $\asynchExec{\mathcal{S}}$ contains a permutation of $e_1\cdot\send{i}{p,q,v} \cdot e_2\cdot \rec{i}{q,v}$ (where $i$ be renamed so the execution is well-formed) \end{lemma}
+If $e$ satisfies causal delivery, then $\asynchExec{\mathcal{S}}$ contains a permutation of $e_1\cdot\send{i}{p,q,v} \cdot e_2\cdot \rec{i}{q,v}$ (where $i$ may be renamed so the execution is well-formed) \end{lemma}
 
 \begin{figure}
 \begin{center}
 \centering
 \begin{lstlisting}
-function proc: $\<Pids>\cup \{\bot\}$
+function cone: $2^{\<Pids>}$
 function receiver: $\<Pids>\cup \{\bot\}$
 
 // for every $i$, $\<proc>(s_i)\neq \pi$
 rule $s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_m$:
   if ( $\exists i,k.\ s_i = \send{k}{p,\pi,(q,v)}$ )
-    proc := $p$
+    cone := $\{p\}$
     receiver := $q$
-  if ( * $\land$ $\mbox{proc} = p \land \exists i,j,k.\ s_i = \send{k}{p,q,v} \land r_j = \rec{k}{q,v}$ )
-    proc := $q$
-  assert $\forall j.\ \<proc>(r_j) \neq \mbox{receiver}$
+  forall i with $s_i = \send{k}{p,q,v}$
+    if ( $p\in \mbox{proc} \land \exists j.\ r_j = \rec{k}{q,v}$ )
+      cone := $\mbox{cone} \cup \{q\}$
+      assert $q \neq \mbox{receiver}$
 \end{lstlisting}
 \end{center}
 %\begin{lstlisting}
@@ -235,6 +235,21 @@ rule $s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_m$:
 \label{fig:mon_causal}
 \end{figure}
 
+\begin{lemma}
+Let $e$ be an execution in $\synchExec{\mathcal{S'}}{k}$ of the form 
+\begin{align*}
+e_1\cdot \send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}\cdot e_2\cdot \send{j}{\pi,q,v}\cdot \rec{j}{q,v}.
+\end{align*}
+Then, $e$ satisfies causal delivery iff for every send action $s$
+\begin{align*}
+(\send{i}{p,\pi,(q,v)}\leadsto_{tr(e)} s\land \<dest>(s)=q)\implies \not\exists r\in e_2.\ s\match r
+\end{align*}
+\end{lemma}
+
+\begin{lemma}
+
+\end{lemma}
+
 \subsection{Checking for Synchronizability Violation Patterns}
 
 \begin{figure}
@@ -243,20 +258,25 @@ rule $s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_m$:
 \begin{lstlisting}
 function cycle: $\<Pids>^*$
 function receiver: $\<Pids>\cup \{\bot\}$
+function lastIsRec: $\mathbb{B}$
+function sawRS: $\mathbb{B}$
 
 // for every $i$, $\<proc>(s_i)\neq \pi$
 rule $s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_m$:
   if ( $\exists i,k.\ s_i = \send{k}{p,\pi,(q,v)}$ )
     cycle := $p$
     receiver := $q$
-  if ( * $\land$ $\exists i,j,k.\ s_i = \send{k}{p,q,v} \land r_j = \rec{k}{q,v}\land \mbox{proc} \in \{p,q\} $ )
+  if ( * $\land$ $\exists i,j,k.\ s_i = \send{k}{p,q,v} \land r_j = \rec{k}{q,v}\land \mbox{cycle} \in \<Pids>^*\cdot \{p,q\} $ )
     if ( * )
       cycle := $\mbox{proc}\cdot p$
+      if ($\mbox{lastIsRec}\land \mbox{proc} = p$)
+        sawRS = true
     else 
       cycle := $\mbox{proc}\cdot q$
+      lastIsRec := true
 
 rule $\send{i}{\pi,q,v}\cdot \rec{i}{q,v}$:
-  assert $\mbox{cycle} \in \<Pids>^*\cdot\mbox{receiver} \land |\mbox{cycle}| > k$
+  assert $\mbox{cycle} \in \<Pids>^*\cdot\mbox{receiver} \implies (|\mbox{cycle}| \leq k \land \neg \mbox{sawRS})$
 \end{lstlisting}
 \end{center}
 \caption{The monitor $\mathcal{M}_{\mathit{viol}}$. Initially, {\tt proc} and {\tt receiver} are $\bot$.}

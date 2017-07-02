@@ -145,8 +145,9 @@ TODO SEE ABOUT THIS EQUALITY UP TO SUBSTITUTIONS OF MESSAGE IDENTIFIERS
 
 Executions are represented abstractly using traces which are sets of indexed actions together with a \emph{program order} relation relating every two actions of the same process and a \emph{source} relation relating a send with the matching receive (if any).
 
-Formally, the \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$.
-%a trace is a tuple $t=(A,po,src)$ where $A\subseteq S_{id}\cup R_{id}$, $po\subseteq (S_{id}\cup R_{id})\times (S_{id}\cup R_{id})$ such that $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$, and $src\subseteq S_{id}\times R_{id}$ such that $src(a,a')$ iff $a\match a'$. The 
+A trace is a tuple $t=(A,po,src)$ where $A\subseteq S_{id}\cup R_{id}$, $po\subseteq A^2$ defines a total order between actions executed by the same process, i.e., for every $p\in\<Pids>$, $po\cap \{a: a\in A\mbox{ and }\<proc>(a)=p\}^2$ is a total order, and $src\subseteq S_{id}\times R_{id}$ is a relation such that $src(a,a')$ iff $a\match a'$.
+The \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$.
+%
 
 \begin{proposition}
 For a trace $t=(A,po,src)$, the union of $po$ and $src$ is acyclic.
@@ -205,14 +206,15 @@ The following lemma shows that a message passing system $\mathcal{S}$ cannot dis
 If $e\in \asynchExec{\mathcal{S}}$, then $e' \in \asynchExec{\mathcal{S}}$ for every execution $e'$ such that $tr(e)=tr(e')$.
 \end{lemma}
 
-For a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. We say that an execution $e$ satisfies \emph{causal delivery} if intuitively, the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$. Formally, an execution $e$ with trace $tr(e)=(A,po,src)$ satisfies causal delivery if for every two send actions $s_1$ and $s_2$ in $e$, 
+For a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. We say that a trace $t$ satisfies \emph{causal delivery} if intuitively, the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$. Formally, a trace $t$ satisfies causal delivery if for every two send actions $s_1$ and $s_2$ in $A$, 
 \begin{align*}
-(s_1\leadsto_{tr(e)} s_2\land \<dest>(s_1)=\<dest>(s_2))\implies (\not\exists r_2\in e.\ s_2\match r_2)\lor (\exists r_1,r_2\in e.\ s_1\match r_1\land s_2\match r_2\land (r_2,r_1)\not\in po)
+(s_1\leadsto_{t} s_2\land \<dest>(s_1)=\<dest>(s_2))\implies (\not\exists r_2\in A.\ s_2\match r_2)\lor (\exists r_1,r_2\in A.\ s_1\match r_1\land s_2\match r_2\land (r_2,r_1)\not\in po)
 \end{align*}
 
-\begin{lemma}
-Every execution $e\in \asynchExec{\mathcal{S}}$ satisfies causal delivery. 
-\end{lemma}
+An execution $e$ satisfies causal delivery when the trace $tr(e)$ satisfies causal delivery.
 
+\begin{lemma}
+Every trace $t\in \asynchTr{\mathcal{S}}$ satisfies causal delivery. 
+\end{lemma}
 
 
