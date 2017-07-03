@@ -18,7 +18,13 @@ SAY THAT FINDING SUCH CYCLES CAN BE DONE ON THE STRONGER SEMANTICS - GIVE THE MA
 \begin{figure}
 \includegraphics[width=10cm]{commit.pdf}
 \caption{A distributed commit protocol.}
-\label{fig:elevator}
+\label{fig:commit}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=7cm]{MSC-commit.pdf}
+\caption{An execution of the distributed commit protocol and its conflict graph.}
+\label{fig:commit-exec}
 \end{figure}
 
 \begin{figure}
@@ -28,8 +34,29 @@ SAY THAT FINDING SUCH CYCLES CAN BE DONE ON THE STRONGER SEMANTICS - GIVE THE MA
 \end{figure}
 
 \begin{figure}
-\includegraphics[width=12cm]{german.pdf}
-\caption{The German cache coherence protocol}
-\label{fig:elevator}
+\begin{subfigure}[t]{6cm}
+\includegraphics[width=6cm]{MSC-elevator1.pdf}
+\caption{An execution of the elevator and its conflict graph.}
+\label{fig:elevator-exec1}
+\end{subfigure}
+\hspace{1cm}
+\begin{subfigure}[t]{5cm}
+\includegraphics[width=5cm]{MSC-elevator2.pdf}
+\caption{An execution of the elevator and its conflict graph.}
+\label{fig:elevator-exec1}
+\end{subfigure}
+\caption{Executions of the elevator.}
+\label{fig:elevator-exec}
 \end{figure}
 
+\begin{figure}
+\includegraphics[width=10cm]{replication.pdf}
+\caption{A replication storage protocol}
+\label{fig:replication}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=7cm]{MSC-storage.pdf}
+\caption{An execution of the replication storage protocol and its conflict graph.}
+\label{fig:commit-exec}
+\end{figure}
