@@ -28,9 +28,11 @@ The set of send, resp., receive, actions $a$ of process $p$, i.e., with $\<proc>
 \subsection{Message Passing Systems}
 
 A message passing system consists of a finite set of processes that communicate via messages. Each process is described as a state
-machine that evolves by executing send or receive actions, and it is equipped with a FIFO buffer for storing incoming messages before 
-being received. Local actions modifying the state of a process are omitted in order to simplify the technical exposition. Also, extending our
-results to other types of buffers that don't satisfy the FIFO semantics are discussed in Section~\ref{}. 
+machine that evolves by executing send or receive actions.
+%, and it is equipped with a FIFO buffer for storing incoming messages before being received. 
+Local actions modifying the state of a process are omitted in order to simplify the technical exposition. 
+%Also, extending our
+%results to other types of buffers that don't satisfy the FIFO semantics are discussed in Section~\ref{}. 
 
 %, or local actions (specified as $\epsilon$ transitions)
 % and it is equipped with an instance of some fixed collection data type, e.g., FIFO queue, 
@@ -41,9 +43,9 @@ Formally, a \emph{message passing system} is a tuple $\mathcal{S}=((\<Lsts>_p,\d
 %$S_p=(\<Lsts>_p,\delta_p,l_p^0)$ 
 where $\<Lsts>_p$ is the set of local states of process $p$,
 $\delta_p\subseteq \<Lsts>\times (S_p\cup R_p)\times \<Lsts>$ is a transition relation describing the 
-evolution of process $p$, and $l^0_p$ is the initial state of process $p$.
+evolution of process $p$, and $l^0_p$ is the initial state of process $p$. Examples of message passing systems can be found in Figure~\ref{fig:commit}, Figure~\ref{fig:elevator}, and Figure~\ref{fig:replication}.
 
-For a process $p$, a state $l\in \<Lsts>_p$ is called \emph{receiving} when $(l,a,l')\in\delta_p$ for some $l'$ implies that $a\in R_p$. The state $l$ is called \emph{final} when there exists no $l'$ such that $(l,a,l')\in\delta_p$ for some $a$.
+For a process $p$, a state $l\in \<Lsts>_p$ is called \emph{receiving} when $(l,a,l')\in\delta_p$, for some $l'$, implies that $a\in R_p$. For instance, the state {\tt Init} of the process {\tt Manager} in Figure~\ref{fig:commit} is receiving. The state $l$ is called \emph{final} when there exists no $l'$ and $a$ such that $(l,a,l')\in\delta_p$.
 
 %, and $\<AdtM>$ is 
 %a collection data type  with interface $\mathrm{add}(m)$ for adding an element $m$
@@ -55,10 +57,16 @@ For a process $p$, a state $l\in \<Lsts>_p$ is called \emph{receiving} when $(l,
 
 \subsection{Asynchronous Semantics}
 
-A configuration $c=\tup{\vec{l},\vec{b}}$ is a vector  $\vec{l}$  of local states together with a vector $\vec{b}$ of message buffers  that are
-represented as sequences of message payloads tagged with a unique identifier. These two vectors are indexed by elements of $\<Pids>$.
+The semantics of a message passing system assumes that each process is equipped with a FIFO buffer for storing incoming messages, 
+every send action enqueues the message into the destination's buffer, and every receive action dequeues a message from the corresponding 
+buffer. Since messages are not received instantaneously, we use the term \emph{asynchronous} to refer to this semantics (to distinguish it
+from a ``more synchronous'' semantics defined in Section~\ref{sec:criterion}). 
+
+Formally, configuration $c=\tup{\vec{l},\vec{b}}$ is a vector  $\vec{l}$  of local states together with a vector $\vec{b}$ of message buffers  that are
+represented as sequences of message payloads tagged with unique identifiers. The identifiers are used only for technical reasons, to identify a ``matching'' relation
+between sends and receives.  These two vectors are indexed by elements of $\<Pids>$.
 For a vector $\vec{x}$, let $\vec{x}_p$ denote the element of $\vec{x}$ of index $p$.
-The state of the process $p$ is defined by the local state $\vec{l}_p$ and the message buffer $\vec{b}_p$.
+%The state of the process $p$ is defined by the local state $\vec{l}_p$ and the message buffer $\vec{b}_p$.
 The initial configuration $c_0$ of the system $\mathcal{S}$ is the tuple of initial local states together with empty message buffers, i.e., 
 $c_0=\tup{\vec{l},\vec{b}}$ where $\vec{l}_p=l_p^0$ and $\vec{b}=\epsilon$ for each $p\in\<Pids>$.
 %The set of configurations is denoted by $C$.
@@ -70,7 +78,7 @@ $c_0=\tup{\vec{l},\vec{b}}$ where $\vec{l}_p=l_p^0$ and $\vec{b}=\epsilon$ for e
     \inferrule[send]{
       m= (i,v) \\ 
       i\in \<Mids>\mbox{ fresh} \\
-      l\in \delta_p(\vec{l}_p,\senda{p,q,v}) \neq \emptyset
+      (\vec{l}_p,\senda{p,q,v},l)\in \delta_p 
     }{
       \vec{l},\vec{b}
       \xrightarrow{\send{i}{p,q,v}}
@@ -79,7 +87,7 @@ $c_0=\tup{\vec{l},\vec{b}}$ where $\vec{l}_p=l_p^0$ and $\vec{b}=\epsilon$ for e
     
     \inferrule[receive]{
       \vec{b}_q = (i,v) \cdot b \\
-      l\in \delta_q(\vec{l}_q,\reca{q,v}) \neq \emptyset
+      (\vec{l}_q,\reca{q,v},l)\in \delta_q
     }{
       \vec{l},\vec{b}
       \xrightarrow{\rec{i}{q,v}}
@@ -96,7 +104,7 @@ $c_0=\tup{\vec{l},\vec{b}}$ where $\vec{l}_p=l_p^0$ and $\vec{b}=\epsilon$ for e
   \end{mathpar}
   }
 % \vspace{-5mm}
-  \caption{The asynchronous semantics of a message passing system $\mathcal{S}$. Above, $\vec{l}[\vec{l}_p\gets l]$ denotes an update of $\vec{l}$ where the element of index $p$ is replaced by $l$. Also, $\cdot$ denotes the concatenation of two sequences.
+  \caption{The asynchronous semantics of a message passing system $\mathcal{S}$. For a vector $\vec{x}$, $\vec{x}[\vec{x}_p\gets E]$ is the vector $\vec{y}$ with $\vec{y}_q=\vec{x}_q$, for every $q\neq p$, and $\vec{x}_p=E$. Also, $\cdot$ denotes the concatenation of two sequences.
   %$\vec{b}[\vec{b}_q.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the element of index $q$.
   }
   \label{fig:asynch-sem}
@@ -116,11 +124,11 @@ For notational convenience, we often associate $\<Mids>$ with $\<Nats>$, e.g., w
 
 The transition relation $\rightarrow$ in Figure~\ref{fig:asynch-sem} is determined by a message passing system $\mathcal{S}$, and maps
 a configuration $c_1$ to another configuration $c_2$ and indexed action $a\in S_{id}\cup R_{id}$.
-\textsc{send} transitions ... \textsc{receive} transitions ... TODO FILL IN
+The effect of a \textsc{send} transition is to enqueue the message payload tagged with a fresh identifier to the buffer of the destination, and the effect of a \textsc{receive} transition is to dequeue a message from the local buffer.
 
 An \emph{execution} of a system $\mathcal{S}$ under the asynchronous semantics to configuration ${c}_n$
 is a sequence of indexed actions $a_1 \ldots a_n$ such that 
-%is a configuration sequence ${c}_0 {c}_1 \ldots {c}_n$ such that
+there exists a configuration sequence ${c}_0 {c}_1 \ldots {c}_n$ with
 %\vspace{-2mm}
 %\begin{align*}
 $  {c}_m \xrightarrow{a_{m+1}} {c}_{m+1}$
@@ -132,21 +140,22 @@ We
 %call the sequence $a_1 \ldots a_n$ the \emph{log} of ${c}_0 {c}_1 \ldots
 %{c}_n$ and we 
 say that ${c}_n$ is reachable in $\mathcal{S}$ under the asynchronous semantics. % with log $a_1\ldots a_n$. 
-The \emph{reachable local state vectors} of $\mathcal{S}$, denoted $\asynch{States}(\mathcal{S})$, is the
+The \emph{reachable local state vectors} of $\mathcal{S}$, denoted by $\asynchSt{\mathcal{S}}$, is the
 set of local state vectors in reachable configurations.
 %
 The set of executions of $\mathcal{S}$ under the asynchronous semantics is denoted by $\asynchExec{\mathcal{S}}$.
+In the following, we don't distinguish between executions obtained by a consistent renaming of the message identifiers. 
 
-Given an execution $e$, a send action $s$ in $e$ is called an \emph{unmatched send} when $e$ contains no receive action $r$ with $s\match r$. An execution $e$ is called \emph{matched} when it contains no unmatched send.
+Given an execution $e$, a send action $s$ in $e$ is called an \emph{unmatched send} when $e$ contains no receive action $r$ such that $s\match r$. An execution $e$ is called \emph{matched} when it contains no unmatched send.
 
 \subsection{Traces}
 
-TODO SEE ABOUT THIS EQUALITY UP TO SUBSTITUTIONS OF MESSAGE IDENTIFIERS
+%TODO SEE ABOUT THIS EQUALITY UP TO SUBSTITUTIONS OF MESSAGE IDENTIFIERS
 
 Executions are represented abstractly using traces which are sets of indexed actions together with a \emph{program order} relation relating every two actions of the same process and a \emph{source} relation relating a send with the matching receive (if any).
 
 A trace is a tuple $t=(A,po,src)$ where $A\subseteq S_{id}\cup R_{id}$, $po\subseteq A^2$ defines a total order between actions executed by the same process, i.e., for every $p\in\<Pids>$, $po\cap \{a: a\in A\mbox{ and }\<proc>(a)=p\}^2$ is a total order, and $src\subseteq S_{id}\times R_{id}$ is a relation such that $src(a,a')$ iff $a\match a'$.
-The \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$.
+The \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$. Examples of traces can be found in Figure~\ref{fig:commit-exec}, Figure~\ref{fig:elevator-exec}, Figure~\ref{fig:replication-exec}.
 %
 
 \begin{proposition}
@@ -164,7 +173,7 @@ Traces abstract away the order between actions that are not ``causally'' related
 %
 Two executions have the same trace when they only differ in the order between such actions.
 Formally, given an execution $e=e_1\cdot a\cdot a'\cdot e_2$ with $tr(e)=(A,po,src)$, where $e_1, e_2\in (S_{id}\cup R_{id})^*$ and $a,a'\in S_{id}\cup R_{id}$, we say that the execution $e'=e_1\cdot a'\cdot a\cdot e_2$ is derived from $e$ by a \emph{valid swap} iff $(a,a')\not\in po\cup src$. A permutation $e'$ of an execution $e$ is \emph{conflict-preserving} when $e'$ can be derived from $e$ through a sequence of valid swaps. 
-From now on, whenever we use the term permutation we mean conflict-preserving permutation. 
+From now on, whenever we use the term permutation we mean conflict-preserving permutation.
 
 \begin{example}\label{ex:perm}
 The following traces 
@@ -191,22 +200,29 @@ have the following conflict-preserving permutations, respectively:
 \end{align*}
 \end{example}
 
+A direct consequence of the definitions is that the set of executions having the same trace are permutations of one another. 
+
 \begin{lemma}
-Let $e$ be an execution. Then, for every permutation $e'$ of $e$, we have that $tr(e')=tr(e)$. Moreover, for every execution $e'$ such that $tr(e)=tr(e')$, we have that $e'$ is a permutation of $e$ or vice-versa (modulo a substitution of message identifiers).
+Let $e$ be an execution. Then, for every execution $e'$ such that $tr(e)=tr(e')$, we have that $e'$ is a permutation of $e$ or vice-versa. % (modulo a substitution of message identifiers).
 %and $e_2$ be  two executions such that $tr(e_1)=tr(e_2)$. Then, $e_1$ is a permutation of $e_2$ or vice-versa (modulo a substitution of message identifiers).
 \end{lemma}
 
 %A message passing system can not distinguish between two executions, one being a conflict-preserving permutation of the other.
 
 
-The following lemma shows that a message passing system $\mathcal{S}$ cannot distinguish between executions having the same trace.
+The following lemma shows that a message passing system $\mathcal{S}$ cannot distinguish between permutations or equivalently, executions having the same trace.
 %admits an execution $e'$ whenever it admits an execution $e$ with $tr(e)=tr(e')$.
 
-\begin{lemma}
-If $e\in \asynchExec{\mathcal{S}}$, then $e' \in \asynchExec{\mathcal{S}}$ for every execution $e'$ such that $tr(e)=tr(e')$.
+\begin{lemma}\label{lem:undist}
+If $e'$ is a permutation of an execution $e\in \asynchExec{\mathcal{S}}$ to configuration $c_n$, then $e'$ is also an execution of $\mathcal{S}$ to configuration $c_n$.
+Also, if $e\in \asynchExec{\mathcal{S}}$, then $e' \in \asynchExec{\mathcal{S}}$ for every execution $e'$ such that $tr(e)=tr(e')$.
 \end{lemma}
 
-For a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. We say that a trace $t$ satisfies \emph{causal delivery} if intuitively, the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$. Formally, a trace $t$ satisfies causal delivery if for every two send actions $s_1$ and $s_2$ in $A$, 
+\subsection{Causal Delivery}
+
+The asynchronous semantics ensures a property known as \emph{causal delivery}, which intuitively, says that the order in which messages are received by a process $q$ is consistent with the ``causal'' relation between them. Two messages are causally related if for instance, they were sent by the same process $p$ or one of the messages was sent by a process $p$ after the other one was received by the same process $p$. This property is ensured by the fact that the message buffers have a FIFO semantics and a sent message is instantaneously enqueued in the destination's buffer. For instance, TODO MAKE SOME PICTURES FOR A CORRECT AND AN INCORRECT EXECUTION
+
+Formally, for a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. A trace $t$ satisfies \emph{causal delivery} if the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$, i.e., for every two send actions $s_1$ and $s_2$ in $A$, 
 \begin{align*}
 (s_1\leadsto_{t} s_2\land \<dest>(s_1)=\<dest>(s_2))\implies (\not\exists r_2\in A.\ s_2\match r_2)\lor (\exists r_1,r_2\in A.\ s_1\match r_1\land s_2\match r_2\land (r_2,r_1)\not\in po)
 \end{align*}
@@ -216,5 +232,8 @@ An execution $e$ satisfies causal delivery when the trace $tr(e)$ satisfies caus
 \begin{lemma}
 Every trace $t\in \asynchTr{\mathcal{S}}$ satisfies causal delivery. 
 \end{lemma}
+\begin{proof}
+TODO Assume by contradiction that there exists 
+\end{proof}
 
 
