@@ -55,7 +55,7 @@ For a process $p$, a state $l\in \<Lsts>_p$ is called \emph{receiving} when $(l,
 %that each receive action is enabled in every local state, i.e., for every $l\in \<Lsts>$ and every $r\in R$, there exists $l'\in \<Lsts>$ such that $(l,r,l')\in \delta$.
 %TODO GIVE MORE EXPLANATIONS
 
-\subsection{Asynchronous Semantics}
+\subsection{Asynchronous Semantics}\label{ssec:semantics}
 
 The semantics of a message passing system assumes that each process is equipped with a FIFO buffer for storing incoming messages, 
 every send action enqueues the message into the destination's buffer, and every receive action dequeues a message from the corresponding 
@@ -220,9 +220,16 @@ Also, if $e\in \asynchExec{\mathcal{S}}$, then $e' \in \asynchExec{\mathcal{S}}$
 
 \subsection{Causal Delivery}
 
-The asynchronous semantics ensures a property known as \emph{causal delivery}, which intuitively, says that the order in which messages are received by a process $q$ is consistent with the ``causal'' relation between them. Two messages are causally related if for instance, they were sent by the same process $p$ or one of the messages was sent by a process $p$ after the other one was received by the same process $p$. This property is ensured by the fact that the message buffers have a FIFO semantics and a sent message is instantaneously enqueued in the destination's buffer. For instance, TODO MAKE SOME PICTURES FOR A CORRECT AND AN INCORRECT EXECUTION
+The asynchronous semantics ensures a property known as \emph{causal delivery}, which intuitively, says that the order in which messages are received by a process $q$ is consistent with the ``causal'' relation between them. Two messages are causally related if for instance, they were sent by the same process $p$ or one of the messages was sent by a process $p$ after the other one was received by the same process $p$. This property is ensured by the fact that the message buffers have a FIFO semantics and a sent message is instantaneously enqueued in the destination's buffer. For instance, the trace (execution) on the left of Figure~\ref{fig:ex-causal-delivery} satisfies causal delivery. In particular, the messages $v1$ and $v3$ are causally related, and they are received in the same order by $q2$. On the other hand, on the right of Figure~\ref{fig:ex-causal-delivery}, we give a trace where the messages $v_1$ and $v_3$ are causally related, but received in a different order by $q2$, which implies that the trace doesn't satisfy causal delivery. This trace is not admitted by the asynchronous semantics defined in Section~\ref{ssec:semantics} because the message $v1$ would be enqueued in the buffer of $q2$ before $\senda{p,q1,v2}$ is executed and thus, before $\senda{q1,q2,v3}$ as well.
 
-Formally, for a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. A trace $t$ satisfies \emph{causal delivery} if the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$, i.e., for every two send actions $s_1$ and $s_2$ in $A$, 
+\begin{figure}[t]
+\includegraphics[width=9cm]{ex-causal-delivery.pdf}
+\caption{A trace satisfying causal delivery (on the left) and a trace violating causal delivery (on the right).}
+\label{fig:ex-causal-delivery}
+\end{figure}
+
+Formally, for a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. For instance, for the trace $t$ on the left of Figure~\ref{fig:ex-causal-delivery}, we have that $\senda{p,q2,v1}\leadsto_t \senda{q1,q2,v3}$.
+A trace $t$ satisfies \emph{causal delivery} if the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$, i.e., for every two send actions $s_1$ and $s_2$ in $A$, 
 \begin{align*}
 (s_1\leadsto_{t} s_2\land \<dest>(s_1)=\<dest>(s_2))\implies (\not\exists r_2\in A.\ s_2\match r_2)\lor (\exists r_1,r_2\in A.\ s_1\match r_1\land s_2\match r_2\land (r_2,r_1)\not\in po)
 \end{align*}
@@ -232,8 +239,4 @@ An execution $e$ satisfies causal delivery when the trace $tr(e)$ satisfies caus
 \begin{lemma}
 Every trace $t\in \asynchTr{\mathcal{S}}$ satisfies causal delivery. 
 \end{lemma}
-\begin{proof}
-TODO Assume by contradiction that there exists 
-\end{proof}
-
 
