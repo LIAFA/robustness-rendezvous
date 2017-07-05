@@ -1,24 +1,31 @@
 %!TEX root = main.tex
 \section{Checking Synchronizability}
 
-Verifying synchronizability for a message passing system using a monitor that maintains the conflict-graph of a trace 
-is undecidable since it requires dealing with known undecidable features, e.g., FIFO queues.
+%Verifying synchronizability for a message passing system using a monitor that maintains the conflict-graph of a trace 
+%is difficult because it requires dealing with executions where the message buffers are unbounded. 
+%For instance, even if the processes are finite-state, this would not lead to a decision procedure. 
 We show in this section that checking synchronizability can be reduced 
-to a reachability problem in a system that executes under the \emph{synchronous} semantics, and 
-thus doesn't use unbounded message buffers. This result is based on the following ideas:
-\begin{itemize}
-	\item since the set of synchronizable executions is prefix-closed (Lemma~\ref{lem:pref_closed}), it is enough to look for \emph{borderline} violations, i.e., executions which
-are not synchronizable but for which every strict prefix is synchronizable,
-	\item starting from the original system $\mathcal{S}$, define a new system $\mathcal{S'}$ whose synchronous semantics ``simulates''~\footnote{We refer to the standard notion of (stuttering) simulation where (sequences of) transitions in $\mathcal{S}$ are mapped to transitions of $\mathcal{S'}$.} all the borderline violations of $\mathcal{S}$. 
-	\item define a monitor $\mathcal{M}_{\mathit{causal}}$, which identifies executions of $\mathcal{S'}$ under the synchronous semantics
-which are not executions of the original system $\mathcal{S}$ ($\mathcal{M}_{\mathit{causal}}$ goes to an error state whenever it finds such 
-an execution), 
-	\item define a \emph{monitor} $\mathcal{M}_{\mathit{viol}}$, which identifies synchronizability violations of $\mathcal{S}$ 
-($\mathcal{M}_{\mathit{viol}}$ goes to an error state whenever it finds such an execution),
-	\item establish that $\mathcal{S}$ is $k$-synchronizable whenever the synchronous semantics of $\mathcal{S'}\paral \mathcal{M}_{\mathit{causal}}\paral \mathcal{M}_{\mathit{viol}}$
-doesn't reach a configuration where $\mathcal{M}_{\mathit{viol}}$ is in an error state, but $\mathcal{M}_{\mathit{causal}}$ is \emph{not} in an error state 
-(i.e., reaching such a configuration would mean that the synchronous semantics of $\mathcal{S'}$ admits an execution which is valid according to $\mathcal{S}$ but not synchronizable). 
-\end{itemize}
+to a reachability problem in a system that executes under the \emph{synchronous} semantics, 
+where the message buffers cannot grow beyond some fixed bound. The main idea is to show that every
+\emph{borderline} synchronizability violation (for which every strict prefix is synchronizable) of a system $\mathcal{S}$ can be ``simulated''~\footnote{We refer to the standard notion of (stuttering) simulation where (sequences of) transitions in $\mathcal{S}$ are mapped to transitions of $\mathcal{S'}$.}
+by the synchronous semantics of a system $\mathcal{S'}$ where the reception of exactly one message is delayed (w.r.t. the synchronous semantics).
+Then, we give a monitor which observes executions of $\mathcal{S'}$ and identifies synchronizability violations
+(it goes to an error state whenever it finds such an execution).
+
+%This result is based on the following ideas:
+%\begin{itemize}
+%	\item since the set of synchronizable executions is prefix-closed (Lemma~\ref{lem:pref_closed}), it is enough to look for \emph{borderline} violations, i.e., executions which
+%are not synchronizable but for which every strict prefix is synchronizable,
+%	\item starting from the original system $\mathcal{S}$, define a new system $\mathcal{S'}$ whose synchronous semantics ``simulates'' all the borderline violations of $\mathcal{S}$. 
+%	\item define a monitor $\mathcal{M}_{\mathit{causal}}$, which identifies executions of $\mathcal{S'}$ under the synchronous semantics
+%which are not executions of the original system $\mathcal{S}$ ($\mathcal{M}_{\mathit{causal}}$ goes to an error state whenever it finds such 
+%an execution), 
+%	\item define a \emph{monitor} $\mathcal{M}_{\mathit{viol}}$, which identifies synchronizability violations of $\mathcal{S}$ 
+%($\mathcal{M}_{\mathit{viol}}$ goes to an error state whenever it finds such an execution),
+%	\item establish that $\mathcal{S}$ is $k$-synchronizable whenever the synchronous semantics of $\mathcal{S'}\paral \mathcal{M}_{\mathit{causal}}\paral \mathcal{M}_{\mathit{viol}}$
+%doesn't reach a configuration where $\mathcal{M}_{\mathit{viol}}$ is in an error state, but $\mathcal{M}_{\mathit{causal}}$ is \emph{not} in an error state 
+%(i.e., reaching such a configuration would mean that the synchronous semantics of $\mathcal{S'}$ admits an execution which is valid according to $\mathcal{S}$ but not synchronizable). 
+%\end{itemize}
 
 %\subsection{Synchronizability Violation Patterns}
 %
@@ -98,33 +105,10 @@ doesn't reach a configuration where $\mathcal{M}_{\mathit{viol}}$ is in an error
 %TODO EXTEND TO UNMATCHED TRACES
 %\end{proof}
 
-\subsection{Simulating Borderline Violations on the Synchronous Semantics}\label{ssec:verif1}
+\subsection{Borderline Synchronizability Violations}
 
 For a system $\mathcal{S}$, a violation to $k$-synchronizability $e$ is called \emph{borderline} when every strict prefix of 
-$e$ is $k$-synchronizable. We define a system $\mathcal{S'}$ whose synchronous semantics ``simulates'' a permutation of every borderline violation of 
-$\mathcal{S}$, where essentially, the reception of exactly one message is delayed (w.r.t. the synchronous semantics of $\mathcal{S}$).
-The reception of a message $m$ sent from $p$ to $q$ is delayed by redirecting it to an additional process $\pi$ which relays it
-to $q$ at a later time. 
-
-Formally, given $\mathcal{S}=((\<Lsts>_p,\delta_p,l_p^0)\mid p\in\<Pids>)$, we define $\mathcal{S'}=((\<Lsts>_p,\delta'_p,l_p^0)|p\in\<Pids>\cup\{\pi\})$ where
-\begin{itemize}
-	\item every send of a process $p$ can be non-deterministically redirected to the process $\pi$ (the message payload contains the destination process), i.e., 
-	\begin{align*}
-	&\delta'_p(l,\senda{p,\pi,(q,v)}) = \delta'_p(l,\senda{p,q,v})\mbox{, and} \\ 
-	&\delta'_p(l,a)=\delta_p(l,a)\mbox{ for all $p\in\<Pids>$, $l\in \<Lsts>_p$, and $a\not\in \{\senda{p,\pi,v}| p\in\<Pids>, v\in\<Vals>\}$}
-	\end{align*}
-	\item the process $\pi$ stores the received message in its state and relays it later, i.e., $\<Lsts>_\pi=\{l_\pi^0,l_f\}\cup\{(q,v)\mid q\in\<Pids>, v\in\<Vals>\}$, and
-	for all $q\in\<Pids>$ and $v\in\<Vals>$, 
-	\begin{align*}
-	&\delta'_p(l_\pi^0,\reca{\pi,(q,v)}) = \{(q,v)\} \mbox{ and }
-	\delta'_p((q,v),\senda{\pi,q,v})=l_f
-	\end{align*}	
-\end{itemize}
-
-Redirecting messages to $\pi$ may lead to scenarios violating causal delivery (where a message sent later than the redirected one and to the same destination is received
-earlier). We show how to exclude such scenarios in Section~\ref{ssec:verif2}.
-
-%We first show that $\synchExec{\mathcal{S'}}{k}$ contains all the borderline violations of $\mathcal{S}$. 
+$e$ is $k$-synchronizable.
 
 A preliminary result is that every borderline violation $e$ ends with a receive action and this action is included in every cycle of $CG_{tr(e)}$ that is 
 bad or exceeds the bound $k$. 
@@ -153,6 +137,35 @@ Assume by contradiction that this is not the case. Then, the execution $e'$ is a
 For the following, w.l.o.g., we assume that $v=v_0$. Since $r$ is the last action of $e$, the only outgoing edge of $v$ is an edge labeled by $SX$ with $X\in \{S,R\}$. Therefore $(v,v_1)$ is an $SX$ edge. 
 Assuming by contradiction that the edge $(v_n,v)$ is labeled by $YS$ for some $Y\in \{S,R\}$ implies that $e'$ is already a $k$-synchronizability violation, which contradicts the hypothesis.
 \end{proof}
+
+
+\subsection{Simulating Borderline Violations on the Synchronous Semantics}\label{ssec:verif1}
+
+ We define a system $\mathcal{S'}$ whose synchronous semantics ``simulates'' a permutation of every borderline violation of 
+$\mathcal{S}$, where essentially, the reception of exactly one message is delayed (w.r.t. the synchronous semantics of $\mathcal{S}$).
+The reception of a message $m$ sent from $p$ to $q$ is delayed by redirecting it to an additional process $\pi$ which relays it
+to $q$ at a later time. 
+
+Formally, given $\mathcal{S}=((\<Lsts>_p,\delta_p,l_p^0)\mid p\in\<Pids>)$, we define $\mathcal{S'}=((\<Lsts>_p,\delta'_p,l_p^0)|p\in\<Pids>\cup\{\pi\})$ where
+\begin{itemize}
+	\item every send of a process $p$ can be non-deterministically redirected to the process $\pi$ (the message payload contains the destination process), i.e., 
+	\begin{align*}
+	&\delta'_p(l,\senda{p,\pi,(q,v)}) = \delta'_p(l,\senda{p,q,v})\mbox{, and} \\ 
+	&\delta'_p(l,a)=\delta_p(l,a)\mbox{ for all $p\in\<Pids>$, $l\in \<Lsts>_p$, and $a\not\in \{\senda{p,\pi,v}| p\in\<Pids>, v\in\<Vals>\}$}
+	\end{align*}
+	\item the process $\pi$ stores the received message in its state and relays it later, i.e., $\<Lsts>_\pi=\{l_\pi^0,l_f\}\cup\{(q,v)\mid q\in\<Pids>, v\in\<Vals>\}$, and
+	for all $q\in\<Pids>$ and $v\in\<Vals>$, 
+	\begin{align*}
+	&\delta'_p(l_\pi^0,\reca{\pi,(q,v)}) = \{(q,v)\} \mbox{ and }
+	\delta'_p((q,v),\senda{\pi,q,v})=l_f
+	\end{align*}	
+\end{itemize}
+
+Redirecting messages to $\pi$ may lead to scenarios violating causal delivery (where a message sent later than the redirected one and to the same destination is received
+earlier). We show how to exclude such scenarios in Section~\ref{ssec:verif2}.
+
+%We first show that $\synchExec{\mathcal{S'}}{k}$ contains all the borderline violations of $\mathcal{S}$. 
+
 
 
 
