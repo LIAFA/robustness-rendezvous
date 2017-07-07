@@ -5,7 +5,7 @@
 %is difficult because it requires dealing with executions where the message buffers are unbounded. 
 %For instance, even if the processes are finite-state, this would not lead to a decision procedure. 
 We show in this section that checking synchronizability can be reduced 
-to a reachability problem in a system that executes under the \emph{synchronous} semantics 
+to a reachability problem in a system~\footnote{Given a system $\mathcal{S}$ and a local state $l$, the reachability problem asks whether $\mathcal{S}$ can reach a configuration that contains the state $l$.} that executes under the \emph{synchronous} semantics 
 (where the message buffers cannot grow beyond some fixed bound). The main idea is to show that every
 \emph{borderline} synchronizability violation (for which every strict prefix is synchronizable) of a system $\mathcal{S}$ can be ``simulated''~\footnote{We refer to the standard notion of (stuttering) simulation where (sequences of) transitions in $\mathcal{S}$ are mapped to transitions of $\mathcal{S'}$.}
 by the synchronous semantics of a system $\mathcal{S'}$ where the reception of exactly one message is delayed (w.r.t. the synchronous semantics of $\mathcal{S}$).
