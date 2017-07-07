@@ -3,6 +3,13 @@
 
 %TODO A BUFFER FOR EVERY PAIR OF PROCESSES DOESN'T CHANGE THE RESULTS
 
+We define a message passing system as the composition of a set of processes that exchange messages, which
+can be stored in FIFO buffers before being received. An execution of such a system can be represented abstractly
+using a partially-ordered set of events, called a \emph{trace}. The partial order in a trace represents, intuitively,
+the causal relation between the events in an execution. We show that the systems we define satisfy a property
+known as \emph{causal delivery} which states that the order in which messages are received by a process is
+consistent with the causal relation between the corresponding sendings.
+
 \subsection{Send and Receive Actions}
 
 We fix arbitrary sets $\<Pids>$ and $\<Val>$ of process ids and message payloads. 
