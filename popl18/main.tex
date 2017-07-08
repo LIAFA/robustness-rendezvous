@@ -238,32 +238,32 @@
 We address the problem of verifying message passing programs, defined as a set of parallel processes communicating through unbounded FIFO buffers. Their verification is hard, undecidable in general. An important issue is the design of verification methods that explore subsets of the asynchronous behaviors of the program in order to draw useful conclusions about its correctness. 
 %Existing approaches in this line of research are either not applicable to systems with unbounded buffers, or restricted in scope, or highly complex, or not guaranteed to terminate, or are based on approximate analyses without guarantees of completeness. In this paper 
 
-We introduce a bounded analysis for message passing programs that explores a special type of computations, called $k$-synchronous. These computations can be viewed as sequences of interaction phases, each phase allowing at most $k$ send actions (by different processes), followed by a sequence of receives corresponding to sends in the same phase. We give a procedure for deciding {\em $k$-synchronizability} of a message passing program, i.e., whether every computation is equivalent (has the same happen-before relation) to one of its $k$-synchronous computations. This procedure 
-
- is decidable and PSPACE-complete. T
-
-of them being a sequence of at most $K$ sends (by different processes), followed by a sequence of receives corresponding to sends in the same phase.
-
-We propose an approach for the verification of message passing programs that avoids manipulating explicitly unbounded buffers, and for which it is possible to ensure completeness for a wide and practically relevant class of programs. 
-
-
-
-The contribution of this paper are:
-
-\begin{itemize}
-
-\item A new bounded analysis for message passing programs called Exchange Bounded Analysis (EBA), based on exploring a special type of computations called $K$-synchronous, for a given integer $K>0$. Such computations are successions of interaction phases, each of them being a sequence of at most $K$ sends (by different processes), followed by a sequence of receives corresponding to sends in the same phase. The complexity of state reachability under EBA is PSPACE-complete.
-
-\item A procedure for deciding {\em $K$-synchronizability} of a message passing programs, i.e., for given program, determine whether every  computation of that program is equivalent (has the same happen-before relation) to one of its $K$-synchronous computations. Importantly, the decision procedure never consider the asynchronous semantics (with unbounded buffers); it is based on an exchange-bounded analysis of an instrumented version of the original program. Consequently, the state reachability problem is decidable for $K$-synchronizable programs, and deciding both $K$-synchronizability and state reachability in this case is PSPACE-complete.
-
-\item A procedure for deciding {\em synchronizability}, for a class of message passing programs called {\em flow-bounded programs}, i.e., for a given program in this class, determine whether there exists a $K>0$ for which the program is $K$-synchronizable. The decision procedure uses an iteration of exchange bounded analyses of instrumented versions of the program. Consequently, the state reachability problem is decidable for synchronizable flow-bounded programs.
-%Deciding  synchronizability and state reachability in this case is PSPACE-complete. NOOONNNNNNNN
-
-\item Our approach is also applicable to verifying the existence of deadlocks.
-
-\end{itemize}
-
-All programs we have encountered in practice are synchronizable, and they are either in the syntactical class of flow-bounded programs, or they are outside this class but still synchronizable for a bound $K$ that is easy to find.
+We introduce a bounded analysis for message passing programs that explores a special type of computations, called $k$-synchronous. These computations can be viewed as sequences of interaction phases, each phase allowing at most $k$ send actions (by different processes), followed by a sequence of receives corresponding to sends in the same phase. We give a procedure for deciding {\em $k$-synchronizability} of a message passing program, i.e., whether every computation is equivalent (has the same happen-before relation) to one of its $k$-synchronous computations. This procedure consists in checking a reachability property on the $k$-synchronous computations of an instrumented version of the program (it doesn't have to deal with arbitrary asynchronous computations). We show that reachability over $k$-synchronous computations and checking $k$-synchronizability are both PSPACE-complete. Furthermore, we introduce a class of programs called {\em flow-bounded} for which the problem of deciding whether there exists a $k>0$ for which the program is $k$-synchronizable, is decidable.
+%
+% is decidable and PSPACE-complete. T
+%
+%of them being a sequence of at most $K$ sends (by different processes), followed by a sequence of receives corresponding to sends in the same phase.
+%
+%We propose an approach for the verification of message passing programs that avoids manipulating explicitly unbounded buffers, and for which it is possible to ensure completeness for a wide and practically relevant class of programs. 
+%
+%
+%
+%The contribution of this paper are:
+%
+%\begin{itemize}
+%
+%\item A new bounded analysis for message passing programs called Exchange Bounded Analysis (EBA), based on exploring a special type of computations called $K$-synchronous, for a given integer $K>0$. Such computations are successions of interaction phases, each of them being a sequence of at most $K$ sends (by different processes), followed by a sequence of receives corresponding to sends in the same phase. The complexity of state reachability under EBA is PSPACE-complete.
+%
+%\item A procedure for deciding {\em $K$-synchronizability} of a message passing programs, i.e., for given program, determine whether every  computation of that program is equivalent (has the same happen-before relation) to one of its $K$-synchronous computations. Importantly, the decision procedure never consider the asynchronous semantics (with unbounded buffers); it is based on an exchange-bounded analysis of an instrumented version of the original program. Consequently, the state reachability problem is decidable for $K$-synchronizable programs, and deciding both $K$-synchronizability and state reachability in this case is PSPACE-complete.
+%
+%\item A procedure for deciding {\em synchronizability}, for a class of message passing programs called {\em flow-bounded programs}, i.e., for a given program in this class, determine whether there exists a $K>0$ for which the program is $K$-synchronizable. The decision procedure uses an iteration of exchange bounded analyses of instrumented versions of the program. Consequently, the state reachability problem is decidable for synchronizable flow-bounded programs.
+%%Deciding  synchronizability and state reachability in this case is PSPACE-complete. NOOONNNNNNNN
+%
+%\item Our approach is also applicable to verifying the existence of deadlocks.
+%
+%\end{itemize}
+%
+%All programs we have encountered in practice are synchronizable, and they are either in the syntactical class of flow-bounded programs, or they are outside this class but still synchronizable for a bound $K$ that is easy to find.
 \end{abstract}
 
 %% ACM Stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
