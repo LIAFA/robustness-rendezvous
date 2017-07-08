@@ -162,7 +162,7 @@ Given an execution $e$, a send action $s$ in $e$ is called an \emph{unmatched se
 Executions are represented abstractly using traces which are sets of indexed actions together with a \emph{program order} relation relating every two actions of the same process and a \emph{source} relation relating a send with the matching receive (if any).
 
 A trace is a tuple $t=(A,po,src)$ where $A\subseteq S_{id}\cup R_{id}$, $po\subseteq A^2$ defines a total order between actions executed by the same process, i.e., for every $p\in\<Pids>$, $po\cap \{a: a\in A\mbox{ and }\<proc>(a)=p\}^2$ is a total order, and $src\subseteq S_{id}\times R_{id}$ is a relation such that $src(a,a')$ iff $a\match a'$.
-The \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$. Examples of traces can be found in Figure~\ref{fig:commit-exec}, Figure~\ref{fig:elevator-exec}, Figure~\ref{fig:replication-exec}.
+The \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$. Examples of traces can be found in Figure~\ref{fig:commit-exec}, Figure~\ref{fig:elevator-exec}, Figure~\ref{fig:replic-exec}.
 %
 
 \begin{proposition}
