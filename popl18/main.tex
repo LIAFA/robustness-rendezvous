@@ -148,7 +148,11 @@
 \newcommand\synchSt[2]{\mathrm{sSt}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
 
 
-\title[Robustness]{Robustness against rendezvous} %% [Short Title] is optional;
+\title[Bounded Asynchrony]{On the Completeness of Verifying Message Passing Program under Bounded Asynchrony}
+%Getting Rid of Unbounded Buffers in the Verification of Message Passing Systems} %% [Short Title] is optional;
+
+
+
                                         %% when present, will be used in
                                         %% header instead of Full Title.
 %\titlenote{with title note}             %% \titlenote is optional;
@@ -158,6 +162,7 @@
 %\subtitlenote{with subtitle note}       %% \subtitlenote is optional;
                                         %% can be repeated if necessary;
                                         %% contents suppressed with 'anonymous'
+
 
 
 %% Author information
@@ -238,7 +243,7 @@
 We address the problem of verifying message passing programs, defined as a set of parallel processes communicating through unbounded FIFO buffers. Their verification is hard, undecidable in general. An important issue is the design of verification methods that explore subsets of the asynchronous behaviors of the program in order to draw useful conclusions about its correctness. 
 %Existing approaches in this line of research are either not applicable to systems with unbounded buffers, or restricted in scope, or highly complex, or not guaranteed to terminate, or are based on approximate analyses without guarantees of completeness. In this paper 
 
-We introduce a bounded analysis for message passing programs that explores a special type of computations, called $k$-synchronous. These computations can be viewed as sequences of interaction phases, each phase allowing at most $k$ send actions (by different processes), followed by a sequence of receives corresponding to sends in the same phase. We give a procedure for deciding {\em $k$-synchronizability} of a message passing program, i.e., whether every computation is equivalent (has the same happen-before relation) to one of its $k$-synchronous computations. This procedure consists in checking a reachability property on the $k$-synchronous computations of an instrumented version of the program (it doesn't have to deal with arbitrary asynchronous computations). We show that reachability over $k$-synchronous computations and checking $k$-synchronizability are both PSPACE-complete. Furthermore, we introduce a class of programs called {\em flow-bounded} for which the problem of deciding whether there exists a $k>0$ for which the program is $k$-synchronizable, is decidable.
+We introduce a bounded analysis for message passing programs that explores a special type of computations, called $k$-synchronous. These computations can be viewed as (unbounded) sequences of interaction phases, each phase allowing at most $k$ send actions (by different processes), followed by a sequence of receives corresponding to sends in the same phase. We give a procedure for deciding {\em $k$-synchronizability} of a message passing program, i.e., whether every computation is equivalent (has the same happen-before relation) to one of its $k$-synchronous computations. This procedure consists in checking a reachability property on the $k$-synchronous computations of an instrumented version of the program (it doesn't have to deal with arbitrary asynchronous computations). We show that reachability over $k$-synchronous computations and checking $k$-synchronizability are both PSPACE-complete. Furthermore, we introduce a class of programs called {\em flow-bounded} for which the problem of deciding whether there exists a $k>0$ for which the program is $k$-synchronizable, is decidable.
 %
 % is decidable and PSPACE-complete. T
 %
