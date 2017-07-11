@@ -1,0 +1,340 @@
+\documentclass[acmsmall,review]{acmart}\settopmatter{printfolios=true} %anonymous
+
+%\frontmatter          % for the preliminaries
+%\pagestyle{headings}  % switches on printing of running heads
+
+
+\makeatletter\if@ACM@journal\makeatother
+%% Journal information (used by PACMPL format)
+%% Supplied to authors by publisher for camera-ready submission
+\acmJournal{PACMPL}
+\acmVolume{1}
+\acmNumber{1}
+\acmArticle{1}
+\acmYear{2017}
+\acmMonth{1}
+\acmDOI{10.1145/nnnnnnn.nnnnnnn}
+\startPage{1}
+\else\makeatother
+%% Conference information (used by SIGPLAN proceedings format)
+%% Supplied to authors by publisher for camera-ready submission
+\acmConference[PL'17]{ACM SIGPLAN Conference on Programming Languages}{January 01--03, 2017}{New York, NY, USA}
+\acmYear{2017}
+\acmISBN{978-x-xxxx-xxxx-x/YY/MM}
+\acmDOI{10.1145/nnnnnnn.nnnnnnn}
+\startPage{1}
+\fi
+
+
+%% Copyright information
+%% Supplied to authors (based on authors' rights management selection;
+%% see authors.acm.org) by publisher for camera-ready submission
+\setcopyright{none}             %% For review submission
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+%\setcopyright{rightsretained}
+%\copyrightyear{2017}           %% If different from \acmYear
+
+
+%% Bibliography style
+\bibliographystyle{ACM-Reference-Format}
+%% Citation style
+%% Note: author/year citations are required for papers published as an
+%% issue of PACMPL.
+\citestyle{acmauthoryear}   %% For author/year citations
+
+
+
+
+
+% \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+%\usepackage[numbers]{natbib}
+\usepackage{xspace}
+\usepackage{balance}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{breakurl}
+\usepackage{enumerate}
+\usepackage{enumitem}
+
+\usepackage{listings}
+\lstdefinelanguage{program}{%
+  keywords={%
+    let,pass,function,%
+    var,const,bool,int,void,atomic,%
+    while,do,if,then,else,assume,assert,call,return,rule,forall,with,new,choose,skip,%
+    task,async,yield,for,wait%
+  },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morecomment=[n]{(*}{*)},
+  mathescape=true,
+  escapeinside=`',
+}
+\lstset{
+  language={program},
+  basicstyle=\ttfamily\scriptsize
+}
+
+
+\usepackage{multirow}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes,shadows,arrows}
+\usetikzlibrary{decorations.pathmorphing,snakes}
+\usepackage{tkz-graph}
+\usepackage{moresize}
+
+%\newenvironment{proof}{\paragraph{Proof.}}{\hfill$\square$}
+
+\def\ttat{\mitt{@}} % the at package clobbers this
+\usepackage{at}
+
+%\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{wasysym} % causing problems with llncs's bold vectors
+\usepackage{stmaryrd}
+\usepackage{alltt}
+\usepackage{mathpartir}
+\usepackage[ligature,reserved,inference]{semantic}
+\usepackage[lined]{algorithm2e}
+\usepackage{graphicx}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{fancyvrb}
+\usepackage{rotating}
+\usepackage{latexsym}
+\usepackage{tabulary}
+\usepackage{wrapfig}
+\usepackage{caption,subcaption}
+%\usepackage{pslatex}
+
+\usetikzlibrary{arrows,automata}
+\usetikzlibrary{positioning,shapes,shadows}
+\usetikzlibrary{decorations}
+\makeatletter
+
+%% Macros plus
+\input macros
+%\input macros-programs
+\input macros-local
+
+\newcommand{\todo}[1]{\textcolor{blue}{[TODO: #1]}}
+\newcommand{\shuvendu}[1]{\textcolor{green}{[SKL: #1]}}
+\newcommand{\send}[2]{\mathrm{send}_{#1}({#2})}
+\newcommand{\rec}[2]{\mathrm{rec}_{#1}({#2})}
+
+\newcommand{\senda}[1]{\mathrm{send}({#1})}
+\newcommand{\reca}[1]{\mathrm{rec}({#1})}
+\newcommand{\paral}{\,||\,}
+
+
+\newcommand{\asynch}[1]{\mathrm{Asynch}\text{-}\mathrm{#1}}
+\newcommand{\synch}[1]{\mathrm{Synch}\text{-}\mathrm{#1}}
+\newcommand\asynchTr[1]{\mathrm{asTr}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\asynchExec[1]{\mathrm{asEx}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\synchTr[2]{\mathrm{sTr}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\synchExec[2]{\mathrm{sEx}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand{\xRightarrow}[2][]{\ext@arrow 0359\Rightarrowfill@{#1}{#2}}
+
+\newcommand\asynchSt[1]{\mathrm{asSt}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+\newcommand\synchSt[2]{\mathrm{sSt}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
+
+
+\title[Bounded Asynchrony]{On the Completeness of Verifying Message Passing Programs under Bounded Asynchrony}
+%Getting Rid of Unbounded Buffers in the Verification of Message Passing Systems} %% [Short Title] is optional;
+
+
+
+                                        %% when present, will be used in
+                                        %% header instead of Full Title.
+%\titlenote{with title note}             %% \titlenote is optional;
+                                        %% can be repeated if necessary;
+                                        %% contents suppressed with 'anonymous'
+%\subtitle{Subtitle}                     %% \subtitle is optional
+%\subtitlenote{with subtitle note}       %% \subtitlenote is optional;
+                                        %% can be repeated if necessary;
+                                        %% contents suppressed with 'anonymous'
+
+
+
+%% Author information
+%% Contents and number of authors suppressed with 'anonymous'.
+%% Each author should be introduced by \author, followed by
+%% \authornote (optional), \orcid (optional), \affiliation, and
+%% \email.
+%% An author may have multiple affiliations and/or emails; repeat the
+%% appropriate command.
+%% Many elements are not rendered, but should be provided for metadata
+%% extraction tools.
+
+%% Author with single affiliation.
+\author{Ahmed Bouajjani}
+%\authornote{with author1 note}          %% \authornote is optional;
+                                        %% can be repeated if necessary
+%\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
+\affiliation{
+  \position{Professor}
+  \department{Computer Science}              %% \department is recommended
+  \institution{University Paris Diderot}            %% \institution is required
+  \streetaddress{5 rue Thomas Mann}
+  \city{Paris}
+  \state{Paris}
+  \postcode{75015}
+  \country{France}
+}
+\email{abou@irif.fr}          %% \email is recommended
+
+\author{Constantin Enea}
+%\authornote{with author1 note}          %% \authornote is optional;
+                                        %% can be repeated if necessary
+%\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
+\affiliation{
+  \position{Associate Professor}
+  \department{Computer Science}              %% \department is recommended
+  \institution{University Paris Diderot}            %% \institution is required
+  \streetaddress{5 rue Thomas Mann}
+  \city{Paris}
+  \state{Paris}
+  \postcode{75015}
+  \country{France}
+}
+\email{abou@irif.fr}          %% \email is recommended
+
+\author{Shaz Qadeer}
+%\authornote{with author1 note}          %% \authornote is optional;
+                                        %% can be repeated if necessary
+%\orcid{nnnn-nnnn-nnnn-nnnn}             %% \orcid is optional
+\affiliation{
+  \position{Principal Researcher}
+  \institution{Microsoft Research}            %% \institution is required
+  \streetaddress{14820 NE 36th Street, Building 99}
+  \city{Redmond	}
+  \state{Washington}
+  \postcode{98052}
+  \country{United States}
+}
+\email{qadeer@microsoft.com}          %% \email is recommended
+
+
+\begin{document}
+
+
+%% Paper note
+%% The \thanks command may be used to create a "paper note" ---
+%% similar to a title note or an author note, but not explicitly
+%% associated with a particular element.  It will appear immediately
+%% above the permission/copyright statement.
+%\thanks{with paper note}                %% \thanks is optional
+                                        %% can be repeated if necesary
+                                        %% contents suppressed with 'anonymous'
+
+
+%% Abstract %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Abstract
+%% Note: \begin{abstract}...\end{abstract} environment must come
+%% before \maketitle command
+
+\begin{abstract}
+We address the problem of verifying message passing programs, defined as a set of parallel processes communicating through unbounded FIFO buffers. Their verification is hard, undecidable in general. An important issue is the design of verification methods that explore subsets of the asynchronous behaviors of the program in order to draw useful conclusions about its correctness. 
+%Existing approaches in this line of research are either not applicable to systems with unbounded buffers, or restricted in scope, or highly complex, or not guaranteed to terminate, or are based on approximate analyses without guarantees of completeness. In this paper 
+
+We introduce a bounded analysis for message passing programs that explores a special type of computations, called $k$-synchronous. These computations can be viewed as (unbounded) sequences of interaction phases, each phase allowing at most $k$ send actions (by different processes), followed by a sequence of receives corresponding to sends in the same phase. We give a procedure for deciding {\em $k$-synchronizability} of a message passing program, i.e., whether every computation is equivalent (has the same happen-before relation) to one of its $k$-synchronous computations. This procedure consists in checking a reachability property on the $k$-synchronous computations of an instrumented version of the program (it doesn't have to deal with arbitrary asynchronous computations). We show that reachability over $k$-synchronous computations and checking $k$-synchronizability are both PSPACE-complete. Furthermore, we introduce a class of programs called {\em flow-bounded} for which the problem of deciding whether there exists a $k>0$ for which the program is $k$-synchronizable, is decidable.
+%
+% is decidable and PSPACE-complete. T
+%
+%of them being a sequence of at most $K$ sends (by different processes), followed by a sequence of receives corresponding to sends in the same phase.
+%
+%We propose an approach for the verification of message passing programs that avoids manipulating explicitly unbounded buffers, and for which it is possible to ensure completeness for a wide and practically relevant class of programs. 
+%
+%
+%
+%The contribution of this paper are:
+%
+%\begin{itemize}
+%
+%\item A new bounded analysis for message passing programs called Exchange Bounded Analysis (EBA), based on exploring a special type of computations called $K$-synchronous, for a given integer $K>0$. Such computations are successions of interaction phases, each of them being a sequence of at most $K$ sends (by different processes), followed by a sequence of receives corresponding to sends in the same phase. The complexity of state reachability under EBA is PSPACE-complete.
+%
+%\item A procedure for deciding {\em $K$-synchronizability} of a message passing programs, i.e., for given program, determine whether every  computation of that program is equivalent (has the same happen-before relation) to one of its $K$-synchronous computations. Importantly, the decision procedure never consider the asynchronous semantics (with unbounded buffers); it is based on an exchange-bounded analysis of an instrumented version of the original program. Consequently, the state reachability problem is decidable for $K$-synchronizable programs, and deciding both $K$-synchronizability and state reachability in this case is PSPACE-complete.
+%
+%\item A procedure for deciding {\em synchronizability}, for a class of message passing programs called {\em flow-bounded programs}, i.e., for a given program in this class, determine whether there exists a $K>0$ for which the program is $K$-synchronizable. The decision procedure uses an iteration of exchange bounded analyses of instrumented versions of the program. Consequently, the state reachability problem is decidable for synchronizable flow-bounded programs.
+%%Deciding  synchronizability and state reachability in this case is PSPACE-complete. NOOONNNNNNNN
+%
+%\item Our approach is also applicable to verifying the existence of deadlocks.
+%
+%\end{itemize}
+%
+%All programs we have encountered in practice are synchronizable, and they are either in the syntactical class of flow-bounded programs, or they are outside this class but still synchronizable for a bound $K$ that is easy to find.
+\end{abstract}
+
+%% ACM Stuff %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% 2012 ACM Computing Classification System (CSS) concepts
+%% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10011007.10011006.10011008</concept_id>
+<concept_desc>Software and its engineering~General programming languages</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Software and its engineering~General programming languages}
+
+
+% \category{D.2.4}{Software Engineering}{Software/Program Verification}
+% \category{D.1.3}{Programming Techniques}{Concurrent Programming}
+% \category{F.3.2}{Logics and Meanings of Programs}{Semantics of Programming Languages}[Program analysis]
+
+
+%% End of generated code
+
+
+%% Keywords
+%% comma separated list
+\keywords{Concurrency, Serializability}
+
+
+%% \maketitle
+%% Note: \maketitle command must come after title commands, author
+%% commands, abstract environment, Computing Classification System
+%% environment and commands, and keywords command.
+\maketitle
+
+
+%% Paper body %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input intro
+\input overview
+\input asynch-semantics
+\input synch-semantics
+\input robustness
+\input verification
+\input decidability
+\input related
+%\input conclusions
+
+\clearpage
+
+%\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
+
+
+
+
+
+
+
