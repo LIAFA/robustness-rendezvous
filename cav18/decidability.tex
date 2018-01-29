@@ -1,27 +1,13 @@
 %!TEX root = main.tex
-\section{Decidability results}
+\section{Decidability results}\label{sec:decidability}
 
-We investigate several decidability and asymptotic complexity questions concerning the synchronous semantics and synchronizability. In this context, we consider finite-state message passing systems, where each process has a bounded number of local states.  We show that the reachability problem under the synchronous semantics, and checking $k$-synchronizability, are both decidable and PSPACE-complete. Therefore, even though these problems deal with asynchronous communicating systems, they have the same complexity as the reachability problem in a system using rendez-vous communication. Then, we give a class of systems for which the problem of checking whether there exists some $k$ such that they are  $k$-synchronizable is decidable.
+We investigate several decidability and asymptotic complexity questions concerning the synchronous semantics and synchronizability. In this context, we consider finite-state message passing systems, where each process has a bounded number of local states.  We show that the reachability problem under the synchronous semantics, and checking $k$-synchronizability, are both decidable and PSPACE-complete. Therefore, even though these problems deal with asynchronous communicating systems, they have the same complexity as the reachability problem in a system using rendez-vous communication. Then, we give a class of systems for which the problem of checking whether there exists some $k$ such that they are  $k$-synchronizable is decidable. Proofs of the results in this section can be found in Appendix~\ref{asec:decidability}.
 
 Given a system $\mathcal{S}$, an integer $k$, and a local state $l$, \emph{the reachability problem under the $k$-synchronous semantics} asks whether $\synchSt{\mathcal{S}}{k}$ contains a configuration $(\vec{l},B)$ with $l=\vec{l}_p$ for some $p\in\<Pids>$.
 
 \begin{theorem}\label{th:dec1}
-For a finite-state system $\mathcal{S}$, the reachability problem under the $k$-synchronous semantics is decidable and PSPACE-complete.
+For a finite-state system $\mathcal{S}$, the reachability problem under the $k$-synchronous semantics and the problem of checking $k$-synchronizability of $\mathcal{S}$ are decidable and PSPACE-complete.
 \end{theorem}
-\begin{proof}
-A consequence of the fact that the product emptiness problem (checking if the product of a set of finite state automata has an empty language) is PSPACE-complete~\cite{DBLP:conf/focs/Kozen77}. The evolution of the $B$ component of a synchronous configuration and the set of messages sent during a $k$-exchange transition can be modeled using an additional labeled transition system that is composed with the processes in the system. 
-\end{proof}
-
-\begin{theorem}
-The problem of checking $k$-synchronizability of a finite-state system $\mathcal{S}$ is decidable and PSPACE-complete.
-\end{theorem}
-\begin{proof}
-Theorem~\ref{th:main-verif} and Theorem~\ref{th:dec1} imply that the problem is in PSPACE. Moreover, PSPACE-hardness follows from the fact that the product emptiness problem can be reduced to checking $1$-synchronizability. Given a set of finite state automata $A_1$, $\ldots$, $A_n$, we define a message passing system $\mathcal{S}$ containing one process $p_i$ for each automaton $A_i$, which ``simulates'' the product. Essentially, $p_1$ is obtained from $A_1$ by rewriting every transition label $a$ to $\senda{p_1,p_2,a_1}\cdot \reca{p_1,a_n}$, the process $p_i$ with $1<i<n$ is obtained from $A_i$ by rewriting every transition label $a$ to $\reca{p_i,a_{i-1}}\cdot \senda{p_i,p_{i+1},a_i}$, and $p_n$ is obtained from $A_n$ by rewriting every transition label $a$ to $\reca{p_n,a_{n-1}}\cdot \senda{p_n,p_1,a_n}$. This rewriting ensures that every transition of the product of $A_1\times\ldots\times A_n$ is simulated precisely by a sequence of sends/receives:
-\begin{align*}
-\senda{p_1,p_2,a_1}\cdot \reca{p_2,a_1}\cdot \senda{p_2,p_3,a_2}\cdot\ldots \cdot \reca{p_n,a_{n-1}} \senda{p_n,p_1,a_n}\cdot \reca{p_1,a_n}
-\end{align*}
-Note that every execution admitted by this system is $1$-synchronous. Augmenting this system with new states and transitions to ensure that it produces a violation of $1$-synchronizability exactly when each process $p_i$ is in a final state of $A_i$, leads to a system which is \emph{not} $1$-synchronizable iff the product $A_1\times\ldots\times A_n$ has a non-empty language. Therefore, the product emptiness problem is polynomial-time reducible to checking $1$-synchronizability.
-\end{proof}
 
 \begin{figure}
 \includegraphics[width=7cm]{Ex-Decidability.pdf}
@@ -42,8 +28,3 @@ For instance, all the processes in the distributed commit protocol in Figure~\re
 \begin{theorem}
 For a flow-bounded system $\mathcal{S}$, the problem of checking if there exists some $k$ such that $\mathcal{S}$ is $k$-synchronizable, is decidable.
 \end{theorem}
-\begin{proof}
-First, assume that there exists an execution $e$ of $\mathcal{S}$ such that the corresponding conflict graph contains a bad cycle. Then, $\mathcal{S}$ is not $k$-synchronizable for $k = |e|$ (where $|e|$ denotes the length of $e$), and finding this $k$ through a procedure that checks $k$-synchronizability for increasing values of $k$ is clearly possible.
-
-Now, assume that $\mathcal{S}$ admits no such execution. Then, every execution $e$ of $\mathcal{S}$ can be permuted to a $k$-synchronous execution $e'$, for some $k$ (the lack of conflict-graph cycles with an $RS$ labeled edge implies that the execution can be permuted to a sequence of $k$-exchange transition labels). Let $K$ be a constant such that every process in $\mathcal{S}$ is $K$-receive bounded and $K$-send bounded (this constant exists because $\mathcal{S}$ is flow-bounded). We get that the number of consecutive receives in $e'$ is bounded by $K\times |\<Pids>|$, and the number of consecutive sends by $K\times |\<Pids>|$. Otherwise, there would exist a process that performs more than $K$ consecutive receives or more than $K$ consecutive sends before a receive, which contradicts the definition of $K$. Therefore, $e'$ can be executed by a sequence of $K\times |\<Pids>|$-exchange transitions.
-\end{proof}

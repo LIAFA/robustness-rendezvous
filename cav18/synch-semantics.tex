@@ -106,47 +106,5 @@ For a $k$-synchronizable message passing system $\mathcal{S}$, $\asynchSt{\mathc
 Direct consequence of Lemma~\ref{lem:undist}.
 \end{proof}
 
-In addition to assertion/invariant checking, we show that the problem of detecting deadlocks in a $k$-synchronizable system can also be solved using the $k$-synchronous semantics instead of the asynchronous one. 
-We consider several notions of deadlock: a configuration $c=(\vec{l},\vec{b})$ is called 
-\begin{itemize}
-	\item \emph{empty-buffer deadlock} when all the buffers are empty, there exists at least one process waiting for a message, and all the other processes are either in a final or receiving state, i.e., $\vec{b}=\vec{\epsilon}$, there exists $p\in\<Pids>$ such that $(\vec{l}_p,r,l')\in\delta_p$ for some $r\in R$, and for all $q\in \<Pids>$, $\vec{l}_q$ is receiving or final,
-	\item \emph{orphan message configuration} when there is at least a non-empty buffer and each process is in a final state, i.e., $\vec{b}\neq\vec{\epsilon}$ and for all $p\in \<Pids>$, $\vec{l}_p$ is final,
-	\item \emph{unspecified reception} when some process is prevented from receiving any message from its buffer, i.e., there exists $p\in\<Pids>$ such that $\vec{l}_p$ is receiving, and for all $\reca{p,v}\in R$, if $(\vec{l}_p,\reca{p,v},l')\in \delta_p$, for some $l'$, then $\vec{b}_p\not\in v\<Val>^*$.
-\end{itemize}
-
-We show that reachability of such configurations in the original asynchronous semantics can be reduced to reachability problems over the synchronous semantics, provided that the system is $k$-synchronizable. The constraints over the buffers of the asynchronous configurations are replaced by constraints over the executions (traces) of the synchronous semantics. For instance, an execution reaching an empty-buffer configuration is ``equivalent'' to a synchronous \emph{matched} execution where every sent message has been received (assuming $k$-synchronizability).
-
-We extend the notion of empty-buffer deadlock to configurations of the synchronous semantics by removing the condition that the buffers are empty.
-
-\begin{theorem}\label{th:deadlock1}
-A $k$-synchronizable system $\mathcal{S}$ reaches an empty-buffer deadlock configuration under the asynchronous semantics iff the $k$-synchronous semantics of $\mathcal{S}$ admits a matched execution to an empty-buffer deadlock configuration.
-\end{theorem}
-\begin{proof}
-We prove the only-if direction, the reverse being similar. 
-Let $e$ be an execution in $\asynchExec{\mathcal{S}}$ to an empty-buffer deadlock configuration $(\vec{l},\vec{\epsilon})$. Since the buffers are empty, by the definition of the asynchronous semantics, we get that $e$ is matched. By $k$-synchronizability, there exists a permutation $e'$ of $e$ that belongs to $\synchExec{\mathcal{S}}{k}$. Then, by Lemma~\ref{lem:undist}, $e'$ is an execution to a configuration $(\vec{l},B)$, for some $B$, which finishes the proof.
-\end{proof}
-
-A configuration $(\vec{l},B)$ of the synchronous semantics is called \emph{final} when every local state $\vec{l}_p$ with $p\in\<Pids>$ is final. The proof of the following result is similar to that of Theorem~\ref{th:deadlock1}, the only addition being that an asynchronous execution to a configuration with non-empty buffers corresponds to a synchronous execution with unmatched send actions (provided that the system is $k$-synchronizable). 
-
-\begin{theorem}
-A $k$-synchronizable system $\mathcal{S}$ reaches an orphan message configuration under the asynchronous semantics iff the $k$-synchronous semantics of $\mathcal{S}$ admits an execution containing at least one unmatched send to a final configuration.
-\end{theorem}
-
-%Let $(\vec{l},B)\xRightarrow{e}{_k} (\vec{l'},B')$ be a \textsc{$k$-exchange} transition. This transition is called \emph{$p$-blocked} when intuitively, $p$ is in a receiving state but it can't receive any message sent to $p$ in $e$, i.e., $\vec{l}_p$ is receiving, $e$ contains an unmatched send action $s$ with destination $p$ and there exists no extension of $e$ by adding a receive $r$ matching $s$ (and possibly other actions) such that $(\vec{l},B)\xRightarrow{e'}{_k} (\vec{l''},B'')$ is valid, for some $(\vec{l''},B'')$.
-
-A local state $l$ of a process $p$ is called \emph{$V$-receiving} when it is receiving and the set of messages that can be received in $l$ is exactly $V$, i.e., for all $v$,  $v\in V$ iff there exists $l'\in \<Lsts>_p$ such that $(l,\reca{p,v},l')\in \delta_p$. A configuration $(\vec{l},B)$ of the synchronous semantics is called \emph{$(p,V)$-receiving} when $\vec{l}_p$ is $V$-receiving. 
-Given an execution $e$, let $\mathit{minUnmatched}(e,p)$ be the set of unmatched send actions in $e$ which are minimal in the causal relation of $tr(e)$ among unmatched send actions with destination $p$, i.e., $\mathit{minUnmatched}(e,p)$ is the set of unmatched send actions $\send{i}{p',p,v}$ in $e$ such that for every other unmatched send action $\send{j}{p'',p,v}$ in $e$ we have that $\send{i}{p'',p,v}\not\leadsto_{tr(e)}\send{i}{p',p,v}$.
-
-\begin{theorem}
-A $k$-synchronizable system $\mathcal{S}$ reaches an unspecified reception configuration under the asynchronous semantics iff there exists some $p\in \<Pids>$ such that the $k$-synchronous semantics of $\mathcal{S}$ admits an execution $e$ to a $(p,V)$-receiving state and 
-\begin{align*}
-\{v: \exists \send{i}{p',p,v}\in \mathit{minUnmatched}(e,p)\}\setminus V \neq \emptyset.
-\end{align*}
-\end{theorem}
-\begin{proof}
-For the only-if direction, let $e$ be an execution in $\asynchExec{\mathcal{S}}$ to an unspecified reception configuration $(\vec{l},\vec{b})$. Then, there exists $p\in\<Pids>$ such that $\vec{l}_p$ is $V$-receiving, for some $V\in\<Vals>$, and $v_p\not\in V$, where $v_p$ is the head of $\vec{b}_p$ (the first message to be dequeued). Therefore, $e$ contains an unmatched send action $\send{i}{p',p,v_p}$ which is also the first among unmatched send actions with destination $p$ (otherwise, $v_p$ would not be the first message in the buffer of $p$). Therefore, $\send{i}{p',p,v_p}\in \mathit{minUnmatched}(e,p)$. By $k$-synchronizability, there exists a permutation $e'$ of $e$ that belongs to $\synchExec{\mathcal{S}}{k}$. By Lemma~\ref{lem:undist}, $e'$ is an execution to a configuration $(\vec{l},B)$, for some $B$, which is $(p,V)$-receiving. Since $e$ and $e'$ have the same trace, we get that $\send{i}{p',p,v_p}\in \mathit{minUnmatched}(e',p)$ as well, which finishes the proof of this direction.
-
-For the if direction, assume that the $k$-synchronous semantics of $\mathcal{S}$ admits an execution $e$ as above. Let $\send{i}{p',p,v}$ be an action in $\mathit{minUnmatched}(e,p)$ such that $v\not\in V$. Because $\send{i}{p',p,v}$ is minimal among unmatched send actions with destination $p$, there exists a permutation $e'$ of $e$ where it is the first unmatched send with destination $p$. As a direct consequence of the definitions, we get that $e$ is an execution to an unspecified reception configuration.
-\end{proof}
-
+Appendix~\ref{asec:deadlocks} shows that the problem of detecting deadlocks in a $k$-synchronizable system can also be solved using the $k$-synchronous semantics instead of the asynchronous one
 
