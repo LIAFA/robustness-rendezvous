@@ -67,38 +67,41 @@ evolution of process $p$, and $l^0_p$ is the initial state of process $p$. Examp
 
 %\subsection{Asynchronous Semantics}\label{ssec:semantics}
 
-The semantics of a message passing system assumes that each process is equipped with a FIFO buffer for storing incoming messages, 
-every send action enqueues the message into the destination's buffer, and every receive action dequeues a message from the corresponding 
-buffer. Since messages are not received instantaneously, we use the term \emph{asynchronous} to refer to this semantics (to distinguish it
-from a ``more synchronous'' semantics defined in Section~\ref{sec:criterion}). 
+%The semantics of a message passing system assumes that each process is equipped with a FIFO buffer for storing incoming messages, 
+%every send action enqueues the message into the destination's buffer, and every receive action dequeues a message from the corresponding 
+%buffer. Since messages are not received instantaneously, we use the term \emph{asynchronous} to refer to this semantics (to distinguish it
+%from a ``more synchronous'' semantics defined in Section~\ref{sec:criterion}). 
 
 We fix an arbitrary set $\<Mids>$ of message identifiers, and the sets 
-\begin{align*}
-S_{id} = \set{s_i: s\in S, i\in \<Mids>} \mbox{ and } R_{id} = \set{r_i: r\in R, i\in \<Mids>}
-\end{align*}
-of indexed actions; an indexed action combines a send/receive action with a message identifier $i\in \<Mids>$.
+$S_{id} = \set{s_i: s\in S, i\in \<Mids>}$ and $R_{id} = \set{r_i: r\in R, i\in \<Mids>}$
+of indexed actions.
+%an indexed action combines a send/receive action with a message identifier $i\in \<Mids>$.
 Message identifiers are used to pair send and receive actions.
 We denote the message id of an indexed send/receive action $a$ by $\<msg>(a)$.
 Indexed send and receive actions $s\in S_{id}$ and $r\in R_{id}$ are \emph{matching}, 
 written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
-For notational convenience, we often associate $\<Mids>$ with $\<Nats>$, e.g., writing $\send{1}{p,q,v}$ and $\rec{2}{q',v'}$ in place of $\send{i_1}{p,q,v}$ and $\rec{i_2}{q',v'}$.
+%For notational convenience, we often associate $\<Mids>$ with $\<Nats>$, e.g., writing $\send{1}{p,q,v}$ and $\rec{2}{q',v'}$ in place of $\send{i_1}{p,q,v}$ and $\rec{i_2}{q',v'}$.
 
-An execution of a system $\mathcal{S}$ under the asynchronous semantics is a sequence of indexed actions that is obtained as an interleaving of processes in $\mathcal{S}$ (see Appendix~\ref{asec:semantics} for a formal definition). Let $\asynchExec{\mathcal{S}}$ denote the set of these executions.
+An execution of a system $\mathcal{S}$ under the asynchronous semantics is a sequence of indexed actions that is obtained as an interleaving of processes in $\mathcal{S}$ (see Appendix~\ref{asec:semantics} for a formal definition). Every send action enqueues the message into the destination's buffer, and every receive action dequeues a message from the corresponding buffer.
+Let $\asynchExec{\mathcal{S}}$ denote the set of these executions.
 Given an execution $e$, a send action $s$ in $e$ is called an \emph{unmatched send} when $e$ contains no receive action $r$ such that $s\match r$. An execution $e$ is called \emph{matched} when it contains no unmatched send.
 
-\subsection{Traces}
+%\subsection{Traces}
 
 %TODO SEE ABOUT THIS EQUALITY UP TO SUBSTITUTIONS OF MESSAGE IDENTIFIERS
-
-Executions are represented abstractly using traces which are sets of indexed actions together with a \emph{program order} relation relating every two actions of the same process and a \emph{source} relation relating a send with the matching receive (if any).
+\smallskip
+\noindent
+{\bf Traces.}
+Executions are represented using traces which are sets of indexed actions together with a \emph{program order} relating every two actions of the same process and a \emph{source} relation relating a send with the matching receive (if any).
 
 A trace is a tuple $t=(A,po,src)$ where $A\subseteq S_{id}\cup R_{id}$, $po\subseteq A^2$ defines a total order between actions executed by the same process, i.e., for every $p\in\<Pids>$, $po\cap \{a: a\in A\mbox{ and }\<proc>(a)=p\}^2$ is a total order, and $src\subseteq S_{id}\times R_{id}$ is a relation such that $src(a,a')$ iff $a\match a'$.
 The \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$. Examples of traces can be found in Figure~\ref{fig:commit-exec}, Figure~\ref{fig:elevator-exec}, Figure~\ref{fig:replic-exec}.
+Note that the union of $po$ and $src$ is acyclic.
 %
 
-\begin{proposition}
-For a trace $t=(A,po,src)$, the union of $po$ and $src$ is acyclic.
-\end{proposition}
+%\begin{proposition}
+%For a trace $t=(A,po,src)$, the union of $po$ and $src$ is acyclic.
+%\end{proposition}
 
 Let $\asynchTr{\mathcal{S}}=\set{tr(e):e\in \asynchExec{\mathcal{S}}}$ be the set of traces of $\mathcal{S}$ under the asynchronous semantics.
 
@@ -115,6 +118,7 @@ From now on, whenever we use the term permutation we mean conflict-preserving pe
 
 \begin{example}\label{ex:perm}
 The following traces 
+\vspace{-2mm}
 \begin{align*}
 \send{1}{p_1,q,\_}\ 
 \send{2}{p_2,q,\_}\ 
@@ -124,10 +128,12 @@ The following traces
 \send{2}{p_2,q_2,\_}\ 
 \rec{2}{q_2,\_}\ 
 \rec{1}{q_1,\_} 
+\vspace{-4mm}
 \end{align*}
 have the following conflict-preserving permutations, respectively:
+\vspace{-2mm}
 \begin{align*}
-\send{1}{p_1,q_1,\_}\ 
+\send{1}{p_1,q,\_}\ 
 \rec{1}{q,\_}\ 
 \send{2}{p_2,q,\_}\ 
 \rec{2}{q,\_} \\
@@ -135,30 +141,33 @@ have the following conflict-preserving permutations, respectively:
 \rec{1}{q_1,\_}\ 
 \send{2}{p_2,q_2,\_}\ 
 \rec{2}{q_2,\_}\ 
+\vspace{-2mm}
 \end{align*}
 \end{example}
 
-A direct consequence of the definitions is that the set of executions having the same trace are permutations of one another. 
+A direct consequence of the definitions is that the set of executions having the same trace are permutations of one another. Also, a system $\mathcal{S}$ cannot distinguish between permutations or equivalently, executions having the same trace.
 
-\begin{lemma}
-Let $e$ be an execution. Then, for every execution $e'$ such that $tr(e)=tr(e')$, we have that $e'$ is a permutation of $e$ or vice-versa. % (modulo a substitution of message identifiers).
-%and $e_2$ be  two executions such that $tr(e_1)=tr(e_2)$. Then, $e_1$ is a permutation of $e_2$ or vice-versa (modulo a substitution of message identifiers).
-\end{lemma}
+%\begin{lemma}
+%Let $e$ be an execution. Then, for every execution $e'$ such that $tr(e)=tr(e')$, we have that $e'$ is a permutation of $e$ or vice-versa. % (modulo a substitution of message identifiers).
+%%and $e_2$ be  two executions such that $tr(e_1)=tr(e_2)$. Then, $e_1$ is a permutation of $e_2$ or vice-versa (modulo a substitution of message identifiers).
+%\end{lemma}
 
 %A message passing system can not distinguish between two executions, one being a conflict-preserving permutation of the other.
 
 
-The following lemma shows that a message passing system $\mathcal{S}$ cannot distinguish between permutations or equivalently, executions having the same trace.
-%admits an execution $e'$ whenever it admits an execution $e$ with $tr(e)=tr(e')$.
+%The following lemma shows that a message passing system $\mathcal{S}$ cannot distinguish between permutations or equivalently, executions having the same trace.
+%%admits an execution $e'$ whenever it admits an execution $e$ with $tr(e)=tr(e')$.
+%
+%\begin{lemma}\label{lem:undist}
+%If $e'$ is a permutation of an execution $e\in \asynchExec{\mathcal{S}}$ to configuration $c_n$, then $e'$ is also an execution of $\mathcal{S}$ to configuration $c_n$.
+%Also, if $e\in \asynchExec{\mathcal{S}}$, then $e' \in \asynchExec{\mathcal{S}}$ for every execution $e'$ such that $tr(e)=tr(e')$.
+%\end{lemma}
 
-\begin{lemma}\label{lem:undist}
-If $e'$ is a permutation of an execution $e\in \asynchExec{\mathcal{S}}$ to configuration $c_n$, then $e'$ is also an execution of $\mathcal{S}$ to configuration $c_n$.
-Also, if $e\in \asynchExec{\mathcal{S}}$, then $e' \in \asynchExec{\mathcal{S}}$ for every execution $e'$ such that $tr(e)=tr(e')$.
-\end{lemma}
-
-\subsection{Causal Delivery}
-
-The asynchronous semantics ensures a property known as \emph{causal delivery}, which intuitively, says that the order in which messages are received by a process $q$ is consistent with the ``causal'' relation between them. Two messages are causally related if for instance, they were sent by the same process $p$ or one of the messages was sent by a process $p$ after the other one was received by the same process $p$. This property is ensured by the fact that the message buffers have a FIFO semantics and a sent message is instantaneously enqueued in the destination's buffer. For instance, the trace (execution) on the left of Figure~\ref{fig:ex-causal-delivery} satisfies causal delivery. In particular, the messages $v1$ and $v3$ are causally related, and they are received in the same order by $q2$. On the other hand, on the right of Figure~\ref{fig:ex-causal-delivery}, we give a trace where the messages $v_1$ and $v_3$ are causally related, but received in a different order by $q2$, which implies that the trace doesn't satisfy causal delivery. This trace is not admitted by the asynchronous semantics because the message $v1$ would be enqueued in the buffer of $q2$ before $\senda{p,q1,v2}$ is executed and thus, before $\senda{q1,q2,v3}$ as well.
+\smallskip
+\noindent
+{\bf Causal Delivery.}
+The asynchronous semantics ensures a property known as \emph{causal delivery}, which intuitively, says that the order in which messages are received by a process $q$ is consistent with the ``causal'' relation between them. Two messages are causally related if for instance, they were sent by the same process $p$ or one of the messages was sent by a process $p$ after the other one was received by the same process $p$. This property is ensured by the fact that the message buffers have a FIFO semantics and a sent message is instantaneously enqueued in the destination's buffer. For instance, the trace (execution) on the left of Figure~\ref{fig:ex-causal-delivery} satisfies causal delivery. In particular, the messages $v1$ and $v3$ are causally related, and they are received in the same order by $q2$. On the other hand, on the right of Figure~\ref{fig:ex-causal-delivery}, we give a trace where the messages $v_1$ and $v_3$ are causally related, but received in a different order by $q2$, thus violating causal delivery. 
+This trace is not admitted by the asynchronous semantics because the message $v1$ would be enqueued in the buffer of $q2$ before $\senda{p,q1,v2}$ is executed and thus, before $\senda{q1,q2,v3}$ as well.
 
 \begin{figure}[t]
 \includegraphics[width=9cm]{ex-causal-delivery.pdf}
@@ -167,14 +176,16 @@ The asynchronous semantics ensures a property known as \emph{causal delivery}, w
 \end{figure}
 
 Formally, for a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. For instance, for the trace $t$ on the left of Figure~\ref{fig:ex-causal-delivery}, we have that $\senda{p,q2,v1}\leadsto_t \senda{q1,q2,v3}$.
-A trace $t$ satisfies \emph{causal delivery} if the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$, i.e., for every two send actions $s_1$ and $s_2$ in $A$, 
+A trace $t$ satisfies \emph{causal delivery} if %the order between receive actions executed by the same process $p$ is consistent with the causal relation between send actions with destination $p$, i.e., 
+for every two send actions $s_1$ and $s_2$ in $A$, 
 \begin{align*}
-(s_1\leadsto_{t} s_2\land \<dest>(s_1)=\<dest>(s_2))\implies (\not\exists r_2\in A.\ s_2\match r_2)\lor (\exists r_1,r_2\in A.\ s_1\match r_1\land s_2\match r_2\land (r_2,r_1)\not\in po)
+&(s_1\leadsto_{t} s_2\land \<dest>(s_1)=\<dest>(s_2))\implies (\not\exists r_2\in A.\ s_2\match r_2)\lor \\
+&\hspace{5cm}(\exists r_1,r_2\in A.\ s_1\match r_1\land s_2\match r_2\land (r_2,r_1)\not\in po)
 \end{align*}
 
-An execution $e$ satisfies causal delivery when the trace $tr(e)$ satisfies causal delivery.
+It can be easily proved that every trace $t\in \asynchTr{\mathcal{S}}$ satisfies causal delivery. %We say an execution $e$ satisfies causal delivery when the trace $tr(e)$ satisfies causal delivery. 
 
-\begin{lemma}
-Every trace $t\in \asynchTr{\mathcal{S}}$ satisfies causal delivery. 
-\end{lemma}
+%\begin{lemma}
+%Every trace $t\in \asynchTr{\mathcal{S}}$ satisfies causal delivery. 
+%\end{lemma}
 
