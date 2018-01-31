@@ -7,32 +7,32 @@ We define a message passing system as the composition of a set of processes that
 can be stored in FIFO buffers before being received. Each process is described as a state
 machine that evolves by executing send or receive actions.
 An execution of such a system can be represented abstractly
-using a partially-ordered set of events, called a \emph{trace}. The partial order in a trace represents, intuitively,
-the causal relation between the events in an execution. We show that the systems we define satisfy a property
-known as \emph{causal delivery} which states that the order in which messages are received by a process is
+using a partially-ordered set of events, called a \emph{trace}. The partial order in a trace represents 
+the causal relation between events. We show that these systems satisfy \emph{causal delivery}, i.e., 
+the order in which messages are received by a process is
 consistent with the causal relation between the corresponding sendings.
 
 %\subsection{Preliminaries}
 
 %\subsection{Send and Receive Actions}
 
-We fix arbitrary sets $\<Pids>$ and $\<Val>$ of process ids and message payloads. 
+We fix sets $\<Pids>$ and $\<Val>$ of process ids and message payloads, 
 %A \emph{message} is a triple $m = \tup{i,j,p}$ where $i \in \<Ids>$ denotes the source, $j \in \<Ids>$ the destination, and $p \in \<Plds>$ the payload. 
 %The set of messages is denoted by $\<Msgs>$. 
 %The source, destination, and payload of a message $m$ are denoted by $\<src>(m)$, $\<dst>(m)$, $\<pay>(m)$, respectively.
 %We fix an arbitrary set $\<Mids>$ of message identifiers, and the sets
-For given sets $\<Ids>$ and $\<Plds>$, we fix the sets 
+and sets 
 %\begin{align*}
 $S = \set{\senda{p,q,v}: p,q\in\<Pids>, v\in \<Val>}$ and $R = \set{\reca{q,v}: q\in\<Pids>, v\in \<Val>}$
 %\end{align*}
 of \emph{send actions} and \emph{receive actions}. 
-Each send action $\senda{p,q,v}$ combines two process ids $p, q\in \<Ids>$ denoting 
-the sender and the receiver of the message, respectively, and a message payload $v\in \<Val>$. Receive actions
-specify the process $q\in \<Pids>$ receiving the message, and the message payload $v\in \<Val>$. 
-We write $\senda{p,q,\_}$ and $\reca{q,\_}$ when the message payload is unconstrained.
-We denote the process executing a send/receive action $a\in S\cup R$ by $\<proc>(a)$, i.e.,
-$\<proc>(a)=p$ for every $a=\senda{p,q,v}$, and $\<proc>(a)=q$ for every $a=\reca{q,v}$,
-and the destination of a send action $s\in S$ by $\<dest>(s)$, i.e., $\<dest>(\senda{p,q,v})=q$.
+Each send $\senda{p,q,v}$ combines two process ids $p, q$ denoting 
+the sender and the receiver of the message, respectively, and a message payload $v$. Receive actions
+specify the process $q$ receiving the message, and the message payload $v$. 
+%We write $\senda{p,q,\_}$ and $\reca{q,\_}$ when the message payload is unconstrained.
+The process executing an action $a\in S\cup R$ is denoted $\<proc>(a)$, i.e.,
+$\<proc>(a)=p$ for all $a=\senda{p,q,v}$ or $a=\reca{p,v}$,
+and the destination $q$ of a send $s=\senda{p,q,v}\in S$ is denoted $\<dest>(s)$.
 The set of send, resp., receive, actions $a$ of process $p$, i.e., with $\<proc>(a)=p$, is denoted by $S_p$, resp., $R_p$.
 %Send and receive actions $s\in S$ and $r\in R$ are \emph{matching}, written $s\match r$, when $\<msg>(s)=\<msg>(r)$.
 

@@ -4,16 +4,16 @@
 %Verifying synchronizability for a message passing system using a monitor that maintains the conflict-graph of a trace 
 %is difficult because it requires dealing with executions where the message buffers are unbounded. 
 %For instance, even if the processes are finite-state, this would not lead to a decision procedure. 
-We show in this section that checking $k$-synchronizability can be reduced 
+We show that checking $k$-synchronizability can be reduced 
 to a reachability problem in a system
 %~\footnote{Given a system $\mathcal{S}$ and a local state $l$, the reachability problem asks whether $\mathcal{S}$ can reach a configuration that contains the state $l$.} 
 that executes under the \emph{$k$-synchronous} semantics 
-(where the message buffers cannot grow beyond $k$). The main idea is to show that every
+(where message buffers are bounded). We show that every
 \emph{borderline} synchronizability violation (for which every strict prefix is synchronizable) of a system $\mathcal{S}$ can be ``simulated''
 %~\footnote{We refer to the standard notion of (stuttering) simulation where (sequences of) transitions in $\mathcal{S}$ are mapped to transitions of $\mathcal{S'}$.}
 by the synchronous semantics of a system $\mathcal{S'}$ where the reception of exactly one message is delayed (w.r.t. the synchronous semantics of $\mathcal{S}$).
 Then, we give a monitor which observes executions of $\mathcal{S'}$ and identifies synchronizability violations
-(there exists a run of this monitor that goes to an error state whenever such a violation exists). More details and proofs of the results in this section can be found in Appendix~\ref{sec:verif}.
+(there exists a run of this monitor that goes to error whenever such a violation exists). Proofs of the results in this section can be found in Appendix~\ref{sec:verif}.
 
 %This result is based on the following ideas:
 %\begin{itemize}
@@ -131,6 +131,7 @@ Moreover, the node $v$ of $CG_{tr(e)}$ representing $r$ (and the corresponding s
 $CG_{tr(e)}$ which is bad or of size bigger than $k$. % is of the form $v, v_1,\ldots, v_n,v$ where $(v,v_1)$ is an $SX$ edge for $X\in \{S,R\}$ and $(v_n,v)$ is an $YR$ edge for $Y\in \{S,R\}$.
 \end{lemma}
 
+\vspace{-1mm}
 
 \subsection{Simulating Borderline Violations on the Synchronous Semantics}\label{ssec:verif2}
 
@@ -169,7 +170,7 @@ which violates causal delivery and it is thus not possible under the asynchronou
 Our solution to this problem is to define a monitor $\mathcal{M}_{\mathit{causal}}$ which excludes such executions of $\mathcal{S'}$ when run under the synchronous semantics, i.e., it goes to an error state whenever applying the homomorphism $\sigma$ leads to a violation of causal delivery. This monitor is based on the same principles that we used to exclude violations of causal delivery in the synchronous semantics in the presence of unmatched sends (the component $B$ from a synchronous configuration). 
 
 
-
+\vspace{-1mm}
 
 \subsection{Detecting Synchronizability Violations}\label{ssec:verif4}
 

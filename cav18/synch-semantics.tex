@@ -70,7 +70,7 @@ For instance, the prefix of the previous execution without the last receive ($\r
   %$\vec{b}[\vec{b}_q.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the element of index $q$.
   }
   \label{fig:synch-sem}
-\vspace{-6mm}
+\vspace{-5mm}
 \end{figure}
 
 Formally, a configuration $c'=(\vec{l},B)$ in the synchronous semantics is a vector $\vec{l}$ of local states together with a function $B:\<Pids>->2^{\<Pids>}$. The transition relation $\Rightarrow_k$ is defined in Figure~\ref{fig:synch-sem}. A \textsc{$k$-exchange} transition corresponds to a sequence of transitions of the asynchronous semantics starting from a configuration with empty buffers. The sequence of transitions is constrained to be a sequence of at most $k$ sends followed by a sequence of receives. The receives are enabled depending on previous unmatched sends as explained above, using the function $B$.
@@ -118,3 +118,4 @@ In particular, this implies that such problems are decidable for finite-state $k
 %\end{proof}
 Appendix~\ref{asec:deadlocks} shows that the problem of detecting deadlocks in a $k$-synchronizable system can also be solved on the $k$-synchronous semantics instead of the asynchronous one.
 
+\vspace{-1mm}

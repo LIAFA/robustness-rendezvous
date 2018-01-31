@@ -1,3 +1,26 @@
 %!TEX root = main.tex
 \section{Experimental Evaluation}
 
+\begin{wrapfigure}{l}{5.7cm}
+\vspace{-8mm}
+{\small
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Name & Loc & Instr & $k$ & Time \\
+\hline
+Elevator&  \\
+\hline
+Two-phase commit &  \\
+\hline
+Replication Storage& \\
+\hline
+German Protocol &  \\
+\hline
+OSR &  \\
+\hline
+\end{tabular}
+}
+\caption{Experimental results.}
+\label{fig:experiments}
+\end{wrapfigure}
+As a proof of concept, we have applied our procedure for checking $k$-synchronizability to a set of examples extracted from the distribution of the P language~\footnote{Available at \url{https://github.com/p-org}.}. In the absence of an exhaustive model-checker for this language, we have rewritten these examples in the Promela language and used the Spin model checker~\footnote{Available at \url{http://spinroot.com}} for discharging the reachability queries. For a given Promela program, its $k$-synchronous semantics is implemented as an instrumentation which uses additional boolean variables to enforce that sends and receives interleave in $k$-exchange phases. Then, the monitors defined in Section~\ref{sec:verif} are defined as additional processes which observe the sequence of $k$-exchanges in an execution and update their state accordingly. Finding a conflict-graph cycle which witnesses non $k$-synchronizability corresponds to violating an assertion.
