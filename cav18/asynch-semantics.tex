@@ -94,18 +94,18 @@ Given an execution $e$, a send action $s$ in $e$ is called an \emph{unmatched se
 {\bf Traces.}
 Executions are represented using traces which are sets of indexed actions together with a \emph{program order} relating every two actions of the same process and a \emph{source} relation relating a send with the matching receive (if any).
 
-A trace is a tuple $t=(A,po,src)$ where $A\subseteq S_{id}\cup R_{id}$, $po\subseteq A^2$ defines a total order between actions executed by the same process, i.e., for every $p\in\<Pids>$, $po\cap \{a: a\in A\mbox{ and }\<proc>(a)=p\}^2$ is a total order, and $src\subseteq S_{id}\times R_{id}$ is a relation such that $src(a,a')$ iff $a\match a'$.
-The \emph{trace} of an execution $e$, denoted by $tr(e)$, is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$. Examples of traces can be found in Figure~\ref{fig:commit-exec}, Figure~\ref{fig:elevator-exec}, Figure~\ref{fig:replic-exec}.
-Note that the union of $po$ and $src$ is acyclic.
+A trace is a tuple $t=(A,po,src)$ where $A\subseteq S_{id}\cup R_{id}$, $po\subseteq A^2$ defines a total order between actions of the same process, i.e., for every $p\in\<Pids>$, $po\cap \{a: a\in A\mbox{ and }\<proc>(a)=p\}^2$ is a total order, and $src\subseteq S_{id}\times R_{id}$ is a relation s.t. $src(a,a')$ iff $a\match a'$.
+The \emph{trace} $tr(e)$ of an execution $e$ is the tuple $(A,po,src)$ where $A$ is the set of all actions in $e$, $po(a,a')$ iff $\<proc>(a)=\<proc>(a')$ and $a$ occurs before $a'$ in $e$, and $src(a,a')$ iff $a\match a'$. Examples of traces can be found in Figure~\ref{fig:commit-exec} and Figure~\ref{fig:elevator-exec}.
+The union of $po$ and $src$ is acyclic.
 %
-
+%
 %\begin{proposition}
 %For a trace $t=(A,po,src)$, the union of $po$ and $src$ is acyclic.
 %\end{proposition}
-
+%
 Let $\asynchTr{\mathcal{S}}=\set{tr(e):e\in \asynchExec{\mathcal{S}}}$ be the set of traces of $\mathcal{S}$ under the asynchronous semantics.
 
-Traces abstract away the order between actions that are not ``causally'' related, e.g., two send actions of two different processes that could be executed in any order. 
+Traces abstract away the order of non-causally related actions, e.g., two sends of different processes that could be executed in any order. 
 %Reordering actions which are not causally related in an execution leads to another execution that 
 %We define a conflict relation $\prec$ on actions in $S_{id}\cup R_{id}$ that relates every two actions of the same process and every send with the matching receive. Formally,
 %\begin{align*}
@@ -113,37 +113,57 @@ Traces abstract away the order between actions that are not ``causally'' related
 %\end{align*}
 %
 Two executions have the same trace when they only differ in the order between such actions.
-Formally, given an execution $e=e_1\cdot a\cdot a'\cdot e_2$ with $tr(e)=(A,po,src)$, where $e_1, e_2\in (S_{id}\cup R_{id})^*$ and $a,a'\in S_{id}\cup R_{id}$, we say that the execution $e'=e_1\cdot a'\cdot a\cdot e_2$ is derived from $e$ by a \emph{valid swap} iff $(a,a')\not\in po\cup src$. A permutation $e'$ of an execution $e$ is \emph{conflict-preserving} when $e'$ can be derived from $e$ through a sequence of valid swaps. 
-From now on, whenever we use the term permutation we mean conflict-preserving permutation.
+Formally, given an execution $e=e_1\cdot a\cdot a'\cdot e_2$ with $tr(e)=(A,po,src)$, where $e_1, e_2\in (S_{id}\cup R_{id})^*$ and $a,a'\in S_{id}\cup R_{id}$, we say that $e'=e_1\cdot a'\cdot a\cdot e_2$ is derived from $e$ by a \emph{valid swap} iff $(a,a')\not\in po\cup src$. A permutation $e'$ of an execution $e$ is \emph{conflict-preserving} when $e'$ can be derived from $e$ through a sequence of valid swaps. 
+For simplicity, whenever we use the term permutation we mean conflict-preserving permutation.
+For instance, a permutation of 
+$\send{1}{p_1,q,\_}\ 
+\send{2}{p_2,q,\_}\ 
+\rec{1}{q,\_}\ 
+\rec{2}{q,\_}$
+is 
+$\send{1}{p_1,q,\_}\ 
+\rec{1}{q,\_}\ 
+\send{2}{p_2,q,\_}\ 
+\rec{2}{q,\_}$
+and a permutation of the execution
+$\send{1}{p_1,q_1,\_}\ 
+\send{2}{p_2,q_2,\_}\ 
+\rec{2}{q_2,\_}\ 
+\rec{1}{q_1,\_} $
+is
+$\send{1}{p_1,q_1,\_}\ $
+$\rec{1}{q_1,\_}\ 
+\send{2}{p_2,q_2,\_}\ 
+\rec{2}{q_2,\_}$.
 
-\begin{example}\label{ex:perm}
-The following traces 
-\vspace{-2mm}
-\begin{align*}
-\send{1}{p_1,q,\_}\ 
-\send{2}{p_2,q,\_}\ 
-\rec{1}{q,\_}\ 
-\rec{2}{q,\_} \\
-\send{1}{p_1,q_1,\_}\ 
-\send{2}{p_2,q_2,\_}\ 
-\rec{2}{q_2,\_}\ 
-\rec{1}{q_1,\_} 
-\vspace{-4mm}
-\end{align*}
-have the following conflict-preserving permutations, respectively:
-\vspace{-2mm}
-\begin{align*}
-\send{1}{p_1,q,\_}\ 
-\rec{1}{q,\_}\ 
-\send{2}{p_2,q,\_}\ 
-\rec{2}{q,\_} \\
-\send{1}{p_1,q_1,\_}\ 
-\rec{1}{q_1,\_}\ 
-\send{2}{p_2,q_2,\_}\ 
-\rec{2}{q_2,\_}\ 
-\vspace{-2mm}
-\end{align*}
-\end{example}
+%\begin{example}\label{ex:perm}
+%The traces 
+%\vspace{-2mm}
+%\begin{align*}
+%\send{1}{p_1,q,\_}\ 
+%\send{2}{p_2,q,\_}\ 
+%\rec{1}{q,\_}\ 
+%\rec{2}{q,\_} \\
+%\send{1}{p_1,q_1,\_}\ 
+%\send{2}{p_2,q_2,\_}\ 
+%\rec{2}{q_2,\_}\ 
+%\rec{1}{q_1,\_} 
+%\vspace{-4mm}
+%\end{align*}
+%have the following conflict-preserving permutations, respectively:
+%\vspace{-2mm}
+%\begin{align*}
+%\send{1}{p_1,q,\_}\ 
+%\rec{1}{q,\_}\ 
+%\send{2}{p_2,q,\_}\ 
+%\rec{2}{q,\_} \\
+%\send{1}{p_1,q_1,\_}\ 
+%\rec{1}{q_1,\_}\ 
+%\send{2}{p_2,q_2,\_}\ 
+%\rec{2}{q_2,\_}\ 
+%\vspace{-2mm}
+%\end{align*}
+%\end{example}
 
 A direct consequence of the definitions is that the set of executions having the same trace are permutations of one another. Also, a system $\mathcal{S}$ cannot distinguish between permutations or equivalently, executions having the same trace.
 
@@ -166,13 +186,15 @@ A direct consequence of the definitions is that the set of executions having the
 \smallskip
 \noindent
 {\bf Causal Delivery.}
-The asynchronous semantics ensures a property known as \emph{causal delivery}, which intuitively, says that the order in which messages are received by a process $q$ is consistent with the ``causal'' relation between them. Two messages are causally related if for instance, they were sent by the same process $p$ or one of the messages was sent by a process $p$ after the other one was received by the same process $p$. This property is ensured by the fact that the message buffers have a FIFO semantics and a sent message is instantaneously enqueued in the destination's buffer. For instance, the trace (execution) on the left of Figure~\ref{fig:ex-causal-delivery} satisfies causal delivery. In particular, the messages $v1$ and $v3$ are causally related, and they are received in the same order by $q2$. On the other hand, on the right of Figure~\ref{fig:ex-causal-delivery}, we give a trace where the messages $v_1$ and $v_3$ are causally related, but received in a different order by $q2$, thus violating causal delivery. 
-This trace is not admitted by the asynchronous semantics because the message $v1$ would be enqueued in the buffer of $q2$ before $\senda{p,q1,v2}$ is executed and thus, before $\senda{q1,q2,v3}$ as well.
+The asynchronous semantics ensures a property known as \emph{causal delivery}, which intuitively, says that the order in which messages are received by a process $q$ is consistent with the ``causal'' relation between them. Two messages are causally related if for instance, they were sent by the same process $p$ or one of the messages was sent by a process $p$ after the other one was received by the same process $p$. This property is ensured by the fact that the message buffers have a FIFO semantics and a sent message is instantaneously enqueued in the destination's buffer. For instance, the trace (execution) on the left of Figure~\ref{fig:ex-causal-delivery} satisfies causal delivery. In particular, the messages $v1$ and $v3$ are causally related, and they are received in the same order by $q2$. On the right of Figure~\ref{fig:ex-causal-delivery}, we give a trace where the messages $v_1$ and $v_3$ are causally related, but received in a different order by $q2$, thus violating causal delivery. 
+This trace is not valid because the message $v1$ would be enqueued in the buffer of $q2$ before $\senda{p,q1,v2}$ is executed and thus, before $\senda{q1,q2,v3}$ as well.
 
 \begin{figure}[t]
 \includegraphics[width=9cm]{ex-causal-delivery.pdf}
+\vspace{-3mm}
 \caption{A trace satisfying causal delivery (on the left) and a trace violating causal delivery (on the right).}
 \label{fig:ex-causal-delivery}
+\vspace{-3mm}
 \end{figure}
 
 Formally, for a trace $t=(A,po,src)$, the transitive closure of $po\cup src$, denoted by $\leadsto_t$, is called the \emph{causal relation} of $t$. For instance, for the trace $t$ on the left of Figure~\ref{fig:ex-causal-delivery}, we have that $\senda{p,q2,v1}\leadsto_t \senda{q1,q2,v3}$.

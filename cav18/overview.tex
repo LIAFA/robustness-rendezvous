@@ -22,10 +22,11 @@ Figure \ref{fig:commit} shows a {\em commit protocol} allowing a client to updat
 \begin{center}
 \includegraphics[width=8.5cm]{commit.pdf}
 \end{center}
-\vspace{-5mm}
-\caption{A distributed commit protocol. Each process is represented by a labeled transition system, where the transitions are labeled by send and receive actions. For instance, $\senda{\sf{c},\sf{m},\sf{update}}$ represents a send from the process $\sf{c}$ (the client) to the process $\sf{m}$ (the manager) with payload $\sf{update}$. Similarly, $\reca{c,\sf{OK}}$ represents the fact that the process $\sf{c}$ receives a message 
+\vspace{-5.5mm}
+\caption{A distributed commit protocol. Each process is defined as a labeled transition system. Transitions are labeled by send and receive actions, e.g., $\senda{\sf{c},\sf{m},\sf{update}}$ is a send from the client $\sf{c}$ to the manager $\sf{m}$ with payload $\sf{update}$. Similarly, $\reca{c,\sf{OK}}$ denotes process $\sf{c}$ receiving a message 
 $\sf{OK}$.}
 \label{fig:commit}
+\vspace{-3.5mm}
 \end{figure}
 
 \begin{figure}[t]
@@ -35,6 +36,7 @@ $\sf{OK}$.}
 \vspace{-5mm}
 \caption{An execution of the distributed commit protocol and its conflict graph.}
 \label{fig:commit-exec}
+\vspace{-7mm}
 \end{figure}
 
 Although the message buffers are bounded in all the computations of the commit protocol, this is not true for every 1-synchronizable system.
@@ -48,6 +50,7 @@ Consider now a slightly different version of the elevator system where the trans
 \vspace{-3mm}
 \caption{The Elevator example}
 \label{fig:elevator}
+\vspace{-5mm}
 \end{figure}
 
 \begin{figure}[t]
@@ -64,6 +67,7 @@ Consider now a slightly different version of the elevator system where the trans
 \end{subfigure}
 \caption{Executions of the Elevator.}
 \label{fig:elevator-exec}
+\vspace{-5mm}
 \end{figure}
 
 %\begin{figure}
