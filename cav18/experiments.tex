@@ -3,10 +3,10 @@
 
 \begin{wrapfigure}{l}{5.7cm}
 \vspace{-8mm}
-{\small
-\begin{tabular}{|c|c|c|c|c|}
+{\scriptsize
+\begin{tabular}{|c|c|c|c|c|c|}
 \hline
-Name & Loc & Instr & $k$ & Time \\
+Name & Proc & Loc & Instr & $k$ & Time \\
 \hline
 Elevator&  \\
 \hline
@@ -22,5 +22,8 @@ OSR &  \\
 }
 \caption{Experimental results.}
 \label{fig:experiments}
+\vspace{-7mm}
 \end{wrapfigure}
-As a proof of concept, we have applied our procedure for checking $k$-synchronizability to a set of examples extracted from the distribution of the P language~\footnote{Available at \url{https://github.com/p-org}.}. In the absence of an exhaustive model-checker for this language, we have rewritten these examples in the Promela language and used the Spin model checker~\footnote{Available at \url{http://spinroot.com}} for discharging the reachability queries. For a given Promela program, its $k$-synchronous semantics is implemented as an instrumentation which uses additional boolean variables to enforce that sends and receives interleave in $k$-exchange phases. Then, the monitors defined in Section~\ref{sec:verif} are defined as additional processes which observe the sequence of $k$-exchanges in an execution and update their state accordingly. Finding a conflict-graph cycle which witnesses non $k$-synchronizability corresponds to violating an assertion.
+As a proof of concept, we have applied our procedure for checking $k$-synchronizability to a set of examples extracted from the distribution of the P language~\footnote{Available at \url{https://github.com/p-org}.}. In the absence of an exhaustive model-checker for this language, we have rewritten these examples in the Promela language and used the Spin model checker~\footnote{Available at \url{http://spinroot.com}} for discharging the reachability queries. For a given Promela program, its $k$-synchronous semantics is implemented as an instrumentation which uses additional boolean variables to enforce that sends and receives interleave in $k$-exchange phases. Then, the monitors defined in Section~\ref{sec:verif} are defined as additional processes which observe the sequence of $k$-exchanges in an execution and update their state accordingly. Finding a conflict-graph cycle which witnesses non $k$-synchronizability corresponds to violating an assertion. 
+
+The experimental data is listed in Figure~\ref{fig:experiments}: Proc, resp., Loc, is the number of processes, resp., the number of lines of code (loc) of the original program, Instr is the number of loc added by the instrumentation, $k$ is the \emph{minimal} integer for which the program is $k$-synchronizable, and Time gives the number of seconds needed for this check. The first three examples are the ones presented in Section~\ref{sec:motivation} and Appendix~\ref{asec:motivation}. The German protocol is a modelization of the cache-coherence protocol with the same name, and OSR is a modelization of a device driver.
