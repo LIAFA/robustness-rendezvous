@@ -1,0 +1,123 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\bibstyle{ACM-Reference-Format}
+\citation{DBLP:journals/jacm/BrandZ83}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
+\citation{DBLP:journals/tcs/BasuB16,DBLP:conf/oopsla/Desai0M14,DBLP:conf/tacas/BouajjaniE12,DBLP:conf/tacas/TorreMP08,DBLP:conf/popl/FlanaganG05}
+\citation{DBLP:journals/tcs/BasuB16}
+\citation{DBLP:conf/pldi/DesaiGJQRZ13}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Motivating examples}{5}{section.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A distributed commit protocol. Each process is represented by a labeled transition system, where the transitions are labeled by send and receive actions. For instance, $\mathrm  {send}({\sf  {c},\sf  {m},\sf  {update}})$ represents a send from the process $\sf  {c}$ (the client) to the process $\sf  {m}$ (the manager) with payload $\sf  {update}$. Similarly, $\mathrm  {rec}({c,\sf  {OK}})$ represents the fact that the process $\sf  {c}$ receives a message $\sf  {OK}$.\relax }}{6}{figure.caption.2}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:commit}{{1}{6}{A distributed commit protocol. Each process is represented by a labeled transition system, where the transitions are labeled by send and receive actions. For instance, $\senda {\sf {c},\sf {m},\sf {update}}$ represents a send from the process $\sf {c}$ (the client) to the process $\sf {m}$ (the manager) with payload $\sf {update}$. Similarly, $\reca {c,\sf {OK}}$ represents the fact that the process $\sf {c}$ receives a message $\sf {OK}$.\relax }{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces An execution of the distributed commit protocol and its conflict graph.\relax }}{6}{figure.caption.3}}
+\newlabel{fig:commit-exec}{{2}{6}{An execution of the distributed commit protocol and its conflict graph.\relax }{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The Elevator example\relax }}{7}{figure.caption.4}}
+\newlabel{fig:elevator}{{3}{7}{The Elevator example\relax }{figure.caption.4}{}}
+\newlabel{fig:elevator-exec1}{{4a}{8}{A $1$-synchronizable execution.\relax }{figure.caption.5}{}}
+\newlabel{sub@fig:elevator-exec1}{{a}{8}{A $1$-synchronizable execution.\relax }{figure.caption.5}{}}
+\newlabel{fig:elevator-exec2}{{4b}{8}{A computation with a 2-exchange.\relax }{figure.caption.5}{}}
+\newlabel{sub@fig:elevator-exec2}{{b}{8}{A computation with a 2-exchange.\relax }{figure.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Executions of the Elevator.\relax }}{8}{figure.caption.5}}
+\newlabel{fig:elevator-exec}{{4}{8}{Executions of the Elevator.\relax }{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Message passing systems}{8}{section.3}}
+\newlabel{sec:prelims}{{3}{8}{Message passing systems}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Send and Receive Actions}{8}{subsection.3.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces A replication storage protocol.\relax }}{9}{figure.caption.6}}
+\newlabel{fig:replication}{{5}{9}{A replication storage protocol.\relax }{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces An execution of the replication storage protocol and its conflict graph.\relax }}{9}{figure.caption.7}}
+\newlabel{fig:replic-exec}{{6}{9}{An execution of the replication storage protocol and its conflict graph.\relax }{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Message Passing Systems}{9}{subsection.3.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces The asynchronous semantics of a message passing system $\mathcal  {S}$. For a vector $\mathaccentV {vec}17E{x}$, $\mathaccentV {vec}17E{x}[\mathaccentV {vec}17E{x}_p\gets E]$ is the vector $\mathaccentV {vec}17E{y}$ with $\mathaccentV {vec}17E{y}_q=\mathaccentV {vec}17E{x}_q$, for every $q\neq p$, and $\mathaccentV {vec}17E{x}_p=E$. Also, $\cdot $ denotes the concatenation of two sequences. \relax }}{10}{figure.caption.8}}
+\newlabel{fig:asynch-sem}{{7}{10}{The asynchronous semantics of a message passing system $\mathcal {S}$. For a vector $\vec {x}$, $\vec {x}[\vec {x}_p\gets E]$ is the vector $\vec {y}$ with $\vec {y}_q=\vec {x}_q$, for every $q\neq p$, and $\vec {x}_p=E$. Also, $\cdot $ denotes the concatenation of two sequences. \relax }{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Asynchronous Semantics}{10}{subsection.3.3}}
+\newlabel{ssec:semantics}{{3.3}{10}{Asynchronous Semantics}{subsection.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Traces}{11}{subsection.3.4}}
+\newlabel{ex:perm}{{3.2}{11}{}{theorem.3.2}{}}
+\newlabel{lem:undist}{{3.4}{11}{}{theorem.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Causal Delivery}{11}{subsection.3.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces A trace satisfying causal delivery (on the left) and a trace violating causal delivery (on the right).\relax }}{12}{figure.caption.9}}
+\newlabel{fig:ex-causal-delivery}{{8}{12}{A trace satisfying causal delivery (on the left) and a trace violating causal delivery (on the right).\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Synchronizability}{12}{section.4}}
+\newlabel{sec:criterion}{{4}{12}{Synchronizability}{section.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces An execution of the $1$-synchronous semantics.\relax }}{13}{figure.caption.10}}
+\newlabel{fig:ex-blocking}{{9}{13}{An execution of the $1$-synchronous semantics.\relax }{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces The synchronous semantics of a message passing system $\mathcal  {S}$. Above, $\mathaccentV {vec}17E{\epsilon }$ denotes a vector where all the components are $\epsilon $. \relax }}{13}{figure.caption.11}}
+\newlabel{fig:synch-sem}{{10}{13}{The synchronous semantics of a message passing system $\mathcal {S}$. Above, $\vec {\epsilon }$ denotes a vector where all the components are $\epsilon $. \relax }{figure.caption.11}{}}
+\newlabel{lem:pref_closed}{{4.1}{14}{}{theorem.4.1}{}}
+\newlabel{lem:zable_nous}{{4.2}{14}{}{theorem.4.2}{}}
+\newlabel{def:synchron}{{4.3}{14}{}{theorem.4.3}{}}
+\citation{journals/jacm/Papadimitriou79b}
+\newlabel{th:deadlock1}{{4.5}{15}{}{theorem.4.5}{}}
+\citation{journals/jacm/Papadimitriou79b}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces A trace which is not $k$-synchronous, for every $k$.\relax }}{16}{figure.caption.12}}
+\newlabel{fig:ex-rs-cycle}{{11}{16}{A trace which is not $k$-synchronous, for every $k$.\relax }{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Characterizing Synchronous Traces}{16}{section.5}}
+\newlabel{def:conf_graph}{{5.1}{16}{Conflict-Graph}{theorem.5.1}{}}
+\newlabel{lem:cg_1}{{5.2}{16}{}{theorem.5.2}{}}
+\newlabel{lem:cg_k}{{5.3}{16}{}{theorem.5.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Checking Synchronizability}{17}{section.6}}
+\newlabel{sec:verif}{{6}{17}{Checking Synchronizability}{section.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces A borderline violation to $1$-synchronizability.\relax }}{18}{figure.caption.13}}
+\newlabel{fig:ex-border-sim}{{12}{18}{A borderline violation to $1$-synchronizability.\relax }{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Borderline Synchronizability Violations}{18}{subsection.6.1}}
+\newlabel{ssec:verif1}{{6.1}{18}{Borderline Synchronizability Violations}{subsection.6.1}{}}
+\newlabel{lem:critical}{{6.2}{18}{}{theorem.6.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Simulating Borderline Violations on the Synchronous Semantics}{18}{subsection.6.2}}
+\newlabel{ssec:verif2}{{6.2}{18}{Simulating Borderline Violations on the Synchronous Semantics}{subsection.6.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Excluding Executions Violating Causal Delivery}{19}{subsection.6.3}}
+\newlabel{ssec:verif3}{{6.3}{19}{Excluding Executions Violating Causal Delivery}{subsection.6.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces The monitor $\mathcal  {M}_{\mathit  {causal}}$. Initially, {\tt  receiver} is $\bot $, and ${\tt  cone}=\emptyset $.\relax }}{20}{figure.caption.14}}
+\newlabel{fig:mon_causal}{{13}{20}{The monitor $\mathcal {M}_{\mathit {causal}}$. Initially, {\tt receiver} is $\bot $, and ${\tt cone}=\emptyset $.\relax }{figure.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces The monitor $\mathcal  {M}_{\mathit  {viol}}(k)$. We use $\mathbb  {B}$ to denote the set of Boolean values and $\mathbb  {N}$ the set of natural numbers. Initially, {\tt  conflict} and {\tt  receiver} are $\bot $, while {\tt  lastIsRec} and {\tt  sawRS} are {\tt  false}.\relax }}{21}{figure.caption.15}}
+\newlabel{fig:mon_viol}{{14}{21}{The monitor $\mathcal {M}_{\mathit {viol}}(k)$. We use $\mathbb {B}$ to denote the set of Boolean values and $\mathbb {N}$ the set of natural numbers. Initially, {\tt conflict} and {\tt receiver} are $\bot $, while {\tt lastIsRec} and {\tt sawRS} are {\tt false}.\relax }{figure.caption.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Detecting Synchronizability Violations}{21}{subsection.6.4}}
+\newlabel{ssec:verif4}{{6.4}{21}{Detecting Synchronizability Violations}{subsection.6.4}{}}
+\citation{DBLP:conf/focs/Kozen77}
+\newlabel{th:main-verif}{{6.6}{22}{}{theorem.6.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Decidability results}{22}{section.7}}
+\newlabel{th:dec1}{{7.1}{22}{}{theorem.7.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces An example of a system which is not $k$-synchronizable, for every $k$.\relax }}{23}{figure.caption.16}}
+\newlabel{fig:decid_ex}{{15}{23}{An example of a system which is not $k$-synchronizable, for every $k$.\relax }{figure.caption.16}{}}
+\citation{DBLP:journals/jacm/BrandZ83}
+\citation{DBLP:journals/tcs/BasuB16}
+\citation{DBLP:journals/tcs/BasuB16}
+\citation{DBLP:conf/esop/DenielouY12,DBLP:journals/jacm/HondaYC16,DBLP:conf/esop/HondaVK98,DBLP:conf/popl/LangeTY15}
+\citation{DBLP:journals/iandc/AbdullaJ96}
+\citation{DBLP:journals/iandc/CeceF05}
+\citation{DBLP:conf/tacas/TorreMP08,DBLP:journals/corr/abs-1209-0359}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{24}{section.8}}
+\newlabel{sec:related}{{8}{24}{Related Work}{section.8}{}}
+\citation{DBLP:journals/fuin/GenestKM07}
+\citation{DBLP:conf/pldi/QadeerW04,DBLP:conf/tacas/QadeerR05,DBLP:conf/cav/LalR08}
+\citation{DBLP:conf/sas/BouajjaniEP11,DBLP:conf/popl/EmmiQR11,DBLP:conf/spin/KiddJV10,DBLP:conf/cav/TorreMP10}
+\citation{DBLP:conf/tacas/TorreMP08,DBLP:conf/tacas/BouajjaniE12}
+\citation{DBLP:conf/cav/TorreMP10}
+\citation{DBLP:conf/popl/AbdullaAJS14,DBLP:conf/popl/FlanaganG05}
+\citation{DBLP:conf/oopsla/Desai0M14}
+\citation{journals/jacm/Papadimitriou79b}
+\citation{DBLP:journals/iandc/AlurMP00,DBLP:conf/esop/BouajjaniEEH13,DBLP:conf/cav/FarzanM08}
+\bibdata{references}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{4.65pt}
+\newlabel{tocindent2}{11.49998pt}
+\newlabel{tocindent3}{0pt}
+\newlabel{TotPages}{{25}{25}{}{page.25}{}}

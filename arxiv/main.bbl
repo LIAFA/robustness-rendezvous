@@ -1,0 +1,212 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem{DBLP:conf/popl/AbdullaAJS14}
+Abdulla, P.A., Aronis, S., Jonsson, B., Sagonas, K.F.: Optimal dynamic partial
+  order reduction. In: Jagannathan, S., Sewell, P. (eds.) The 41st Annual {ACM}
+  {SIGPLAN-SIGACT} Symposium on Principles of Programming Languages, {POPL}
+  '14, San Diego, CA, USA, January 20-21, 2014. pp. 373--384. {ACM} (2014),
+  \url{http://doi.acm.org/10.1145/2535838.2535845}
+
+\bibitem{DBLP:journals/iandc/AbdullaJ96}
+Abdulla, P.A., Jonsson, B.: Verifying programs with unreliable channels. Inf.
+  Comput.  127(2),  91--101 (1996),
+  \url{https://doi.org/10.1006/inco.1996.0053}
+
+\bibitem{DBLP:journals/iandc/AlurMP00}
+Alur, R., McMillan, K.L., Peled, D.A.: Model-checking of correctness conditions
+  for concurrent objects. Inf. Comput.  160(1-2),  167--188 (2000),
+  \url{https://doi.org/10.1006/inco.1999.2847}
+
+\bibitem{DBLP:journals/tcs/BasuB16}
+Basu, S., Bultan, T.: On deciding synchronizability for asynchronously
+  communicating systems. Theor. Comput. Sci.  656,  60--75 (2016),
+  \url{https://doi.org/10.1016/j.tcs.2016.09.023}
+
+\bibitem{DBLP:conf/se/BouajjaniDM14}
+Bouajjani, A., Derevenetc, E., Meyer, R.: Robustness against relaxed memory
+  models. In: Hasselbring, W., Ehmke, N.C. (eds.) Software Engineering 2014,
+  Kiel, Deutschland. {LNI}, vol. 227, pp. 85--86. {GI} (2014),
+  \url{http://eprints.uni-kiel.de/23752/}
+
+\bibitem{DBLP:conf/tacas/BouajjaniE12}
+Bouajjani, A., Emmi, M.: Bounded phase analysis of message-passing programs.
+  In: Flanagan, C., K{\"{o}}nig, B. (eds.) Tools and Algorithms for the
+  Construction and Analysis of Systems - 18th International Conference, {TACAS}
+  2012, Held as Part of the European Joint Conferences on Theory and Practice
+  of Software, {ETAPS} 2012, Tallinn, Estonia, March 24 - April 1, 2012.
+  Proceedings. Lecture Notes in Computer Science, vol. 7214, pp. 451--465.
+  Springer (2012), \url{https://doi.org/10.1007/978-3-642-28756-5_31}
+
+\bibitem{DBLP:conf/esop/BouajjaniEEH13}
+Bouajjani, A., Emmi, M., Enea, C., Hamza, J.: Verifying concurrent programs
+  against sequential specifications. In: Felleisen, M., Gardner, P. (eds.)
+  Programming Languages and Systems - 22nd European Symposium on Programming,
+  {ESOP} 2013, Held as Part of the European Joint Conferences on Theory and
+  Practice of Software, {ETAPS} 2013, Rome, Italy, March 16-24, 2013.
+  Proceedings. Lecture Notes in Computer Science, vol. 7792, pp. 290--309.
+  Springer (2013), \url{https://doi.org/10.1007/978-3-642-37036-6_17}
+
+\bibitem{DBLP:conf/esop/BouajjaniEEOT17}
+Bouajjani, A., Emmi, M., Enea, C., Ozkan, B.K., Tasiran, S.: Verifying
+  robustness of event-driven asynchronous programs against concurrency. In:
+  Yang, H. (ed.) Programming Languages and Systems - 26th European Symposium on
+  Programming, {ESOP} 2017, Held as Part of the European Joint Conferences on
+  Theory and Practice of Software, {ETAPS} 2017, Uppsala, Sweden, April 22-29,
+  2017, Proceedings. Lecture Notes in Computer Science, vol. 10201, pp.
+  170--200. Springer (2017), \url{https://doi.org/10.1007/978-3-662-54434-1_7}
+
+\bibitem{DBLP:conf/sas/BouajjaniEP11}
+Bouajjani, A., Emmi, M., Parlato, G.: On sequentializing concurrent programs.
+  In: Yahav, E. (ed.) Static Analysis - 18th International Symposium, {SAS}
+  2011, Venice, Italy, September 14-16, 2011. Proceedings. Lecture Notes in
+  Computer Science, vol. 6887, pp. 129--145. Springer (2011),
+  \url{https://doi.org/10.1007/978-3-642-23702-7_13}
+
+\bibitem{DBLP:journals/jacm/BrandZ83}
+Brand, D., Zafiropulo, P.: On communicating finite-state machines. J. {ACM}
+  30(2),  323--342 (1983), \url{http://doi.acm.org/10.1145/322374.322380}
+
+\bibitem{DBLP:journals/iandc/CeceF05}
+C{\'{e}}c{\'{e}}, G., Finkel, A.: Verification of programs with half-duplex
+  communication. Inf. Comput.  202(2),  166--190 (2005),
+  \url{https://doi.org/10.1016/j.ic.2005.05.006}
+
+\bibitem{DBLP:conf/esop/DenielouY12}
+Deni{\'{e}}lou, P., Yoshida, N.: Multiparty session types meet communicating
+  automata. In: Seidl, H. (ed.) Programming Languages and Systems - 21st
+  European Symposium on Programming, {ESOP} 2012, Held as Part of the European
+  Joint Conferences on Theory and Practice of Software, {ETAPS} 2012, Tallinn,
+  Estonia, March 24 - April 1, 2012. Proceedings. Lecture Notes in Computer
+  Science, vol. 7211, pp. 194--213. Springer (2012),
+  \url{https://doi.org/10.1007/978-3-642-28869-2_10}
+
+\bibitem{DBLP:conf/oopsla/Desai0M14}
+Desai, A., Garg, P., Madhusudan, P.: Natural proofs for asynchronous programs
+  using almost-synchronous reductions. In: Black, A.P., Millstein, T.D. (eds.)
+  Proceedings of the 2014 {ACM} International Conference on Object Oriented
+  Programming Systems Languages {\&} Applications, {OOPSLA} 2014, part of
+  {SPLASH} 2014, Portland, OR, USA, October 20-24, 2014. pp. 709--725. {ACM}
+  (2014), \url{http://doi.acm.org/10.1145/2660193.2660211}
+
+\bibitem{DBLP:conf/pldi/DesaiGJQRZ13}
+Desai, A., Gupta, V., Jackson, E.K., Qadeer, S., Rajamani, S.K., Zufferey, D.:
+  {P:} safe asynchronous event-driven programming. In: Boehm, H., Flanagan, C.
+  (eds.) {ACM} {SIGPLAN} Conference on Programming Language Design and
+  Implementation, {PLDI} '13, Seattle, WA, USA, June 16-19, 2013. pp. 321--332.
+  {ACM} (2013), \url{http://doi.acm.org/10.1145/2462156.2462184}
+
+\bibitem{DBLP:conf/popl/EmmiQR11}
+Emmi, M., Qadeer, S., Rakamaric, Z.: Delay-bounded scheduling. In: Ball, T.,
+  Sagiv, M. (eds.) Proceedings of the 38th {ACM} {SIGPLAN-SIGACT} Symposium on
+  Principles of Programming Languages, {POPL} 2011, Austin, TX, USA, January
+  26-28, 2011. pp. 411--422. {ACM} (2011),
+  \url{http://doi.acm.org/10.1145/1926385.1926432}
+
+\bibitem{DBLP:conf/cav/FarzanM08}
+Farzan, A., Madhusudan, P.: Monitoring atomicity in concurrent programs. In:
+  Gupta and Malik  \cite{DBLP:conf/cav/2008}, pp. 52--65,
+  \url{https://doi.org/10.1007/978-3-540-70545-1_8}
+
+\bibitem{DBLP:conf/popl/FlanaganG05}
+Flanagan, C., Godefroid, P.: Dynamic partial-order reduction for model checking
+  software. In: Palsberg, J., Abadi, M. (eds.) Proceedings of the 32nd {ACM}
+  {SIGPLAN-SIGACT} Symposium on Principles of Programming Languages, {POPL}
+  2005, Long Beach, California, USA, January 12-14, 2005. pp. 110--121. {ACM}
+  (2005), \url{http://doi.acm.org/10.1145/1040305.1040315}
+
+\bibitem{DBLP:journals/fuin/GenestKM07}
+Genest, B., Kuske, D., Muscholl, A.: On communicating automata with bounded
+  channels. Fundam. Inform.  80(1-3),  147--167 (2007),
+  \url{http://content.iospress.com/articles/fundamenta-informaticae/fi80-1-3-09}
+
+\bibitem{DBLP:conf/cav/2008}
+Gupta, A., Malik, S. (eds.): Computer Aided Verification, 20th International
+  Conference, {CAV} 2008, Princeton, NJ, USA, July 7-14, 2008, Proceedings,
+  Lecture Notes in Computer Science, vol. 5123. Springer (2008),
+  \url{https://doi.org/10.1007/978-3-540-70545-1}
+
+\bibitem{DBLP:journals/corr/abs-1209-0359}
+Heu{\ss}ner, A., Leroux, J., Muscholl, A., Sutre, G.: Reachability analysis of
+  communicating pushdown systems. Logical Methods in Computer Science  8(3)
+  (2012), \url{https://doi.org/10.2168/LMCS-8(3:23)2012}
+
+\bibitem{DBLP:conf/esop/HondaVK98}
+Honda, K., Vasconcelos, V.T., Kubo, M.: Language primitives and type discipline
+  for structured communication-based programming. In: Hankin, C. (ed.)
+  Programming Languages and Systems - ESOP'98, 7th European Symposium on
+  Programming, Held as Part of the European Joint Conferences on the Theory and
+  Practice of Software, ETAPS'98, Lisbon, Portugal, March 28 - April 4, 1998,
+  Proceedings. Lecture Notes in Computer Science, vol. 1381, pp. 122--138.
+  Springer (1998), \url{https://doi.org/10.1007/BFb0053567}
+
+\bibitem{DBLP:journals/jacm/HondaYC16}
+Honda, K., Yoshida, N., Carbone, M.: Multiparty asynchronous session types. J.
+  {ACM}  63(1),  9:1--9:67 (2016), \url{http://doi.acm.org/10.1145/2827695}
+
+\bibitem{DBLP:conf/spin/KiddJV10}
+Kidd, N., Jagannathan, S., Vitek, J.: One stack to run them all - reducing
+  concurrent analysis to sequential analysis under priority scheduling. In:
+  van~de Pol, J., Weber, M. (eds.) Model Checking Software - 17th International
+  {SPIN} Workshop, Enschede, The Netherlands, September 27-29, 2010.
+  Proceedings. Lecture Notes in Computer Science, vol. 6349, pp. 245--261.
+  Springer (2010), \url{https://doi.org/10.1007/978-3-642-16164-3_18}
+
+\bibitem{DBLP:conf/focs/Kozen77}
+Kozen, D.: Lower bounds for natural proof systems. In: 18th Annual Symposium on
+  Foundations of Computer Science, Providence, Rhode Island, USA, 31 October -
+  1 November 1977. pp. 254--266. {IEEE} Computer Society (1977),
+  \url{https://doi.org/10.1109/SFCS.1977.16}
+
+\bibitem{DBLP:conf/tacas/TorreMP08}
+{La Torre}, S., Madhusudan, P., Parlato, G.: Context-bounded analysis of
+  concurrent queue systems. In: Ramakrishnan, C.R., Rehof, J. (eds.) Tools and
+  Algorithms for the Construction and Analysis of Systems, 14th International
+  Conference, {TACAS} 2008, Held as Part of the Joint European Conferences on
+  Theory and Practice of Software, {ETAPS} 2008, Budapest, Hungary, March
+  29-April 6, 2008. Proceedings. Lecture Notes in Computer Science, vol. 4963,
+  pp. 299--314. Springer (2008),
+  \url{https://doi.org/10.1007/978-3-540-78800-3_21}
+
+\bibitem{DBLP:conf/cav/TorreMP10}
+{La Torre}, S., Madhusudan, P., Parlato, G.: Model-checking parameterized
+  concurrent programs using linear interfaces. In: Touili, T., Cook, B.,
+  Jackson, P.B. (eds.) Computer Aided Verification, 22nd International
+  Conference, {CAV} 2010, Edinburgh, UK, July 15-19, 2010. Proceedings. Lecture
+  Notes in Computer Science, vol. 6174, pp. 629--644. Springer (2010),
+  \url{https://doi.org/10.1007/978-3-642-14295-6_54}
+
+\bibitem{DBLP:conf/cav/LalR08}
+Lal, A., Reps, T.W.: Reducing concurrent analysis under a context bound to
+  sequential analysis. In: Gupta and Malik  \cite{DBLP:conf/cav/2008}, pp.
+  37--51, \url{https://doi.org/10.1007/978-3-540-70545-1_7}
+
+\bibitem{DBLP:conf/popl/LangeTY15}
+Lange, J., Tuosto, E., Yoshida, N.: From communicating machines to graphical
+  choreographies. In: Rajamani, S.K., Walker, D. (eds.) Proceedings of the 42nd
+  Annual {ACM} {SIGPLAN-SIGACT} Symposium on Principles of Programming
+  Languages, {POPL} 2015, Mumbai, India, January 15-17, 2015. pp. 221--232.
+  {ACM} (2015), \url{http://doi.acm.org/10.1145/2676726.2676964}
+
+\bibitem{journals/jacm/Papadimitriou79b}
+Papadimitriou, C.H.: The serializability of concurrent database updates. J. ACM
+   26(4),  631--653 (1979)
+
+\bibitem{DBLP:conf/tacas/QadeerR05}
+Qadeer, S., Rehof, J.: Context-bounded model checking of concurrent software.
+  In: Halbwachs, N., Zuck, L.D. (eds.) Tools and Algorithms for the
+  Construction and Analysis of Systems, 11th International Conference, {TACAS}
+  2005, Held as Part of the Joint European Conferences on Theory and Practice
+  of Software, {ETAPS} 2005, Edinburgh, UK, April 4-8, 2005, Proceedings.
+  Lecture Notes in Computer Science, vol. 3440, pp. 93--107. Springer (2005),
+  \url{https://doi.org/10.1007/978-3-540-31980-1_7}
+
+\bibitem{DBLP:conf/pldi/QadeerW04}
+Qadeer, S., Wu, D.: {KISS:} keep it simple and sequential. In: Pugh, W.,
+  Chambers, C. (eds.) Proceedings of the {ACM} {SIGPLAN} 2004 Conference on
+  Programming Language Design and Implementation 2004, Washington, DC, USA,
+  June 9-11, 2004. pp. 14--24. {ACM} (2004),
+  \url{http://doi.acm.org/10.1145/996841.996845}
+
+\end{thebibliography}

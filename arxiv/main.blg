@@ -1,0 +1,57 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: main.aux
+The style file: splncs03.bst
+Database file #1: references.bib
+Repeated entry---line 427 of file references.bib
+ : @proceedings{DBLP:conf/cav/2008
+ :                                ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1043 of file references.bib
+ : @proceedings{DBLP:conf/popl/2011
+ :                                 ,
+I'm skipping whatever remains of this entry
+Warning--I didn't find a database entry for "esop17"
+Warning--I didn't find a database entry for "esop13"
+You've used 31 entries,
+            2785 wiz_defined-function locations,
+            912 strings with 16406 characters,
+and the built_in function-call counts, 20919 in all, are:
+= -- 1822
+> -- 607
+< -- 52
++ -- 235
+- -- 203
+* -- 1441
+:= -- 2599
+add.period$ -- 69
+call.type$ -- 31
+change.case$ -- 219
+chr.to.int$ -- 0
+cite$ -- 31
+duplicate$ -- 1818
+empty$ -- 1789
+format.name$ -- 252
+if$ -- 4617
+int.to.chr$ -- 0
+int.to.str$ -- 31
+missing$ -- 380
+newline$ -- 98
+num.names$ -- 101
+pop$ -- 619
+preamble$ -- 1
+purify$ -- 147
+quote$ -- 0
+skip$ -- 596
+stack$ -- 0
+substring$ -- 1265
+swap$ -- 1124
+text.length$ -- 50
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 123
+warning$ -- 0
+while$ -- 195
+width$ -- 33
+write$ -- 371
+(There were 2 error messages)

@@ -1,0 +1,170 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\bibstyle{splncs03}
+\citation{DBLP:journals/jacm/BrandZ83}
+\citation{DBLP:journals/tcs/BasuB16,DBLP:conf/oopsla/Desai0M14,DBLP:conf/tacas/BouajjaniE12,DBLP:conf/tacas/TorreMP08,DBLP:conf/popl/FlanaganG05}
+\@writefile{toc}{\contentsline {title}{On the Completeness of Verifying Message Passing Programs under Bounded Asynchrony\unskip {}}{1}{chapter.1}}
+\@writefile{toc}{\authcount {4}}
+\@writefile{toc}{\contentsline {author}{Ahmed Bouajjani\unskip {} \and Constantin Enea\unskip {} \and Kailiang Ji\unskip {} \and Shaz Qadeer\unskip {} }{1}{chapter.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1.1}}
+\citation{DBLP:journals/tcs/BasuB16}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Motivating examples}{3}{section.1.2}}
+\newlabel{sec:motivation}{{2}{3}{Motivating examples}{section.1.2}{}}
+\citation{DBLP:conf/pldi/DesaiGJQRZ13}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A distributed commit protocol. Each process is defined as a labeled transition system. Transitions are labeled by send and receive actions, e.g., $\mathrm  {send}({\sf  {c},\sf  {m},\sf  {update}})$ is a send from the client $\sf  {c}$ to the manager $\sf  {m}$ with payload $\sf  {update}$. Similarly, $\mathrm  {rec}({c,\sf  {OK}})$ denotes process $\sf  {c}$ receiving a message $\sf  {OK}$.\relax }}{4}{figure.caption.2}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:commit}{{1}{4}{A distributed commit protocol. Each process is defined as a labeled transition system. Transitions are labeled by send and receive actions, e.g., $\senda {\sf {c},\sf {m},\sf {update}}$ is a send from the client $\sf {c}$ to the manager $\sf {m}$ with payload $\sf {update}$. Similarly, $\reca {c,\sf {OK}}$ denotes process $\sf {c}$ receiving a message $\sf {OK}$.\relax }{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces An execution of the distributed commit protocol and its conflict graph.\relax }}{4}{figure.caption.3}}
+\newlabel{fig:commit-exec}{{2}{4}{An execution of the distributed commit protocol and its conflict graph.\relax }{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The Elevator example\relax }}{5}{figure.caption.4}}
+\newlabel{fig:elevator}{{3}{5}{The Elevator example\relax }{figure.caption.4}{}}
+\newlabel{fig:elevator-exec1}{{4a}{6}{A $1$-synchronizable execution.\relax }{figure.caption.5}{}}
+\newlabel{sub@fig:elevator-exec1}{{a}{6}{A $1$-synchronizable execution.\relax }{figure.caption.5}{}}
+\newlabel{fig:elevator-exec2}{{4b}{6}{A computation with a 2-exchange.\relax }{figure.caption.5}{}}
+\newlabel{sub@fig:elevator-exec2}{{b}{6}{A computation with a 2-exchange.\relax }{figure.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Executions of the Elevator.\relax }}{6}{figure.caption.5}}
+\newlabel{fig:elevator-exec}{{4}{6}{Executions of the Elevator.\relax }{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Message passing systems}{6}{section.1.3}}
+\newlabel{sec:prelims}{{3}{6}{Message passing systems}{section.1.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces A trace satisfying causal delivery (on the left) and a trace violating causal delivery (on the right).\relax }}{8}{figure.caption.6}}
+\newlabel{fig:ex-causal-delivery}{{5}{8}{A trace satisfying causal delivery (on the left) and a trace violating causal delivery (on the right).\relax }{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces An execution of the $1$-synchronous semantics.\relax }}{8}{figure.caption.7}}
+\newlabel{fig:ex-blocking}{{6}{8}{An execution of the $1$-synchronous semantics.\relax }{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Synchronizability}{8}{section.1.4}}
+\newlabel{sec:criterion}{{4}{8}{Synchronizability}{section.1.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces The synchronous semantics of a message passing system $\mathcal  {S}$. Above, $\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle \epsilon $}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle \epsilon $}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle \epsilon $}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle \epsilon $}}$ denotes a vector where all the components are $\epsilon $. \relax }}{9}{figure.caption.8}}
+\newlabel{fig:synch-sem}{{7}{9}{The synchronous semantics of a message passing system $\mathcal {S}$. Above, $\vec {\epsilon }$ denotes a vector where all the components are $\epsilon $. \relax }{figure.caption.8}{}}
+\newlabel{def:synchron}{{1}{9}{Synchronizability}{definition.1.1}{}}
+\citation{journals/jacm/Papadimitriou79b}
+\citation{journals/jacm/Papadimitriou79b}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Characterizing Synchronous Traces}{10}{section.1.5}}
+\newlabel{sec:characterizations}{{5}{10}{Characterizing Synchronous Traces}{section.1.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax }}{10}{figure.caption.9}}
+\newlabel{fig:ex-rs-cycle}{{8}{10}{\relax }{figure.caption.9}{}}
+\newlabel{lem:cg_k}{{1}{11}{Characterizing Synchronous Traces}{theorem.1.5.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Checking Synchronizability}{11}{section.1.6}}
+\newlabel{sec:verif}{{6}{11}{Checking Synchronizability}{section.1.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Borderline Synchronizability Violations}{11}{subsection.1.6.1}}
+\newlabel{ssec:verif1}{{6.1}{11}{Borderline Synchronizability Violations}{subsection.1.6.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces A borderline violation to $1$-synchronizability.\relax }}{12}{figure.caption.10}}
+\newlabel{fig:ex-border-sim}{{9}{12}{A borderline violation to $1$-synchronizability.\relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Simulating Borderline Violations on the Synchronous Semantics}{12}{subsection.1.6.2}}
+\newlabel{ssec:verif2}{{6.2}{12}{Simulating Borderline Violations on the Synchronous Semantics}{subsection.1.6.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Detecting Synchronizability Violations}{13}{subsection.1.6.3}}
+\newlabel{ssec:verif4}{{6.3}{13}{Detecting Synchronizability Violations}{subsection.1.6.3}{}}
+\newlabel{th:main-verif}{{2}{13}{Detecting Synchronizability Violations}{theorem.1.6.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Decidability results}{13}{section.1.7}}
+\newlabel{sec:decidability}{{7}{13}{Decidability results}{section.1.7}{}}
+\newlabel{th:dec1}{{3}{13}{Decidability results}{theorem.1.7.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces An example of a system which is not $k$-synchronizable, for every $k$.\relax }}{14}{figure.caption.11}}
+\newlabel{fig:decid_ex}{{10}{14}{An example of a system which is not $k$-synchronizable, for every $k$.\relax }{figure.caption.11}{}}
+\citation{DBLP:journals/jacm/BrandZ83}
+\citation{DBLP:journals/tcs/BasuB16}
+\citation{DBLP:journals/tcs/BasuB16}
+\citation{DBLP:conf/esop/DenielouY12,DBLP:journals/jacm/HondaYC16,DBLP:conf/esop/HondaVK98,DBLP:conf/popl/LangeTY15}
+\citation{DBLP:journals/iandc/AbdullaJ96}
+\citation{DBLP:journals/iandc/CeceF05}
+\citation{DBLP:conf/tacas/TorreMP08,DBLP:journals/corr/abs-1209-0359}
+\citation{DBLP:journals/fuin/GenestKM07}
+\citation{DBLP:conf/pldi/QadeerW04,DBLP:conf/tacas/QadeerR05,DBLP:conf/cav/LalR08}
+\citation{DBLP:conf/sas/BouajjaniEP11,DBLP:conf/popl/EmmiQR11,DBLP:conf/spin/KiddJV10,DBLP:conf/cav/TorreMP10}
+\citation{DBLP:conf/tacas/TorreMP08,DBLP:conf/tacas/BouajjaniE12}
+\citation{DBLP:conf/cav/TorreMP10}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{15}{section.1.8}}
+\newlabel{sec:related}{{8}{15}{Related Work}{section.1.8}{}}
+\citation{DBLP:conf/popl/AbdullaAJS14,DBLP:conf/popl/FlanaganG05}
+\citation{DBLP:conf/oopsla/Desai0M14}
+\citation{journals/jacm/Papadimitriou79b}
+\citation{DBLP:journals/iandc/AlurMP00,DBLP:conf/esop/BouajjaniEEH13,DBLP:conf/cav/FarzanM08}
+\citation{DBLP:conf/se/BouajjaniDM14,DBLP:conf/esop/BouajjaniEEOT17}
+\citation{DBLP:conf/se/BouajjaniDM14,DBLP:conf/esop/BouajjaniEEOT17}
+\citation{DBLP:conf/se/BouajjaniDM14}
+\citation{DBLP:conf/esop/BouajjaniEEOT17}
+\citation{DBLP:conf/se/BouajjaniDM14}
+\citation{DBLP:conf/esop/BouajjaniEEOT17}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Experimental Evaluation}{16}{section.1.9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Experimental results.\relax }}{16}{figure.caption.12}}
+\newlabel{fig:experiments}{{11}{16}{Experimental results.\relax }{figure.caption.12}{}}
+\bibdata{references}
+\bibcite{DBLP:conf/popl/AbdullaAJS14}{1}
+\bibcite{DBLP:journals/iandc/AbdullaJ96}{2}
+\bibcite{DBLP:journals/iandc/AlurMP00}{3}
+\bibcite{DBLP:journals/tcs/BasuB16}{4}
+\bibcite{DBLP:conf/se/BouajjaniDM14}{5}
+\bibcite{DBLP:conf/tacas/BouajjaniE12}{6}
+\bibcite{DBLP:conf/esop/BouajjaniEEH13}{7}
+\bibcite{DBLP:conf/esop/BouajjaniEEOT17}{8}
+\bibcite{DBLP:conf/sas/BouajjaniEP11}{9}
+\bibcite{DBLP:journals/jacm/BrandZ83}{10}
+\bibcite{DBLP:journals/iandc/CeceF05}{11}
+\bibcite{DBLP:conf/esop/DenielouY12}{12}
+\bibcite{DBLP:conf/oopsla/Desai0M14}{13}
+\bibcite{DBLP:conf/pldi/DesaiGJQRZ13}{14}
+\bibcite{DBLP:conf/popl/EmmiQR11}{15}
+\bibcite{DBLP:conf/cav/FarzanM08}{16}
+\citation{DBLP:conf/cav/2008}
+\bibcite{DBLP:conf/popl/FlanaganG05}{17}
+\bibcite{DBLP:journals/fuin/GenestKM07}{18}
+\bibcite{DBLP:conf/cav/2008}{19}
+\bibcite{DBLP:journals/corr/abs-1209-0359}{20}
+\bibcite{DBLP:conf/esop/HondaVK98}{21}
+\bibcite{DBLP:journals/jacm/HondaYC16}{22}
+\bibcite{DBLP:conf/spin/KiddJV10}{23}
+\bibcite{DBLP:conf/focs/Kozen77}{24}
+\bibcite{DBLP:conf/tacas/TorreMP08}{25}
+\bibcite{DBLP:conf/cav/TorreMP10}{26}
+\bibcite{DBLP:conf/cav/LalR08}{27}
+\citation{DBLP:conf/cav/2008}
+\bibcite{DBLP:conf/popl/LangeTY15}{28}
+\bibcite{journals/jacm/Papadimitriou79b}{29}
+\bibcite{DBLP:conf/tacas/QadeerR05}{30}
+\bibcite{DBLP:conf/pldi/QadeerW04}{31}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces A replication storage protocol.\relax }}{21}{figure.caption.14}}
+\newlabel{fig:replication}{{12}{21}{A replication storage protocol.\relax }{figure.caption.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces An execution of the replication storage protocol and its conflict graph.\relax }}{21}{figure.caption.15}}
+\newlabel{fig:replic-exec}{{13}{21}{An execution of the replication storage protocol and its conflict graph.\relax }{figure.caption.15}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Motivating Examples}{21}{section.A.1}}
+\newlabel{asec:motivation}{{A}{21}{Motivating Examples}{section.A.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces The asynchronous semantics of a message passing system $\mathcal  {S}$. For a vector $\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle x$}}$, $\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle x$}}[\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle x$}}_p\gets E]$ is the vector $\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle y$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle y$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle y$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle y$}}$ with $\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle y$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle y$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle y$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle y$}}_q=\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle x$}}_q$, for every $q\not =p$, and $\mathchoice {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\displaystyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\textstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptstyle x$}} {\unhbox \voidb@x \hbox {\relax \mathversion  {bold}$\scriptscriptstyle x$}}_p=E$. Also, $\cdot $ denotes the concatenation of two sequences. \relax }}{22}{figure.caption.16}}
+\newlabel{fig:asynch-sem}{{14}{22}{The asynchronous semantics of a message passing system $\mathcal {S}$. For a vector $\vec {x}$, $\vec {x}[\vec {x}_p\gets E]$ is the vector $\vec {y}$ with $\vec {y}_q=\vec {x}_q$, for every $q\neq p$, and $\vec {x}_p=E$. Also, $\cdot $ denotes the concatenation of two sequences. \relax }{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Asynchronous Semantics of Message Passing Systems}{22}{section.A.2}}
+\newlabel{asec:semantics}{{B}{22}{Asynchronous Semantics of Message Passing Systems}{section.A.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Detecting deadlocks}{23}{section.A.3}}
+\newlabel{asec:deadlocks}{{C}{23}{Detecting deadlocks}{section.A.3}{}}
+\newlabel{th:deadlock1}{{5}{23}{Detecting deadlocks}{theorem.A.3.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Proofs of Section{}\def \nobreakspace  {}{{}\def \nobreakspace  {}{{}\def \nobreakspace  {}{\nobreakspace  {}}\nobreakspace  {}}\nobreakspace  {}}\nobreakspace  {}\ref  {sec:characterizations}}{25}{section.A.4}}
+\newlabel{asec:characterizations}{{D}{25}{Proofs of Section~\ref {sec:characterizations}}{section.A.4}{}}
+\newlabel{lem:cg_k}{{8}{25}{Proofs of Section~\ref {sec:characterizations}}{theorem.A.4.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {E}Proofs of Section{}\def \nobreakspace  {}{{}\def \nobreakspace  {}{{}\def \nobreakspace  {}{\nobreakspace  {}}\nobreakspace  {}}\nobreakspace  {}}\nobreakspace  {}\ref  {sec:verif}}{25}{section.A.5}}
+\newlabel{asec:verif}{{E}{25}{Proofs of Section~\ref {sec:verif}}{section.A.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {E.1}Borderline Synchronizability Violations}{25}{subsection.A.5.1}}
+\newlabel{lem:critical}{{4}{26}{Borderline Synchronizability Violations}{lemma.A.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {E.2}Simulating Borderline Violations on the Synchronous Semantics}{26}{subsection.A.5.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces The monitor $\mathcal  {M}_{\mathit  {causal}}$. Initially, {\tt  receiver} is $\bot $, and ${\tt  cone}=\emptyset $.\relax }}{27}{figure.caption.17}}
+\newlabel{fig:mon_causal}{{15}{27}{The monitor $\mathcal {M}_{\mathit {causal}}$. Initially, {\tt receiver} is $\bot $, and ${\tt cone}=\emptyset $.\relax }{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {E.3}Excluding Executions Violating Causal Delivery}{27}{subsection.A.5.3}}
+\newlabel{asec:causal-delivery}{{E.3}{27}{Excluding Executions Violating Causal Delivery}{subsection.A.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {E.4}Detecting Synchronizability Violations}{28}{subsection.A.5.4}}
+\newlabel{asec:violations}{{E.4}{28}{Detecting Synchronizability Violations}{subsection.A.5.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces The monitor $\mathcal  {M}_{\mathit  {viol}}(k)$. We use $\mathbb  {B}$ to denote the set of Boolean values and $\mathbb  {N}$ the set of natural numbers. Initially, {\tt  conflict} and {\tt  receiver} are $\bot $, while {\tt  lastIsRec} and {\tt  sawRS} are {\tt  false}.\relax }}{28}{figure.caption.18}}
+\newlabel{fig:mon_viol}{{16}{28}{The monitor $\mathcal {M}_{\mathit {viol}}(k)$. We use $\mathbb {B}$ to denote the set of Boolean values and $\mathbb {N}$ the set of natural numbers. Initially, {\tt conflict} and {\tt receiver} are $\bot $, while {\tt lastIsRec} and {\tt sawRS} are {\tt false}.\relax }{figure.caption.18}{}}
+\citation{DBLP:conf/focs/Kozen77}
+\@writefile{toc}{\contentsline {section}{\numberline {F}Proofs of Section{}\def \nobreakspace  {}{{}\def \nobreakspace  {}{{}\def \nobreakspace  {}{\nobreakspace  {}}\nobreakspace  {}}\nobreakspace  {}}\nobreakspace  {}\ref  {sec:decidability}}{29}{section.A.6}}
+\newlabel{asec:decidability}{{F}{29}{Proofs of Section~\ref {sec:decidability}}{section.A.6}{}}
+\newlabel{th:dec1}{{9}{29}{Proofs of Section~\ref {sec:decidability}}{theorem.A.6.9}{}}
