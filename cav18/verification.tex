@@ -5,15 +5,17 @@
 %is difficult because it requires dealing with executions where the message buffers are unbounded. 
 %For instance, even if the processes are finite-state, this would not lead to a decision procedure. 
 We show that checking $k$-synchronizability can be reduced 
-to a reachability problem in a system
+to a reachability problem  
 %~\footnote{Given a system $\mathcal{S}$ and a local state $l$, the reachability problem asks whether $\mathcal{S}$ can reach a configuration that contains the state $l$.} 
-that executes under the \emph{$k$-synchronous} semantics 
-(where message buffers are bounded). We show that every
-\emph{borderline} synchronizability violation (for which every strict prefix is synchronizable) of a system $\mathcal{S}$ can be ``simulated''
-%~\footnote{We refer to the standard notion of (stuttering) simulation where (sequences of) transitions in $\mathcal{S}$ are mapped to transitions of $\mathcal{S'}$.}
-by the synchronous semantics of a system $\mathcal{S'}$ where the reception of exactly one message is delayed (w.r.t. the synchronous semantics of $\mathcal{S}$).
-Then, we give a monitor which observes executions of $\mathcal{S'}$ and identifies synchronizability violations
-(there exists a run of this monitor that goes to error whenever such a violation exists). Proofs of the results in this section can be found in Appendix~\ref{sec:verif}.
+under the \emph{$k$-synchronous} semantics 
+(where message buffers are bounded). This reduction holds for arbitrary, possibly infinite-state, systems.
+More precisely, since the set of (asynchronous) executions of a system is prefix-closed, if a system $\mathcal{S}$ admits a synchronizability violation, then it also admits a \emph{borderline} violation, for which every strict prefix is synchronizable. We show that every \emph{borderline} violation can be ``simulated''~\footnote{We refer to the standard notion of (stuttering) simulation where one system mimics the transitions of the other system.} by the synchronous semantics of an instrumentation of $\mathcal{S}$ where the receipt of exactly one message is delayed (during every execution). 
+%borderline (minimal) violation 
+%We show that every
+%\emph{borderline} synchronizability violation (for which every strict prefix is synchronizable) of a system $\mathcal{S}$ can be 
+%by the synchronous semantics of a system $\mathcal{S'}$ where the reception of exactly one message is delayed (w.r.t. the synchronous semantics of $\mathcal{S}$).
+We describe a monitor that observes executions of the instrumentation (under the synchronous semantics) and identifies synchronizability violations
+(there exists a run of this monitor that goes to an error state whenever such a violation exists). %Proofs of the results in this section can be found in Appendix~\ref{sec:verif}.
 
 %This result is based on the following ideas:
 %\begin{itemize}
@@ -110,7 +112,7 @@ Then, we give a monitor which observes executions of $\mathcal{S'}$ and identifi
 
 \subsection{Borderline Synchronizability Violations}\label{ssec:verif1}
 
-For a system $\mathcal{S}$, a violation to $k$-synchronizability $e$ is called \emph{borderline} when every strict prefix of 
+For a system $\mathcal{S}$, a violation $e$ to $k$-synchronizability is called \emph{borderline} when every strict prefix of 
 $e$ is $k$-synchronizable. Figure~\ref{fig:ex-border-sim}(a) gives an example of a borderline violation to $1$-synchronizability (it is the same execution as in Figure~\ref{fig:elevator-exec}(b)).
 
 We show that every borderline violation $e$ ends with a receive action and this action is included in every cycle of $CG_{tr(e)}$ that is 
@@ -126,19 +128,19 @@ and $(v_n,v)$ is an $YR$ edge with $Y\in \{S,R\}$.
 \end{figure}
 
 \begin{lemma}
-Let $e$ be a borderline violation to $k$-synchronizability of $\mathcal{S}$. Then, $e = e'\cdot r$ for some $e'\in (S_{id}\cup R_{id})^*$ and $r\in R_{id}$.
+Let $e$ be a borderline violation to $k$-synchronizability of a system $\mathcal{S}$. Then, $e = e'\cdot r$ for some $e'\in (S_{id}\cup R_{id})^*$ and $r\in R_{id}$.
 Moreover, the node $v$ of $CG_{tr(e)}$ representing $r$ (and the corresponding send) is a critical node of every cycle of 
 $CG_{tr(e)}$ which is bad or of size bigger than $k$. % is of the form $v, v_1,\ldots, v_n,v$ where $(v,v_1)$ is an $SX$ edge for $X\in \{S,R\}$ and $(v_n,v)$ is an $YR$ edge for $Y\in \{S,R\}$.
+\vspace{-2mm}
 \end{lemma}
 
-\vspace{-1mm}
 
 \subsection{Simulating Borderline Violations on the Synchronous Semantics}\label{ssec:verif2}
 
-Let $\mathcal{S'}$ be a system obtained from $\mathcal{S}$ by ``delaying'' the reception of exactly one message, chosen nondeterministically: $\mathcal{S'}$ contains an additional process $\pi$ and exactly one message sent by a process in $\mathcal{S}$ can be non-deterministically redirected to $\pi$ which sends it to the original destination non-deterministically at a later time.
+Let $\mathcal{S'}$ be a system obtained from $\mathcal{S}$ by ``delaying'' the reception of exactly one nondeterministically chosen message: $\mathcal{S'}$ contains an additional process $\pi$ and exactly one message sent by a process in $\mathcal{S}$ is non-deterministically redirected to $\pi$~\footnote{Meaning that every transition labeled by a send action $\senda{p,q,v}$ is doubled by a transition labeled by $\senda{p,\pi,(q,v)}$, and such a send to $\pi$ is enabled only once throughout the entire execution.}, which sends it to the original destination at a later time~\footnote{The process $\pi$ stores the message $(q,v)$ it receives in its state and has one transition where it can send $v$ to the original destination $q$.}.
 We show that the synchronous semantics of $\mathcal{S'}$ ``simulates'' a permutation of every borderline violation of 
 $\mathcal{S}$. 
-Figure~\ref{fig:ex-border-sim}(b) shows the synchronous execution of $\mathcal{S'}$ that corresponds to the borderline violation in Figure~\ref{fig:ex-border-sim}(a). It is essentially the same except for delaying the reception of $\text{doorOpened}$ by sending it to $\pi$ who relays it to the elevator at a later time.
+Figure~\ref{fig:ex-border-sim}(b) shows the synchronous execution of $\mathcal{S'}$ that corresponds to the borderline violation in Figure~\ref{fig:ex-border-sim}(a). It is essentially the same except for delaying the reception of {\sf doorOpened} by sending it to $\pi$ who relays it to the elevator at a later time.
 
 %We first show that $\synchExec{\mathcal{S'}}{k}$ contains all the borderline violations of $\mathcal{S}$. 
 
@@ -146,47 +148,100 @@ The following result shows that the $k$-synchronous semantics of $\mathcal{S'}$ 
 %For two executions $e$ and $e'$, $e =_{\mathit{id}} e'$ denotes the fact that $e'$ is obtained from $e$ by renaming message identifiers, i.e., there exists a function $f:\<Mids>->\<Mids>$ such that $e[i]=a_j$, for some $a\in S\cup R$ and $j\in\<Mids>$, iff $e'[i]=a_{f(j)}$ (where $e[i]$ denotes the $i$-th element of the sequence $e$).
 %TODO BELONGS TO THIS MODULO CONFLICT-PRESERVING PERMUTATIONS
 %For a borderline violation $e=e_1\cdot s\cdot e_2\cdot r$, where $s\match r$, we assume that $e_1\cdot s\cdot e_2$ is $k$-synchronous. By Lemma~\ref{lem:zable_nous}, this is without lost of generality because $e_1\cdot s\cdot e_2$ is $k$-synchronizable.
-
-\begin{lemma}
+\vspace{-1mm}
+\begin{lemma}\label{lem:critical}
 Let $e=e_1\cdot \send{i}{p,q,v}\cdot e_2\cdot \rec{i}{q,v}$ be a borderline violation to $k$-synchronizability of $\mathcal{S}$. Then, $\synchExec{\mathcal{S'}}{k}$ contains an execution $e'$ of the form: 
-\begin{align*}
-e'=e_1'\cdot \send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}\cdot e_2'\cdot \send{j}{\pi,q,v}\cdot \rec{j}{q,v}
-\end{align*}
+\begin{center}
+$e'=e_1'\cdot \send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}\cdot e_2'\cdot \send{j}{\pi,q,v}\cdot \rec{j}{q,v}$
+\end{center}
 such that $e_1'\cdot \send{i}{p,q,v} \cdot e_2'$ is a permutation of $e_1\cdot \send{i}{p,q,v}\cdot e_2$.
+\vspace{-1mm}
 \end{lemma}
 
 %Redirecting messages to $\pi$ may lead to scenarios violating causal delivery (where a message sent later than the redirected one and to the same destination is received earlier). 
 %We show how to exclude such scenarios in Section~\ref{ssec:verif3}.
 %\subsection{Excluding Executions Violating Causal Delivery}\label{ssec:verif3}
 Checking $k$-synchronizability for $\mathcal{S}$ on the system $\mathcal{S'}$ would require that every (synchronous) execution of $\mathcal{S'}$ can be transformed to an execution of $\mathcal{S}$ by applying an homomorphism $\sigma$ where the send/receive pair with destination $\pi$ is replaced with the original send action and the send/receive pair initiated by $\pi$ is replaced with the original receive action (all the other actions are left unchanged). However, this is not true in general. For instance, $\mathcal{S'}$ may admit an execution 
-\begin{align*}
-\send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}\cdot \send{i'}{p,q,v'}\cdot \rec{i'}{q,v'}\cdot \send{j}{\pi,q,v}\cdot \rec{j}{q,v}
-\end{align*}
-where a message sent after the one redirected to $\pi$ is received earlier (and the two messages were sent by the same process $p$). This execution is possible under the $1$-synchronous semantics of $\mathcal{S'}$. Applying the homomorphism $\sigma$, we get the execution 
 $
-\send{i}{p,q,v)}\cdot \send{i'}{p,q,v'}\cdot \rec{i'}{q,v'}\rec{i}{q,v}
+\send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}\cdot \send{j}{p,q,v'}\cdot \rec{j}{q,v'}\cdot \send{i'}{\pi,q,v}\cdot \rec{i'}{q,v}
 $
-which violates causal delivery and it is thus not possible under the asynchronous semantics of $\mathcal{S}$.
-Our solution to this problem is to define a monitor $\mathcal{M}_{\mathit{causal}}$ which excludes such executions of $\mathcal{S'}$ when run under the synchronous semantics, i.e., it goes to an error state whenever applying the homomorphism $\sigma$ leads to a violation of causal delivery. This monitor is based on the same principles that we used to exclude violations of causal delivery in the synchronous semantics in the presence of unmatched sends (the component $B$ from a synchronous configuration). 
+where a message sent after the one redirected to $\pi$ is received earlier, and the two messages were sent by the same process $p$. This execution is possible under the $1$-synchronous semantics of $\mathcal{S'}$. Applying the homomorphism $\sigma$, we get the execution 
+$
+\send{i}{p,q,v}\cdot \send{j}{p,q,v'}\cdot \rec{j}{q,v'}\cdot \rec{i}{q,v}
+$
+which violates causal delivery and therefore, it is not admitted by the asynchronous semantics of $\mathcal{S}$.
+Our solution to this problem is to define a monitor $\mathcal{M}_{\mathit{causal}}$, i.e., a process which reads every transition label in the execution and advances its local state, which excludes such executions of $\mathcal{S}'$ when run under the synchronous semantics, i.e., it blocks the system $\mathcal{S}'$ whenever applying some transition would lead to an execution which, modulo the homomorphism $\sigma$, is a violation of causal delivery. This monitor is based on the same principles that we used to exclude violations of causal delivery in the synchronous semantics in the presence of unmatched sends (the component $B$ from a synchronous configuration). 
 
 
 \vspace{-1mm}
 
 \subsection{Detecting Synchronizability Violations}\label{ssec:verif4}
 
-We complete the reduction of checking $k$-synchronizability to a reachability problem under the $k$-synchronous semantics by defining a monitor $\mathcal{M}_{\mathit{viol}}(k)$ which observes executions in $\mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}$ and checks whether they represent violations to $k$-synchronizability. We show that there exists a run of $\mathcal{M}_{\mathit{viol}}(k)$ that goes to an error state whenever such a violation exists. 
+We complete the reduction of checking $k$-synchronizability to a reachability problem under the $k$-synchronous semantics by describing a monitor $\mathcal{M}_{\mathit{viol}}(k)$, which observes executions in the $k$-synchronous semantics of $\mathcal{S}' \paral\mathcal{M}_{\mathit{causal}}$ and checks whether they represent violations to $k$-synchronizability; $\mathcal{M}_{\mathit{viol}}(k)$ goes to an error state whenever such a violation exists. 
 %The monitor is nondeterministic and it may not reach the error state every time it observes a violation, but there is another run of the monitor on the same execution which reaches the error state. 
 
-Essentially, $\mathcal{M}_{\mathit{viol}}(k)$ observes the sequence of $k$-exchanges in an execution and constructs a conflict graph cycle, interpreting the sequence $\send{i}{p,\pi,(q,v)}\rec{i}{\pi,(q,v)}$ as in the original system $\mathcal{S}$, i.e., as $\send{i}{p,q,v}$, and $\send{i}{\pi,q,v}\rec{i}{q,v}$ as $\rec{i}{q,v}$. 
-By Lemma~\ref{lem:critical}, every cycle that is a witness for \emph{non} $k$-synchronizability includes the node representing the pair $\send{i}{p,q,v}$, $\rec{i}{q,v}$. Moreover, the successor of this node in the cycle represents an action that is executed by $p$ and the predecessor an action executed by $q$. Therefore, the monitor searches for a conflict-graph path from a node representing an action of $p$ to a node representing an action of $q$. Whenever it founds such a path it goes to an error state.
-The set of executions in $\mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}$ for which $\mathcal{M}_{\mathit{viol}}(k)$ goes to an error state %(i.e., the {\tt assert} on the last line of Figure~\ref{fig:mon_viol} fails) 
-is denoted by $\mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}\paral \neg \mathcal{M}_{\mathit{viol}}(k)$.
+Essentially, $\mathcal{M}_{\mathit{viol}}(k)$ observes the sequence of $k$-exchanges in an execution and tracks a conflict graph cycle, if any, interpreting $\send{i}{p,\pi,(q,v)}\cdot\rec{i}{\pi,(q,v)}$ as in the original system $\mathcal{S}$, i.e., as $\send{i}{p,q,v}$, and $\send{i}{\pi,q,v}\cdot \rec{i}{q,v}$ as $\rec{i}{q,v}$. 
+By Lemma~\ref{lem:critical}, every cycle that is a witness for \emph{non} $k$-synchronizability includes the node representing the pair $\send{i}{p,q,v}$, $\rec{i}{q,v}$. Moreover, the successor of this node in the cycle represents an action that is executed by $p$ and the predecessor an action executed by $q$. Therefore, the monitor searches for a conflict-graph path from a node representing an action of $p$ to a node representing an action of $q$. Whenever it finds such a path it goes to an error state.
+
+\begin{figure}[t]
+\begin{minipage}{6.5cm}
+\begin{lstlisting}
+function conflict: $\<Pids>\cup\{\bot\}$
+function lastIsRec: $\mathbb{B}$
+function sawRS: $\mathbb{B}$
+function count: $\mathbb{N}$
+
+rule $\send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}$:
+  conflict := $p$
+  count := k
+
+//for every $i$, $\<dest>(s_i)\neq \pi$ and $\<proc>(s_i)\neq \pi$
+rule $s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_m$:
+  for i = $1$ to $n$
+    if ($\,$*$\land\exists j.\ s_i \match r_j \land \mbox{conflict} \in \{\<proc>(s_i),\<dest>(s_i)\} $)
+      if ( * )
+        conflict := $\<proc>(s_i)$
+        if ($\mbox{lastIsRec}$) sawRS := true
+        lastIsRec := false
+      else 
+        conflict := $\<dest>(s_i)$
+        lastIsRec := true
+      count--
+    if ( * $\land$ $\<proc>(s_i)=\mbox{conflict}\land \forall j.\ \neg s_i\match r_j$ )
+      count--
+      lastIsRec := false
+
+rule $\send{i}{\pi,q,v}\cdot \rec{i}{q,v}$:
+  assert $\mbox{conflict} =q \implies (\mbox{count} > 0 \land \neg \mbox{sawRS})$
+\end{lstlisting}
+%function receiver: $\<Pids>\cup \{\bot\}$
+%  receiver := $q$
+\end{minipage}
+\hspace{5mm}
+\begin{minipage}{5.5cm}
+\includegraphics[width=5cm]{Borderline-mviol.pdf}
+\end{minipage}
+\vspace{-3mm}
+\caption{The monitor $\mathcal{M}_{\mathit{viol}}(k)$. $\mathbb{B}$ is the set of Booleans and $\mathbb{N}$ is the set of natural numbers. Initially, {\tt conflict} is $\bot$, while {\tt lastIsRec} and {\tt sawRS} are {\tt false}.}
+\label{fig:mon_viol}
+\vspace{-5mm}
+\end{figure}
+
+Figure~\ref{fig:mon_viol} lists the definition of $\mathcal{M}_{\mathit{viol}}(k)$ as an abstract state machine. 
+By the construction of $\mathcal{S'}$, we assume w.l.o.g., that both the send to $\pi$ and the send from $\pi$ are executed in isolation as an instance of $1$-exchange.
+When observing the send to $\pi$, the monitor updates the variable ${\tt conflict}$, which in general stores the process executing the last action in the cycle, to $p$. Also, a variable ${\tt count}$, which becomes $0$ when the cycle has strictly more than $k$ nodes, is initialized to $k$. 
+Then, for every $k$-exchange transition in the execution, $\mathcal{M}_{\mathit{viol}}(k)$ non-deterministically picks pairs of matching send/receive or unmatched sends to continue the conflict-graph path, knowing that the last node represents an action of the process stored in ${\tt conflict}$. The rules for choosing pairs of matching send/receive to advance the conflict-graph path are pictured on the right of Figure~\ref{fig:mon_viol} (advancing the conflict-graph path with an unmatched send doesn't modify the value of ${\tt conflict}$, it just decrements the value of ${\tt count}$). There are two cases depending on whether the last node in the path conflicts with the send or the receive of the considered pair. One of the two processes involved in this pair of send/receive equals the current value of ${\tt conflict}$. Therefore, ${\tt conflict}$ can either remain unchanged or change to the value of the other process. The variable {\tt lastIsRec} records whether the current conflict-graph path ends in a conflict due to a receive action. If it is the case, and the next conflict is between this receive and a send, then {\tt sawRS} is set to {\tt true} to record the fact that the path contains an $RS$ labeled edge (leading to a potential bad cycle).
+
+When $\pi$ sends its message to $q$, the monitor checks whether the conflict-graph path it discovered ends in a node representing an action of $q$. If this is the case, this path together with the node representing the delayed send forms a cycle. Then, if ${\tt sawRS}$ is ${\tt true}$, then the cycle is bad and if ${\tt count}$ reached the value $0$, then the cycle contains more than $k$ nodes. In both cases, the current execution is a violation to $k$-synchronizability.
+
+The set of executions in the $k$-synchronous semantics of $\mathcal{S}'$ composed with $\mathcal{M}_{\mathit{causal}}$ and $\mathcal{M}_{\mathit{viol}}(k)$, in which the latter goes to an error state, is denoted by $\mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}\paral \neg \mathcal{M}_{\mathit{viol}}(k)$.
 
 \begin{theorem}\label{th:main-verif}
-For a given $k$, a system $\mathcal{S}$ is $k$-synchronizable iff 
-\begin{align*}
-\mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}\paral \neg \mathcal{M}_{\mathit{viol}}(k)=\emptyset
-\end{align*}
+For a given $k$, a system $\mathcal{S}$ is $k$-synchronizable iff the set of executions
+$
+\mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}\paral \neg \mathcal{M}_{\mathit{viol}}(k)
+$
+is empty
 \end{theorem}
 
 

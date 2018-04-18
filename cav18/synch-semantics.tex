@@ -15,16 +15,16 @@ We define a property of message passing systems called \emph{$k$-synchronizabili
 \vspace{-6mm}
 \end{figure}
 
-The $k$-synchronous semantics uses an extended version of the standard rendez-vous primitive where more than one process is allowed to send a message and a process can send multiple messages, but all these messages must be received before being allowed to send more messages. This primitive is called \emph{$k$-exchange} if the number of sent messages is smaller than $k$. For instance, the execution 
+The $k$-synchronous semantics uses an extended version of the standard rendez-vous primitive where more than one process is allowed to send a message and a process can send multiple messages, but all these messages must be received before being allowed to send more messages. This primitive is called \emph{$k$-exchange} if the number of sent messages is at most $k$. For instance, the execution 
 $
-\send{1}{p_1,q,\_}\ 
-\send{2}{p_2,q,\_}\ 
-\rec{1}{q,\_}\ 
-\rec{2}{q,\_} 
+\send{1}{p_1,p_2,\_}\ 
+\send{2}{p_2,p_1,\_}\ 
+\rec{1}{p_2,\_}\ 
+\rec{2}{p_1,\_} 
 $
 is an instance of a $2$-exchange. 
-Actually, to ensure that the $k$-synchronous semantics is prefix-closed (if it admits an execution, then it admits all its prefixes), we allow messages to be dropped during a $k$-exchange transition. 
-For instance, the prefix of the previous execution without the last receive ($\rec{2}{q,\_}$) is also an instance of a $2$-exchange. The presence of unmatched send actions must be constrained in order to ensure that the set of executions admitted by the $k$-synchronous semantics satisfies causal delivery. Consider for instance the execution in Figure~\ref{fig:ex-blocking} which can be produced by a sequence of $1$-exchanges. The receive action ($\reca{q_2,v_3}$) pictured as an empty box needs to be disabled in order to exclude violations of causal delivery. To this, the semantics tracks for each process $p$ a set of processes $B(p)$ from which it is forbidden to receive messages. Following the sequence of $1$-exchanges in this execution, the unmatched $\senda{p,q2,v1}$ disables any receive by $q2$ of a message sent by $p$ (otherwise, it will be even a violation of the FIFO semantics of $q2$'s buffer). Therefore, the first $1$-exchange results in $B(q2)=\{p\}$. The second $1$-exchange (the message from $p$ to $q1$) forbids $q2$ to receive any message from $q1$. Otherwise, this message will be necessarily causally related to $v1$, and receiving it will lead to a violation of causal delivery. Therefore, when reaching $\senda{q1,q2,v_3}$ the receive $\reca{q_2,v_3}$ is disabled because $q1\in B(q2)$.
+To ensure that the $k$-synchronous semantics is prefix-closed (if it admits an execution, then it admits all its prefixes), we allow messages to be dropped during a $k$-exchange transition. 
+For instance, the prefix of the previous execution without the last receive ($\rec{2}{p_1,\_}$) is also an instance of a $2$-exchange. The presence of unmatched send actions must be constrained in order to ensure that the set of executions admitted by the $k$-synchronous semantics satisfies causal delivery. Consider for instance, the sequence of $1$-exchanges in Figure~\ref{fig:ex-blocking}, a $1$-exchange with one unmatched send, followed by two $1$-exchanges with matching pairs of send/receives. The receive action ($\reca{q2,v3}$) pictured as an empty box needs to be disabled in order to exclude violations of causal delivery. To this, the semantics tracks for each process $p$ a set of processes $B(p)$ from which it is forbidden to receive messages. For the sequence of $1$-exchanges in Figure~\ref{fig:ex-blocking}, the unmatched $\senda{p,q2,v1}$ disables any receive by $q2$ of a message sent by $p$ (otherwise, it will be even a violation of the FIFO semantics of $q2$'s buffer). Therefore, the first $1$-exchange results in $B(q2)=\{p\}$. The second $1$-exchange (the message from $p$ to $q1$) forbids $q2$ to receive any message from $q1$. Otherwise, this message will be necessarily causally related to $v1$, and receiving it will lead to a violation of causal delivery. Therefore, when reaching $\senda{q1,q2,v_3}$ the receive $\reca{q_2,v_3}$ is disabled because $q1\in B(q2)$.
 
 %The standard rendez-vous primitive corresponds to the $1$-exchange. 
 %The semantics allows messages to be dropped, but  TODO SAY THAT THIS IS RELATED TO AN IMPLICIT FIFO SEMANTICS FOR THE BUFFERS
@@ -64,8 +64,8 @@ For instance, the prefix of the previous execution without the last receive ($\r
 %    }%\hspace{5mm}
   \end{mathpar}
   }
- \vspace{-6mm}
-  \caption{The synchronous semantics of a message passing system $\mathcal{S}$. Above, $\vec{\epsilon}$ denotes a vector where all the components are $\epsilon$.
+ \vspace{-5mm}
+  \caption{The synchronous semantics. Above, $\vec{\epsilon}$ is a vector where all the components are $\epsilon$, and $\xrightarrow{e}$ is the transition relation of the asynchronous semantics.
   %and for a sequence of indexed actions $e\in(S_{id}\cup R_{id})^*$, $\overline{e}$ denotes the sequence of \emph{actions} obtained from $e$ by removing message identifiers.
   %$\vec{b}[\vec{b}_q.\ \mathrm{add}(m)]$ denotes the vector of message buffers obtained from $\vec{b}$ by calling the method $\mathrm{add}(m)$ of the element of index $q$.
   }
@@ -105,8 +105,7 @@ A message passing system $\mathcal{S}$ is called \emph{$k$-synchronizable} when 
 
 %As a consequence of Definition~\ref{def:synchron}, a system $\mathcal{S}$ is not $k$-synchronizable when it admits an execution $e$ (under the asynchronous semantics) which is not $k$-synchronous (i.e., its trace is not $k$-synchronous). Such an execution $e$ is called a \emph{violation to $k$-synchronizability}.
 
-It can be easily proved that $k$-synchronizable systems reach exactly the same set of local state vectors under the asynchronous and the $k$-synchronous semantics. Therefore, any assertion checking or invariant checking problem for a $k$-synchronizable system $\mathcal{S}$ can be solved by considering the $k$-synchronous semantics instead of the asynchronous one. 
-In particular, this implies that such problems are decidable for finite-state $k$-synchronizable systems~\footnote{A system is called \emph{finite-state} when the number of local states of every process is bounded.} 
+It can be easily proved that $k$-synchronizable systems reach exactly the same set of local state vectors under the asynchronous and the $k$-synchronous semantics. Therefore, any assertion checking or invariant checking problem for a $k$-synchronizable system $\mathcal{S}$ can be solved by considering the $k$-synchronous semantics instead of the asynchronous one. This holds even for the problem of detecting deadlocks. Therefore, all these problems become decidable for finite-state $k$-synchronizable systems, whereas they are undecidable in the general case (because of the FIFO message buffers).
 %whereas they are undecidable for arbitrary systems. 
 %The $k$-synchronous semantics of a finite-state system can be modeled by a finite-state labeled transition system since the message buffers are of bounded size.
 %
@@ -116,6 +115,6 @@ In particular, this implies that such problems are decidable for finite-state $k
 %\begin{proof}
 %Direct consequence of Lemma~\ref{lem:undist}.
 %\end{proof}
-Appendix~\ref{asec:deadlocks} shows that the problem of detecting deadlocks in a $k$-synchronizable system can also be solved on the $k$-synchronous semantics instead of the asynchronous one.
+%Appendix~\ref{asec:deadlocks} shows that the problem of detecting deadlocks in a $k$-synchronizable system can also be solved on the $k$-synchronous semantics instead of the asynchronous one.
 
 \vspace{-1mm}

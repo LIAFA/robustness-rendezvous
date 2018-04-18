@@ -101,11 +101,12 @@
 \newcommand\asynchSt[1]{\mathrm{asSt}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
 \newcommand\synchSt[2]{\mathrm{sSt}_{#2}({#1})} %{  \llbracket {#1} \rrbracket_{asynch} }
 
-\author{}
-\institute{}
-
-\title{On the Completeness of Verifying Message Passing Programs under Bounded Asynchrony}
-%Getting Rid of Unbounded Buffers in the Verification of Message Passing Systems} %% [Short Title] is optional;
+\title{On the Completeness of Verifying Message Passing Programs under Bounded Asynchrony\thanks{This work is supported in part by the European Research Council (ERC) under the European Union's Horizon 2020 research and innovation programme (grant agreement No 678177).}}
+\author{Ahmed Bouajjani\inst{1} \and Constantin Enea\inst{1} \and Kailiang Ji\inst{1} \and Shaz Qadeer\inst{3} }
+\institute{IRIF, University Paris Diderot \& CNRS, 
+\email{\{abou,cenea,jkl\}@irif.fr},
+\and Microsoft Research, 
+\email{qadeer@microsoft.com}}
 
 
 
@@ -201,14 +202,15 @@
 
 \maketitle
 
-\vspace{-5mm}
+%\vspace{-5mm}
 \begin{abstract}
-We address the problem of verifying message passing programs, defined as a set of parallel processes communicating through unbounded FIFO buffers.
+We address the problem of verifying message passing programs, defined as a set of processes communicating through unbounded FIFO buffers.
 %Their verification is hard, undecidable in general. An important issue is the design of verification methods that explore subsets of the asynchronous behaviors of the program in order to draw useful conclusions about its correctness. 
 %Existing approaches in this line of research are either not applicable to systems with unbounded buffers, or restricted in scope, or highly complex, or not guaranteed to terminate, or are based on approximate analyses without guarantees of completeness. In this paper 
-We introduce a bounded analysis that explores a special type of computations, called $k$-synchronous. These computations can be viewed as (unbounded) sequences of interaction phases, each phase allowing at most $k$ send actions (by different processes), followed by a sequence of receives corresponding to sends in the same phase. We give a procedure for deciding {\em $k$-synchronizability} of a program, i.e., whether every computation is equivalent (has the same happens-before relation) to one of its $k$-synchronous computations. We also show that 
+We introduce a bounded analysis that explores a special type of computations, called $k$-synchronous. These computations can be viewed as (unbounded) sequences of interaction phases, each phase allowing at most $k$ send actions (by different processes), followed by a sequence of receives corresponding to sends in the same phase. We give a procedure for deciding {\em $k$-synchronizability} of a program, i.e., whether every computation is equivalent (has the same happens-before relation) to one of its $k$-synchronous computations. We show that 
 %This procedure consists in checking a reachability property on the $k$-synchronous computations of an instrumented version of the program (it doesn't have to deal with arbitrary asynchronous computations). We show that 
-reachability over $k$-synchronous computations and checking $k$-synchronizability are both PSPACE-complete. Furthermore, we introduce a class of programs called {\em flow-bounded} for which the problem of deciding whether there exists a $k>0$ for which the program is $k$-synchronizable, is decidable.
+reachability over $k$-synchronous computations and checking $k$-synchronizability are both PSPACE-complete. 
+%Furthermore, we introduce a class of programs called {\em flow-bounded} for which the problem of deciding whether there exists a $k>0$ for which the program is $k$-synchronizable, is decidable.
 %
 % is decidable and PSPACE-complete. T
 %
@@ -259,9 +261,9 @@ reachability over $k$-synchronous computations and checking $k$-synchronizabilit
 %\bibliographystyle{plain}
 \bibliography{references}
 
-\newpage
-\appendix
-\input{app-all.tex}
+%\newpage
+%\appendix
+%\input{app-all.tex}
 
 \end{document}
 
