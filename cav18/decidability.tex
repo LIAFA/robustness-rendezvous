@@ -8,8 +8,10 @@
 
 Given a system $\mathcal{S}$, an integer $k$, and a local state $l$, \emph{the reachability problem under the $k$-synchronous semantics} asks whether there exists a $k$-synchronous execution of $\mathcal{S}$ reaching a configuration $(\vec{l},B)$ with $l=\vec{l}_p$ for some $p\in\<Pids>$. Theorem~\ref{th:main-verif} shows that checking $k$-synchronizability can be reduced to a reachability problem under the $k$-synchronous semantics. This reduction holds for arbitrary (infinite-state) systems, which implies that $k$-synchronizability can be checked using the existing assertion checking technology. Moreover, for finite-state systems, where each process has  a finite number of local states (message buffers can still be unbounded), it implies that checking this property is PSPACE-complete.
 
+\vspace{-1mm}
 \begin{theorem}\label{th:dec1}
 For a finite-state system $\mathcal{S}$, the reachability problem under the $k$-synchronous semantics and the problem of checking $k$-synchronizability of $\mathcal{S}$ are decidable and PSPACE-complete.
+\vspace{-1mm}
 \end{theorem}
 
 %\begin{figure}[t]

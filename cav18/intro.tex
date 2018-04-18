@@ -90,7 +90,11 @@ However, it is possible that the program is {\em not} $k$-synchronizable for any
 %We also show that all the techniques we develop in this paper can also be used for verifying the existence of deadlocks.
 
 We have applied our theory to a set of nontrivial examples, two of them being presented in Section~\ref{sec:motivation}. 
-All the examples are synchronizable, which confirms our conviction that non-synchronizability should correspond to an ill-designed system (and therefore it should be reported as an anomaly). %Therefore, our approach always terminates and is complete for these systems.
+All the examples are synchronizable, which confirms our conviction that non-synchronizability should correspond to an ill-designed system (and therefore it should be reported as an anomaly).
+
+An extended version of this paper with missing proofs can be found at~\cite{}.
+\vspace{-2mm}
+ %Therefore, our approach always terminates and is complete for these systems.
 
 %In fact, programs that are non flow-bounded are rare in practice, and typically this is because they contain the "producer-consumer" pattern (like the Elevator example shown in the next section). For such non flow-bounded programs, not synchronizability can only be due to the existence of the bad pattern forbidding exchange serializability. This bad pattern is eventually found for some $k$ because the producer-consumer pattern (which is 1-synchronizable) does not increase the needed bound for reaching the exchange serializability bad pattern. Therefore, our method always terminate (in practice) and establishes synchronizabiity, or will find the serializability bad pattern, although we do not have any non-artificial example where the latter case occurs. 
 
