@@ -194,7 +194,6 @@ function count: $\mathbb{N}$
 rule $\send{i}{p,\pi,(q,v)}\cdot \rec{i}{\pi,(q,v)}$:
   conflict := $p$
   count := k
-
 //for every $i$, $\<dest>(s_i)\neq \pi$ and $\<proc>(s_i)\neq \pi$
 rule $s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_m$:
   for i = $1$ to $n$
@@ -210,7 +209,6 @@ rule $s_1\cdot\ldots\cdot s_n\cdot r_1\cdot\ldots\cdot r_m$:
     if ( * $\land$ $\<proc>(s_i)=\mbox{conflict}\land \forall j.\ \neg s_i\match r_j$ )
       count--
       lastIsRec := false
-
 rule $\send{i}{\pi,q,v}\cdot \rec{i}{q,v}$:
   assert $\mbox{conflict} =q \implies (\mbox{count} > 0 \land \neg \mbox{sawRS})$
 \end{lstlisting}
@@ -236,12 +234,14 @@ When $\pi$ sends its message to $q$, the monitor checks whether the conflict-gra
 
 The set of executions in the $k$-synchronous semantics of $\mathcal{S}'$ composed with $\mathcal{M}_{\mathit{causal}}$ and $\mathcal{M}_{\mathit{viol}}(k)$, in which the latter goes to an error state, is denoted by $\mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}\paral \neg \mathcal{M}_{\mathit{viol}}(k)$.
 
+\vspace{-.5mm}
 \begin{theorem}\label{th:main-verif}
 For a given $k$, a system $\mathcal{S}$ is $k$-synchronizable iff the set of executions
 $
 \mathcal{S}_k' \paral\mathcal{M}_{\mathit{causal}}\paral \neg \mathcal{M}_{\mathit{viol}}(k)
 $
 is empty
+\vspace{-1mm}
 \end{theorem}
 
 
